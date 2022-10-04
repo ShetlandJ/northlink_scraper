@@ -18,7 +18,8 @@
         "livewire/livewire": "^2.5",
         "nesk/puphpeteer": "^2.0",
         "pbmedia/laravel-ffmpeg": "^7.8",
-        "tightenco/ziggy": "^1.0"
+        "tightenco/ziggy": "^1.0",
+        "sunra/php-simple-html-dom-parser": "1.5.2"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
