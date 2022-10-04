@@ -37,12 +37,10 @@ class ScrapeData extends Command
     public function handle()
     {
         $continueCounter = 0;
-        logger("1");
         $this->northlinkService->fetchToken();
-        logger("2");
         // create array of dates from 2022-10-05 to 2022-12-30
         $dates = $this->createDatesArray();
-        logger("3");
+
         foreach ($dates as $dateString) {
             if ($continueCounter > 5) {
                 $this->exit();

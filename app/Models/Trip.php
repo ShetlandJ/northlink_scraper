@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\TripPrice;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 
 class Trip extends Model
 {
@@ -25,5 +26,10 @@ class Trip extends Model
     public function prices(): HasMany
     {
         return $this->hasMany(TripPrice::class);
+    }
+
+    public function scopeWithPrices(Builder $query): Builder
+    {
+        return $query->with('prices');
     }
 }
