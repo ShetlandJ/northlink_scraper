@@ -15,24 +15,38 @@ class HomeController extends NorthlinkController
 {
     public function index()
     {
-        // $client = new Client();
-
         $trip = Trip::query();
         $trip->join('trip_prices', 'trips.id', '=', 'trip_prices.trip_id');
-
-        // where trip_prices.resourceCode like NPET
         $trip->where('trip_prices.resourceCode', 'like', '%NPET%');
-        $trip->where('trip_prices.available', true);
+        $trip->where('trips.date', '>=', now()->format('Y-m-d'));
+        $trip->where('trips.date', '<=', now()->addDays(30)->format('Y-m-d'));
 
-        // dq($trip);
-        dd($trip->first());
+        $trips = $trip->get();
+
+        $availableTrips = [];
+
+        foreach ($trips as $trip) {
+            // if array not keyed by date, key it
+            if (!isset($availableTrips[$trip->date])) {
+                $availableTrips[$trip->date] = [
+                    'date' => $trip->date,
+                    'available' => 0,
+                ];
+            }
+
+            if ($trip->available) {
+                $availableTrips[$trip->date]['available'] = 1;
+            }
+        }
 
 
+        $availableTrips = array_values($availableTrips);
 
         return Inertia::render('Home', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
             'isLoggedIn' => Auth::check(),
+            'petCabins' => $availableTrips,
         ]);
     }
 }

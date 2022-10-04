@@ -5,7 +5,7 @@ import Container from '../components/Container.vue';
 import NavBar from '../components/NavBar.vue';
 
 defineProps({
-    ingredients: {
+    petCabins: {
         type: Array,
         default: () => [],
     },

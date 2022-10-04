@@ -22,6 +22,10 @@ class TripPrice extends Model
         'resourceType',
     ];
 
+    protected $casts = [
+        'available' => 'boolean',
+    ];
+
     public function trip(): BelongsTo
     {
         return $this->belongsTo(Trip::class);
