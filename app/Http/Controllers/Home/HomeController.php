@@ -17,46 +17,10 @@ class HomeController extends NorthlinkController
         $client = new Client();
 
 
-        $fetchToken = $this->northlinkService->fetchToken();
-        }
+        // $this->northlinkService->fetchToken();
+        // $data = $this->northlinkService->fetchDataByDate('2022-10-05');
 
-        // $payload = [
-        //     "departureRequests" => [
-        //         [
-        //             "route" => "ABLE",
-        //             "date" => date("Y-m-d"),
-        //             "resources" => [[
-        //                 "resourceCode" => "PAX",
-        //                 "amount" => "2",
-        //                 "resourceType" => "A",
-        //                 "type" => "STD"
-        //             ]],
-        //             "vehicles" => [],
-        //         ],
-        //         [
-        //             "route" => "LEAB",
-        //             "date" => date("Y-m-d", strtotime("+5 days")),
-        //             "resources" => [[
-        //                 "resourceCode" => "PAX",
-        //                 "amount" => "2",
-        //                 "resourceType" => "A",
-        //                 "type" => "STD"
-        //             ]],
-        //             "vehicles" => [],
-        //         ],
-        //     ]
-        // ];
-
-        // $options = [
-        //     'json' => $payload
-        //    ];
-
-        // $postReq = $client->post('https://www.northlinkferries.co.uk/api/booking/create', $options);
-
-        // $json = $postReq->getBody();
-        // $data = json_decode($json, true);
-
-        // dd($data);
+        // $this->northlinkService->updateOrCreateTripRecords($data);
 
 
         // $res = $client->request('GET', 'https://www.northlinkferries.co.uk/api/departures/LEAB/prices/2022-10-23', [

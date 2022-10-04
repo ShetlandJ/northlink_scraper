@@ -14,7 +14,7 @@ defineProps({
 </script>
 
 <template>
-    <Head title="Recipe Calculator" />
+    <Head title="Northlink Trip Availability" />
 
     <div
         class="
