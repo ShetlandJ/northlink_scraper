@@ -36,10 +36,16 @@ class ScrapeData extends Command
      */
     public function handle()
     {
+        // give users an option to choose between ABLE or LEAB
+        $routeCode = $this->choice('Which token do you want to use?', ['ABLE', 'LEAB']);
+
         $continueCounter = 0;
         $this->northlinkService->fetchToken();
         // create array of dates from 2022-10-05 to 2022-12-30
         $dates = $this->createDatesArray();
+
+        // create progrss
+        $bar = $this->output->createProgressBar(count($dates));
 
         foreach ($dates as $dateString) {
             if ($continueCounter > 5) {
@@ -47,20 +53,25 @@ class ScrapeData extends Command
             }
 
             // if trip exists for date, skip
-            if (Trip::where('date', $dateString)->exists()) {
+            $tripExists = Trip::where('date', $dateString)
+                ->where('routeCode', $routeCode)
+                ->exists();
+
+            if ($tripExists) {
                 logger("Trip exists for date: {$dateString}");
                 continue;
             }
 
-            logger(sprintf('Scraping data for date: %s', $dateString));
-            $data = $this->northlinkService->fetchDataByDate($dateString);
+
+            $data = $this->northlinkService->fetchDataByDate($dateString, $routeCode);
             if (!$data) {
                 $continueCounter++;
                 continue;
             }
-            $this->northlinkService->updateOrCreateTripRecords($data, $dateString);
-            logger(sprintf('Finished scraping data for date: %s', $dateString));
-            logger("-------------------------------");
+            $this->northlinkService->updateOrCreateTripRecords($data, $dateString, $routeCode);
+            // advance progress bar
+            $bar->advance();
+
         }
 
 

@@ -94,17 +94,25 @@ class NorthlinkService
         return $token;
     }
 
-    public function fetchDataByDate(string $date): ?array
+    public function fetchDataByDate(string $date, string $routeCode = self::LERWICK_TO_ABERDEEN): ?array
     {
         $token = $this->getToken();
 
         $client = new Client();
 
-        $res = $client->request('GET', 'https://www.northlinkferries.co.uk/api/departures/LEAB/prices/' . $date, [
-            'headers' => [
-                'Authorization' => $token
+        $res = $client->request(
+            'GET',
+            sprintf(
+                'https://www.northlinkferries.co.uk/api/departures/%s/prices/%s',
+                $routeCode,
+                $date,
+            ),
+            [
+                'headers' => [
+                    'Authorization' => $token
+                ]
             ]
-        ]);
+        );
 
         $json = $res->getBody();
         $data = json_decode($json, true);
@@ -113,17 +121,14 @@ class NorthlinkService
         return $prices;
     }
 
-    public function updateOrCreateTripRecords(array $data, string $date)
+    public function updateOrCreateTripRecords(array $data, string $date, string $routeCode)
     {
-        // if the trip was created in the last 15 minutes, exit early
-        $trip = Trip::where('date', $date)->first();
+        $trip = Trip::where('date', $date)
+            ->where('routeCode', $routeCode)
+            ->first();
 
         if ($trip && $trip->created_at->diffInMinutes(now()) < 15) {
             return;
-        }
-
-        if (!isset($data['price'])) {
-            dd($data);
         }
 
         $trip = Trip::firstOrCreate([

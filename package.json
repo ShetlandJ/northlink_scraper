@@ -27,6 +27,8 @@
         "vue-loader": "^17.0.0"
     },
     "dependencies": {
+        "@headlessui/vue": "^0.0.0-insiders.83a5f45",
+        "@heroicons/vue": "^2.0.11",
         "@nesk/puphpeteer": "^2.0.0",
         "@vuepic/vue-datepicker": "^3.3.0",
         "@vueup/vue-quill": "^1.0.0-beta.8",
