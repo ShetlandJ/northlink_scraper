@@ -14,9 +14,6 @@ class CapacityController extends NorthlinkController
 {
     public function __invoke()
     {
-        dd(
-            'j'
-        );
         $year = (int) Route::input('year');
         $month = (int) Route::input('month');
         $routeCode = Route::input('routeCode');
@@ -24,16 +21,15 @@ class CapacityController extends NorthlinkController
         $firstDayOfMonth = date('Y-m-d', strtotime($year . '-' . $month . '-01'));
 
         $trip = Trip::query();
-        $trip->join('trip_prices', 'trips.id', '=', 'trip_prices.trip_id');
         $trip->where('trips.date', '>=', $firstDayOfMonth);
         $trip->where('trips.date', '<=', date('Y-m-d', strtotime($firstDayOfMonth . ' + 1 month')));
         $trip->where('trips.routeCode', $routeCode);
+        $trip->with('prices');
 
         $trips = $trip->get();
 
         $capacityPerMonth = [];
 
-        dd($trips);
         foreach ($trips as $trip) {
             $capacityPerMonth[$trip->date] = [
                 'date' => $trip->date,

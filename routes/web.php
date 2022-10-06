@@ -27,3 +27,7 @@ Route::get('/', [HomeController::class, 'index'])
 Route::get('/pets', function() {
     return Inertia::render('PetCabinAvailability');
 })->name('pets');
+
+Route::get('/capacity', function() {
+    return Inertia::render('CapacityPage');
+})->name('capacity');

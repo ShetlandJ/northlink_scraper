@@ -11,7 +11,7 @@ import Tool from "../components/home/Tool.vue";
 
     <div
         class="
-            items-top[]
+            items-top
             justify-center
             min-h-screen
             bg-gray-100
