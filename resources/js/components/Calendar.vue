@@ -19,7 +19,6 @@ const getPetCabinData = async (month, year, route = null) => {
     }
 };
 
-// get today's month and year
 const today = new Date();
 const month = today.getMonth() + 1;
 const year = today.getFullYear();
@@ -27,12 +26,13 @@ const year = today.getFullYear();
 getPetCabinData(month, year);
 
 const getAvailabilityClass = (date, route) => {
-    const formattedDate =
-        date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+    const year = date.getFullYear()
+    const month = date.getMonth() + 1;
+    const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
 
-    const foundDate = dates.value[route].find(
-        (item) => item.date === formattedDate
-    );
+    const formattedDate = `${year}-${month}-${day}`
+
+    const foundDate = dates.value[route].find((item) => item.date === formattedDate);
 
     if (!foundDate) {
         return "bg-gray-200";
