@@ -47,7 +47,7 @@ const updateFromPage = ({ month, year }, route) => {
 </script>
 
 <template>
-    <div v-for="route in ['LEAB', 'ABLE']" :key="route">
+    <div v-for="(route, index) in ['LEAB', 'ABLE']" :key="route">
         <div class="flex justify-center">
             <p
                 v-if="route === 'LEAB'"
@@ -64,6 +64,7 @@ const updateFromPage = ({ month, year }, route) => {
         </div>
 
         <Calendar
+            class="mb-6"
             is-expanded
             @update:from-page="(value) => updateFromPage(value, route)"
         >
@@ -79,6 +80,8 @@ const updateFromPage = ({ month, year }, route) => {
                 </div>
             </template>
         </Calendar>
+
+        <hr v-if="index === 0" class="mb-4" />
     </div>
 </template>
 

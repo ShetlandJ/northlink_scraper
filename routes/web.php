@@ -8,6 +8,7 @@ use App\Http\Controllers\Home\CategoryController;
 use App\Http\Controllers\Home\IngredientController;
 use App\Http\Controllers\Home\RecipeCreateController;
 use App\Http\Controllers\Home\SupplierController;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,3 +23,7 @@ use App\Http\Controllers\Home\SupplierController;
 
 Route::get('/', [HomeController::class, 'index'])
     ->name('home');
+
+Route::get('/pets', function() {
+    return Inertia::render('PetCabinAvailability');
+})->name('pets');

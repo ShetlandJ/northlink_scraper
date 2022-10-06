@@ -36,7 +36,7 @@ const showingNavigationDropdown = ref(false);
                         "
                         :href="route('home')"
                     >
-                        <span class="dark:text-white"> Northlink Scraper </span>
+                        <span class="dark:text-white"> Northlink Available Tool </span>
                     </Link>
                 </h1>
             </div>
@@ -71,12 +71,13 @@ const showingNavigationDropdown = ref(false);
                             md:border-none md:p-0
                             dark:text-white dark:hover:text-white
                         "
+                        :href="route('pets')"
                         :class="{ 'font-bold': $page.url === '/suppliers' }"
                     >
-                        Suppliers
+                        Pet Cabin Availability
                     </Link>
                 </li>
-                <JetDropdown align="right" width="48">
+                <!-- <JetDropdown align="right" width="48">
                     <template #trigger>
                         <button
                             type="button"
@@ -124,9 +125,9 @@ const showingNavigationDropdown = ref(false);
                             Recipe Categories
                         </JetNavLink>
                     </template>
-                </JetDropdown>
+                </JetDropdown> -->
 
-                <li class="md:ml-4 my-2">
+                <!-- <li class="md:ml-4 my-2">
                     <Link
                         class="
                             border-t
@@ -161,7 +162,7 @@ const showingNavigationDropdown = ref(false);
                     >
                         Recipes
                     </Link>
-                </li>
+                </li> -->
             </ul>
         </nav>
     </header>

@@ -3,7 +3,7 @@ import { ref, computed } from "vue";
 import { Head, useForm, Link } from "@inertiajs/inertia-vue3";
 import Container from "../components/Container.vue";
 import NavBar from "../components/NavBar.vue";
-import Calendar from '../components/Calendar.vue';
+// import Calendar from '../components/PetCabinAvailabilityCalendar.vue';
 
 defineProps({
     LEAB_petCabins: {
@@ -22,7 +22,7 @@ defineProps({
 
     <div
         class="
-            items-top
+            items-top[]
             justify-center
             min-h-screen
             bg-gray-100
@@ -33,10 +33,11 @@ defineProps({
     >
         <NavBar />
 
-        <Calendar
-            :start-date="new Date(2022, 9, 1)"
-            :data="LEAB_petCabins"
-        />
+        <!-- <div class="w-1/2">
+            <Calendar
+                :start-date="new Date(2022, 9, 1)"
+            />
+        </div> -->
 
         <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
             <div class="flex justify-center pt-8 sm:justify-start sm:pt-0">
