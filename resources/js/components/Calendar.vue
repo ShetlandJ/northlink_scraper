@@ -3,13 +3,6 @@ import "v-calendar/dist/style.css";
 import axios from "axios";
 import { ref } from "@vue/runtime-core";
 
-// const props = defineProps({
-//     data: {
-//         type: Array,
-//         default: () => [],
-//     },
-// })
-
 const dates = ref({
     LEAB: [],
     ABLE: [],
