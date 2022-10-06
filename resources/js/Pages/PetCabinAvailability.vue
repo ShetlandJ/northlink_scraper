@@ -34,15 +34,15 @@ import PetCabinAvailabilityCalendar from "../components/PetCabinAvailabilityCale
             </p>
             <div class="mb-2">
                 <div class="flex items-center">
-                    <div class="availability-dot available" />
+                    <div class="availability-dot bg-green-500" />
                     <span class="ml-3">Available</span>
                 </div>
                 <div class="flex items-center">
-                    <div class="availability-dot unavailable" />
+                    <div class="availability-dot bg-red-500" />
                     <span class="ml-3">Unavailable</span>
                 </div>
                 <div class="flex items-center">
-                    <div class="availability-dot unknown" />
+                    <div class="availability-dot bg-gray-200" />
                     <span class="ml-3">Unknown</span>
                 </div>
             </div>
@@ -59,17 +59,5 @@ import PetCabinAvailabilityCalendar from "../components/PetCabinAvailabilityCale
     width: 10px;
     height: 10px;
     border-radius: 50%;
-}
-
-.available {
-    background-color: green;
-}
-
-.unavailable {
-    background-color: red;
-}
-
-.unknown {
-    background-color: gray;
 }
 </style>
