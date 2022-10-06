@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Home\PetCabinController;
 use App\Models\Word;
 use Illuminate\Support\Str;
 use App\Models\WordOfTheDay;
@@ -23,3 +24,5 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/pet-cabins/{month}/{year}', PetCabinController::class);
