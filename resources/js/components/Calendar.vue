@@ -8,16 +8,23 @@ const dates = ref({
     ABLE: [],
 });
 
-const getPetCabinData = async (firstSearch = true) => {
-    const { data } = await axios.get("/api/pet-cabins/10/2022");
+const getPetCabinData = async (month, year, route = null) => {
+    const { data } = await axios.get(`/api/pet-cabins/${month}/${year}`);
 
-    dates.value.LEAB = data.LEAB;
-    dates.value.ABLE = data.ABLE;
-
-    console.log(dates.value);
+    if (!route) {
+        dates.value.LEAB = data.LEAB;
+        dates.value.ABLE = data.ABLE;
+    } else {
+        dates.value[route] = data[route];
+    }
 };
 
-getPetCabinData();
+// get today's month and year
+const today = new Date();
+const month = today.getMonth() + 1;
+const year = today.getFullYear();
+
+getPetCabinData(month, year);
 
 const getAvailabilityClass = (date, route) => {
     const formattedDate =
@@ -32,6 +39,10 @@ const getAvailabilityClass = (date, route) => {
     }
 
     return foundDate.available ? "bg-green-500" : "bg-red-500";
+};
+
+const updateFromPage = ({ month, year }, route) => {
+    getPetCabinData(month, year, route);
 };
 </script>
 
@@ -52,7 +63,10 @@ const getAvailabilityClass = (date, route) => {
             </p>
         </div>
 
-        <Calendar is-expanded>
+        <Calendar
+            is-expanded
+            @update:from-page="(value) => updateFromPage(value, route)"
+        >
             <template v-slot:day-content="{ day, dayEvents }">
                 <div v-on="dayEvents">
                     <div class="flex justify-center">{{ day.label }}</div>
