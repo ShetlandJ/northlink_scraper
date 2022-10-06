@@ -131,31 +131,56 @@ class NorthlinkService
             return;
         }
 
-        $trip = Trip::firstOrCreate([
-            'date' => $date,
-            'price' => $data['price'],
-            'bookable' => $data['bookable'],
-            'noAccommodationsAvailable' => $data['noAccommodationsAvailable'],
-            'noVehicleCapacity' => $data['noVehicleCapacity'],
-            'noPassengerCapacity' => $data['noPassengerCapacity'],
-            'routeCode' => $data['supplier'],
-            'departFrom' => $this->getRouteString($data['supplier'])->departFrom,
-            'returnFrom' => $this->getRouteString($data['supplier'])->returnFrom,
-        ]);
+        if ($trip) {
+            $trip->date = $date;
+            $trip->routeCode = $routeCode;
+            $trip->price = $data['price'];
+            $trip->bookable = $data['bookable'];
+            $trip->noAccommodationsAvailable = $data['noAccommodationsAvailable'];
+            $trip->noVehicleCapacity = $data['noVehicleCapacity'];
+            $trip->noPassengerCapacity = $data['noPassengerCapacity'];
+            $trip->departFrom = $this->getRouteString($data['supplier'])->departFrom;
+            $trip->returnFrom = $this->getRouteString($data['supplier'])->returnFrom;
 
-        foreach ($data['prices'] as $index => $price) {
-            TripPrice::firstOrCreate([
-                "trip_id" => $trip->id,
-                "resourceCode" => $price['resourceCode'],
-                "price" => $price['price'],
-                "ticketType" => $price['ticketType'],
-                "type" => $price['type'],
-                "available" => $price['available'],
-                "yieldClass" => $price['yieldClass'],
-                "capacity" => $price['capacity'],
-                "intervalValue" => $price['intervalValue'],
-                "resourceType" => $price['resourceType'],
+            $trip->save();
+        } else {
+            Trip::create([
+                'date' => $date,
+                'routeCode' => $routeCode,
+                'price' => $data['price'],
+                'bookable' => $data['bookable'],
+                'noAccommodationsAvailable' => $data['noAccommodationsAvailable'],
+                'noVehicleCapacity' => $data['noVehicleCapacity'],
+                'noPassengerCapacity' => $data['noPassengerCapacity'],
+                'departFrom' => $this->getRouteString($data['supplier'])->departFrom,
+                'returnFrom' => $this->getRouteString($data['supplier'])->returnFrom,
             ]);
+        }
+
+        foreach ($data['prices'] as $price) {
+            if (! TripPrice::where('trip_id', $trip->id)->first()) {
+                TripPrice::create([
+                    'trip_id' => $trip->id,
+                    'price' => $price['price'],
+                    'bookable' => $price['bookable'],
+                    'noAccommodationsAvailable' => $price['noAccommodationsAvailable'],
+                    'noVehicleCapacity' => $price['noVehicleCapacity'],
+                    'noPassengerCapacity' => $price['noPassengerCapacity'],
+                ]);
+            } else {
+                $tripPrice = TripPrice::where('trip_id', $trip->id)->first();
+                $tripPrice->resourceCode = $price['resourceCode'];
+                $tripPrice->price = $price['price'];
+                $tripPrice->ticketType = $price['ticketType'];
+                $tripPrice->type = $price['type'];
+                $tripPrice->available = $price['available'];
+                $tripPrice->yieldClass = $price['yieldClass'];
+                $tripPrice->capacity = $price['capacity'];
+                $tripPrice->intervalValue = $price['intervalValue'];
+                $tripPrice->resourceType = $price['resourceType'];
+
+                $tripPrice->save();
+            }
         }
     }
 

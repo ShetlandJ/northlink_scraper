@@ -52,15 +52,15 @@ class ScrapeData extends Command
                 $this->exit();
             }
 
-            // if trip exists for date, skip
-            $tripExists = Trip::where('date', $dateString)
-                ->where('routeCode', $routeCode)
-                ->exists();
+            // // if trip exists for date, skip
+            // $tripExists = Trip::where('date', $dateString)
+            //     ->where('routeCode', $routeCode)
+            //     ->exists();
 
-            if ($tripExists) {
-                logger("Trip exists for date: {$dateString}");
-                continue;
-            }
+            // if ($tripExists) {
+            //     logger("Trip exists for date: {$dateString}");
+            //     continue;
+            // }
 
 
             $data = $this->northlinkService->fetchDataByDate($dateString, $routeCode);

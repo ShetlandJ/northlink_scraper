@@ -3,22 +3,11 @@ import { ref, computed } from "vue";
 import { Head, useForm, Link } from "@inertiajs/inertia-vue3";
 import Container from "../components/Container.vue";
 import NavBar from "../components/NavBar.vue";
-// import Calendar from '../components/PetCabinAvailabilityCalendar.vue';
-
-defineProps({
-    LEAB_petCabins: {
-        type: Array,
-        default: () => [],
-    },
-    ABLE_petCabins: {
-        type: Array,
-        default: () => [],
-    },
-});
+import Tool from "../components/home/Tool.vue";
 </script>
 
 <template>
-    <Head title="Northlink Trip Availability" />
+    <Head title="Northlink Scanner" />
 
     <div
         class="
@@ -33,155 +22,28 @@ defineProps({
     >
         <NavBar />
 
-        <!-- <div class="w-1/2">
-            <Calendar
-                :start-date="new Date(2022, 9, 1)"
-            />
-        </div> -->
+        <Container>
+            <!-- large fonr -->
 
-        <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
-            <div class="flex justify-center pt-8 sm:justify-start sm:pt-0">
-                <h1 class="text-4xl text-gray-600 dark:text-gray-200">
-                    Northlink Trip Availability
-                </h1>
-            </div>
-            <div
-                class="
-                    mt-8
-                    bg-white
-                    dark:bg-gray-800
-                    overflow-hidden
-                    shadow
-                    sm:rounded-lg
-                "
-            >
-                <div class="grid grid-cols-1 md:grid-cols-1">
-                    <div class="p-6">
-                        <div class="flex items-center">
-                            <div
-                                class="
-                                    ml-4
-                                    text-lg text-gray-600
-                                    leading-7
-                                    font-semibold
-                                "
-                            >
-                                <h1
-                                    class="
-                                        text-2xl text-gray-600
-                                        dark:text-gray-200
-                                    "
-                                >
-                                    Lerwick to Aberdeen
-                                </h1>
-                                <div
-                                    class="
-                                        mt-2
-                                        text-gray-500
-                                        dark:text-gray-400
-                                        text-sm
-                                    "
-                                >
-                                    <ul>
-                                        <li
-                                            v-for="petCabin in LEAB_petCabins"
-                                            :key="petCabin.id"
-                                        >
-                                            <span
-                                                class="
-                                                    text-gray-600
-                                                    dark:text-gray-200
-                                                    mr-4
-                                                "
-                                                >{{ petCabin.date }}</span
-                                            >
-                                            <span
-                                                class="
-                                                    text-gray-600
-                                                    dark:text-gray-200
-                                                "
-                                                v-if="petCabin.available"
-                                            >
-                                                ✅
-                                            </span>
-                                            <span
-                                                class="
-                                                    text-gray-600
-                                                    dark:text-gray-200
-                                                "
-                                                v-else
-                                            >
-                                                ⛔️
-                                            </span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
+            <p class="mb-2 text-xl">Welcome to Northlink Scanner.</p>
 
-                            <div
-                                class="
-                                    ml-4
-                                    text-lg text-gray-600
-                                    leading-7
-                                    font-semibold
-                                "
-                            >
-                                <h1
-                                    class="
-                                        text-2xl text-gray-600
-                                        dark:text-gray-200
-                                    "
-                                >
-                                    Aberdeen to Lerwick
-                                </h1>
-                                <div
-                                    class="
-                                        mt-2
-                                        text-gray-500
-                                        dark:text-gray-400
-                                        text-sm
-                                    "
-                                >
-                                    <ul>
-                                        <li
-                                            v-for="petCabin in ABLE_petCabins"
-                                            :key="petCabin.id"
-                                        >
-                                            <span
-                                                class="
-                                                    text-gray-600
-                                                    dark:text-gray-200
-                                                    mr-4
-                                                "
-                                                >{{ petCabin.date }}</span
-                                            >
-                                            <span
-                                                class="
-                                                    text-gray-600
-                                                    dark:text-gray-200
-                                                "
-                                                v-if="petCabin.available"
-                                            >
-                                                ✅
-                                            </span>
-                                            <span
-                                                class="
-                                                    text-gray-600
-                                                    dark:text-gray-200
-                                                "
-                                                v-else
-                                            >
-                                                ⛔️
-                                            </span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <p class="mb-2">
+                The aim of this website is to help those travelling on the
+                Northlink ferry to find cheaper bookings and check availability
+                most easily than using Northlink's booking service.
+            </p>
+            <p class="mb-2">
+                These are the tools that are currently available:
+            </p>
+
+            <div class="bg-gray-300 text-center py-4 lg:px-4">
+                <Tool
+                    emoji="🐶"
+                    text="Check pet cabin availability"
+                    route-name="pets"
+                />
             </div>
-        </div>
+        </Container>
     </div>
 </template>
 
