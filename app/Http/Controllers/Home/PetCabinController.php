@@ -43,8 +43,6 @@ class PetCabinController extends NorthlinkController
         }
 
         $availableTrips = array_values($availableTrips);
-
-        // get first day of month
         $firstDayOfMonth = date('Y-m-d', strtotime($year . '-' . $month . '-01'));
 
         return [

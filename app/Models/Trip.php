@@ -23,9 +23,19 @@ class Trip extends Model
         'returnFrom',
     ];
 
+    protected $casts = [
+        'capacity',
+    ];
+
     public function prices(): HasMany
     {
         return $this->hasMany(TripPrice::class);
+    }
+
+    public function getCapacityAttribute(): int
+    {
+        $tripPrice = $this->prices->where('resourceCode', 'PAX')->first();
+        return $tripPrice ? $tripPrice->capacity : 0;
     }
 
     public function scopeWithPrices(Builder $query): Builder
