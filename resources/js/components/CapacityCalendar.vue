@@ -18,17 +18,19 @@ const today = new Date();
 const month = today.getMonth() + 1;
 const year = today.getFullYear();
 
-getPetCabinData(month, year, 'LEAB');
-getPetCabinData(month, year, 'ABLE');
+getPetCabinData(month, year, "LEAB");
+getPetCabinData(month, year, "ABLE");
 
 const getCapacity = (date, route) => {
-    const year = date.getFullYear()
+    const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
 
-    const formattedDate = `${year}-${month}-${day}`
+    const formattedDate = `${year}-${month}-${day}`;
 
-    const foundDate = dates.value[route].find((item) => item.date === formattedDate);
+    const foundDate = dates.value[route].find(
+        (item) => item.date === formattedDate
+    );
 
     if (!foundDate) {
         return -1;
@@ -68,20 +70,33 @@ const updateFromPage = ({ month, year }, route) => {
                 <div v-on="dayEvents">
                     <div class="flex justify-center">{{ day.label }}</div>
                     <div class="flex justify-center mb-4">
-                            <div
-                                class="rounded-full px-2 py-1 text-xs font-bold text-center"
-                                :class="{
-                                    'bg-green-500': getCapacity(day.date, route) > 400,
-                                    'bg-orange-500': getCapacity(day.date, route) > 200 && getCapacity(day.date, route) < 400,
-                                    'bg-red-500': getCapacity(day.date, route) < 200 && getCapacity(day.date, route) > 0,
-                                    'bg-gray-200': getCapacity(day.date, route) === -1,
-                                }"
-                            >
-                                <span v-if="getCapacity(day.date, route) >= 0">
-                                    {{ getCapacity(day.date, route) }}
-                                </span>
-                                <span v-else>-</span>
-                            </div>
+                        <div
+                            class="
+                                rounded-full
+                                px-2
+                                py-1
+                                text-xs
+                                font-bold
+                                text-center
+                            "
+                            :class="{
+                                'bg-green-500':
+                                    getCapacity(day.date, route) > 400,
+                                'bg-orange-500':
+                                    getCapacity(day.date, route) > 200 &&
+                                    getCapacity(day.date, route) < 400,
+                                'bg-red-500':
+                                    getCapacity(day.date, route) < 200 &&
+                                    getCapacity(day.date, route) > 0,
+                                'bg-gray-200':
+                                    getCapacity(day.date, route) === -1,
+                            }"
+                        >
+                            <span v-if="getCapacity(day.date, route) >= 0">
+                                {{ getCapacity(day.date, route) }}
+                            </span>
+                            <span v-else>-</span>
+                        </div>
                     </div>
                 </div>
             </template>

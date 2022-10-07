@@ -72,9 +72,29 @@ const showingNavigationDropdown = ref(false);
                             dark:text-white dark:hover:text-white
                         "
                         :href="route('pets')"
-                        :class="{ 'font-bold': $page.url === '/suppliers' }"
+                        :class="{ 'font-bold': $page.url === '/pets' }"
                     >
                         Pet Cabin Availability
+                    </Link>
+                </li>
+
+                <li class="md:ml-4 my-2">
+                    <Link
+                        class="
+                            border-t
+                            block
+                            no-underline
+                            hover:underline
+                            py-2
+                            text-grey-darkest
+                            hover:text-black
+                            md:border-none md:p-0
+                            dark:text-white dark:hover:text-white
+                        "
+                        :href="route('capacity')"
+                        :class="{ 'font-bold': $page.url === '/capacity' }"
+                    >
+                        Capacity
                     </Link>
                 </li>
                 <!-- <JetDropdown align="right" width="48">
