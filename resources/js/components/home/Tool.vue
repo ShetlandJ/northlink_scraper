@@ -1,7 +1,8 @@
 <script setup>
 import { Link } from "@inertiajs/inertia-vue3";
+import { computed } from "@vue/runtime-core";
 
-defineProps({
+const props = defineProps({
     emoji: {
         type: String,
         required: true,
@@ -14,31 +15,37 @@ defineProps({
         type: String,
         required: true,
     },
+    colour: {
+        type: String,
+        default: 'indigo',
+    }
 });
+
+const outerClasses = computed(() => {
+    console.log(props.colour);
+    return `
+    p-2
+    items-center
+    leading-none
+    lg:rounded-full
+    flex
+    lg:inline-flex
+    cursor-pointer
+    bg-${props.colour}-800 text-${props.colour}-100
+`});
 </script>
 
 <template>
-    <div class="my-4">
+    <div class="my-4" :key="text">
         <Link
-            class="
-                p-2
-                bg-indigo-800
-                items-center
-                text-indigo-100
-                leading-none
-                lg:rounded-full
-                flex
-                lg:inline-flex
-                cursor-pointer
-            "
             role="alert"
             :href="route(routeName)"
+            :class="outerClasses"
         >
             <span
                 class="
                     flex
                     rounded-full
-                    bg-indigo-500
                     uppercase
                     px-2
                     py-1
@@ -46,6 +53,7 @@ defineProps({
                     font-bold
                     mr-3
                 "
+                :class="`bg-${colour}-500`"
                 >{{ emoji }}</span
             >
             <span class="font-semibold mr-2 text-left flex-auto">

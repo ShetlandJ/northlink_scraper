@@ -23,8 +23,6 @@ import Tool from "../components/home/Tool.vue";
         <NavBar />
 
         <Container>
-            <!-- large fonr -->
-
             <p class="mb-2 text-xl">Welcome to Northlink Scanner.</p>
 
             <p class="mb-2">
@@ -38,9 +36,17 @@ import Tool from "../components/home/Tool.vue";
 
             <div class="bg-gray-300 text-center py-4 lg:px-4">
                 <Tool
+                    emoji="📆"
+                    text="Check available capacity"
+                    route-name="capacity"
+                    colour="green"
+                />
+
+                <Tool
                     emoji="🐶"
                     text="Check pet cabin availability"
                     route-name="pets"
+                    colour="indigo"
                 />
             </div>
         </Container>
