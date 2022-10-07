@@ -157,30 +157,23 @@ class NorthlinkService
             ]);
         }
 
-        foreach ($data['prices'] as $price) {
-            if (! TripPrice::where('trip_id', $trip->id)->first()) {
-                TripPrice::create([
-                    'trip_id' => $trip->id,
-                    'price' => $price['price'],
-                    'bookable' => $price['bookable'],
-                    'noAccommodationsAvailable' => $price['noAccommodationsAvailable'],
-                    'noVehicleCapacity' => $price['noVehicleCapacity'],
-                    'noPassengerCapacity' => $price['noPassengerCapacity'],
-                ]);
-            } else {
-                $tripPrice = TripPrice::where('trip_id', $trip->id)->first();
-                $tripPrice->resourceCode = $price['resourceCode'];
-                $tripPrice->price = $price['price'];
-                $tripPrice->ticketType = $price['ticketType'];
-                $tripPrice->type = $price['type'];
-                $tripPrice->available = $price['available'];
-                $tripPrice->yieldClass = $price['yieldClass'];
-                $tripPrice->capacity = $price['capacity'];
-                $tripPrice->intervalValue = $price['intervalValue'];
-                $tripPrice->resourceType = $price['resourceType'];
+        // delete all tripPrices
+        TripPrice::where('trip_id', $trip->id)->delete();
 
-                $tripPrice->save();
-            }
+        foreach ($data['prices'] as $price) {
+            $tripPrice = new TripPrice();
+            $tripPrice->trip_id = $trip->id;
+            $tripPrice->resourceCode = $price['resourceCode'];
+            $tripPrice->price = $price['price'];
+            $tripPrice->ticketType = $price['ticketType'];
+            $tripPrice->type = $price['type'];
+            $tripPrice->available = $price['available'];
+            $tripPrice->yieldClass = $price['yieldClass'];
+            $tripPrice->capacity = $price['capacity'];
+            $tripPrice->intervalValue = $price['intervalValue'];
+            $tripPrice->resourceType = $price['resourceType'];
+
+            $tripPrice->save();
         }
     }
 
