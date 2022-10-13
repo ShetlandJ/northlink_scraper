@@ -7,13 +7,13 @@ use App\Models\Token;
 use App\Services\NorthlinkService;
 use Illuminate\Console\Command;
 
-class ScrapeData extends Command
+class ScrapeCarDataOnePax extends Command
 {
     // signature
-    protected $signature = 'scrape:data';
+    protected $signature = 'scrape:car-2';
 
     // description
-    protected $description = 'Scrape data from Northlink';
+    protected $description = 'Scrape car data from Northlink';
 
     // northlink service
     private NorthlinkService $northlinkService;
@@ -51,17 +51,6 @@ class ScrapeData extends Command
             if ($continueCounter > 5) {
                 $this->exit();
             }
-
-            // // if trip exists for date, skip
-            // $tripExists = Trip::where('date', $dateString)
-            //     ->where('routeCode', $routeCode)
-            //     ->exists();
-
-            // if ($tripExists) {
-            //     logger("Trip exists for date: {$dateString}");
-            //     continue;
-            // }
-
 
             $data = $this->northlinkService->fetchDataByDate($dateString, $routeCode);
             if (!$data) {
