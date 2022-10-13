@@ -17,6 +17,13 @@ class NorthlinkService
     private const ABERDEEN_TO_LERWICK = 'ABLE';
     private const TOKEN_GENERATION_LINK = 'https://www.northlinkferries.co.uk/api/booking/create';
 
+    private Client $client;
+
+    public function __construct()
+    {
+        $this->client = new Client();
+    }
+
     public function getToken(): ?string
     {
         $token = Token::first();
@@ -48,10 +55,10 @@ class NorthlinkService
             "departureRequests" => [
                 [
                     "route" => $outbound,
-                    "date" => date("Y-m-d"),
+                    "date" => date("Y-m-d", strtotime('tomorrow')),
                     "resources" => [[
                         "resourceCode" => "PAX",
-                        "amount" => "2",
+                        "amount" => "1",
                         "resourceType" => "A",
                         "type" => "STD"
                     ]],
@@ -62,7 +69,7 @@ class NorthlinkService
                     "date" => date("Y-m-d", strtotime("+5 days")),
                     "resources" => [[
                         "resourceCode" => "PAX",
-                        "amount" => "2",
+                        "amount" => "1",
                         "resourceType" => "A",
                         "type" => "STD"
                     ]],
@@ -76,13 +83,11 @@ class NorthlinkService
     {
         $payload = $this->generatePayloadForToken();
 
-        $client = new Client();
-
         $options = [
             'json' => $payload
         ];
 
-        $postReq = $client->post(self::TOKEN_GENERATION_LINK, $options);
+        $postReq = $this->client->post(self::TOKEN_GENERATION_LINK, $options);
 
         $json = $postReq->getBody();
         $data = json_decode($json, true);
@@ -98,9 +103,7 @@ class NorthlinkService
     {
         $token = $this->getToken();
 
-        $client = new Client();
-
-        $res = $client->request(
+        $res = $this->client->request(
             'GET',
             sprintf(
                 'https://www.northlinkferries.co.uk/api/departures/%s/prices/%s',
@@ -114,11 +117,15 @@ class NorthlinkService
             ]
         );
 
+        logger(["TOKEN!", $token]);
+
         $json = $res->getBody();
         $data = json_decode($json, true);
-        $prices = isset($data["res"]['result'][0]) ? $data["res"]['result'][0] : null;
+        $results = isset($data["res"]['result'][0]) ? $data["res"]['result'][0] : null;
 
-        return $prices;
+        $this->fetchAccomodationsForDate($token);
+
+        return $results;
     }
 
     public function updateOrCreateTripRecords(array $data, string $date, string $routeCode)
@@ -134,13 +141,16 @@ class NorthlinkService
         if ($trip) {
             $trip->date = $date;
             $trip->routeCode = $routeCode;
-            $trip->price = $data['price'];
+            $trip->price = (float) $data['price'];
             $trip->bookable = $data['bookable'];
             $trip->noAccommodationsAvailable = $data['noAccommodationsAvailable'];
             $trip->noVehicleCapacity = $data['noVehicleCapacity'];
             $trip->noPassengerCapacity = $data['noPassengerCapacity'];
             $trip->departFrom = $this->getRouteString($data['supplier'])->departFrom;
             $trip->returnFrom = $this->getRouteString($data['supplier'])->returnFrom;
+            $trip->startDate = $data['startDate'];
+            $trip->hashId = $data['hashId'];
+            $trip->identifier = $data['identifier'];
 
             $trip->save();
         } else {
@@ -203,4 +213,92 @@ class NorthlinkService
 
         return (object) $payload;
     }
+
+    public function fetchAccomodationsForDate($token)
+    {
+        $part1 = [
+            'route' => 'LEAB',
+            'date' => '2022-10-14',
+            'resources' => [
+                'amount' => 2,
+                'resourceCode' => 'PAX',
+                'resourceType' => 'A',
+                'type' => 'STD'
+            ],
+            'hashId' => 'LEAB120221201900',
+        ];
+
+        $part2 = [
+            'route' => 'ABLE',
+            'date' => '2022-10-16',
+            'resources' => [
+                'amount' => 2,
+                'resourceCode' => 'PAX',
+                'resourceType' => 'A',
+                'type' => 'STD'
+            ],
+            'hashId' => 'ABLE202211241700',
+        ];
+
+        $data = [
+            $part1, $part2
+        ];
+
+                // create a get request with form data to https://www.northlinkferries.co.uk/api/accommodations/LEAB
+        $firstToken = Trip::where('startDate', '>', '2022-10-14 00:00:00')
+            ->first()
+            ->identifier;
+
+        logger(["SECOND TOKEN", $token]);
+
+        $res =$this->client->request(
+            'POST',
+            'https://www.northlinkferries.co.uk/api/book/departures',
+            [
+                'headers' => [
+                    'Authorization' => $token,
+                ],
+                'form_params' => [
+                    'identifiers' => [
+                        'Tk9STXxMRUFCfDIwMjItMTEtMjAgMTk6MDB8UEFYfFNURHxBQXxCZXN0UHJpY2VBbW91bnQ=&',
+                        'Tk9STXxBQkxFfDIwMjItMTEtMjQgMTc6MDB8UEFYfFNURHxBQXxCZXN0UHJpY2VBbW91bnQ=&',
+                    ]
+                ]
+            ],
+        );
+
+        $res = $this->client->request(
+            'POST',
+            'https://www.northlinkferries.co.uk/api/accommodations/LEAB',
+            [
+                'headers' => [
+                    'Authorization' => $token,
+                ],
+            ],
+        );
+
+        $json = $res->getBody();
+        $data = json_decode($json, true);
+        dd($data);
+
+
+
+        // [
+        //     "data[0][route]"=> "LEAB",
+        //     "data[0][date]" => "2022-11-20",
+        //     "data[0][resources][0][amount]" => 2,
+        //     "data[0][resources][0][resourceCode]" =>"PAX",
+        //     "data[0][resources][0][resourceType]" => "A",
+        //     "data[0][resources][0][type]" => "STD",
+        //     "data[0][hashId]" => "LEAB20221120",
+        //     "data[1][route]" => "ABLE",
+        //     "data[1][date]" => "2022-11-24",
+        //     "data[1][resources][0][amount]" => 2,
+        //     "data[1][resources][0][resourceCode]" => "PAX",
+        //     "data[1][resources][0][resourceType]" => "A",
+        //     "data[1][resources][0][type]" => "STD",
+        //     "data[1][hashId]" => "ABLE20221124",
+        // ]
+    }
+
 }
