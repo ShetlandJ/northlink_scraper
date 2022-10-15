@@ -19,30 +19,30 @@ class PetCabinController extends NorthlinkController
         $year = (int) Route::input('year');
         $month = (int) Route::input('month');
 
-        $trip = Trip::query();
-        $trip->join('trip_prices', 'trips.id', '=', 'trip_prices.trip_id');
-        $trip->where('trip_prices.resourceCode', 'like', '%NPET%');
-        $trip->where('trips.date', '>=', now()->format('Y-m-d'));
-        $trip->where('trips.date', '<=', now()->addDays(30)->format('Y-m-d'));
+        // $trip = Trip::query();
+        // $trip->join('trip_prices', 'trips.id', '=', 'trip_prices.trip_id');
+        // $trip->where('trip_prices.resourceCode', 'like', '%NPET%');
+        // $trip->where('trips.date', '>=', now()->format('Y-m-d'));
+        // $trip->where('trips.date', '<=', now()->addDays(30)->format('Y-m-d'));
 
-        $trips = $trip->get();
+        // $trips = $trip->get();
 
-        $availableTrips = [];
+        // $availableTrips = [];
 
-        foreach ($trips as $trip) {
-            if (!isset($availableTrips[$trip->date])) {
-                $availableTrips[$trip->date] = [
-                    'date' => $trip->date,
-                    'available' => 0,
-                ];
-            }
+        // foreach ($trips as $trip) {
+        //     if (!isset($availableTrips[$trip->date])) {
+        //         $availableTrips[$trip->date] = [
+        //             'date' => $trip->date,
+        //             'available' => 0,
+        //         ];
+        //     }
 
-            if ($trip->available) {
-                $availableTrips[$trip->date]['available'] = 1;
-            }
-        }
+        //     if ($trip->available) {
+        //         $availableTrips[$trip->date]['available'] = 1;
+        //     }
+        // }
 
-        $availableTrips = array_values($availableTrips);
+        // $availableTrips = array_values($availableTrips);
         $firstDayOfMonth = date('Y-m-d', strtotime($year . '-' . $month . '-01'));
 
         return [
@@ -69,6 +69,7 @@ class PetCabinController extends NorthlinkController
                 $availableTrips[$trip->date] = [
                     'date' => $trip->date,
                     'available' => 0,
+                    'in_the_past' => strtotime($trip->date) < strtotime(date('Y-m-d')),
                 ];
             }
 

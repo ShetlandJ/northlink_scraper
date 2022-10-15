@@ -83,7 +83,7 @@ class ScrapeCarDataOnePax extends Command
     private function createDatesArray(): array
     {
         $dates = [];
-        $startDate = '2022-10-05';
+        $startDate = date('Y-m-d');
         $endDate = '2022-12-30';
         $currentDate = $startDate;
         while ($currentDate <= $endDate) {

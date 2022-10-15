@@ -116,7 +116,6 @@ class NorthlinkService
         $data = json_decode($json, true);
         $prices = isset($data["res"]['result'][0]) ? $data["res"]['result'][0] : null;
 
-        dd($prices);
         return $prices;
     }
 
