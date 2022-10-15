@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Trip;
 use App\Models\Token;
+use App\Services\ConfigService;
 use App\Services\NorthlinkService;
 use Illuminate\Console\Command;
 
@@ -17,16 +18,20 @@ class ScrapeTwoPaxData extends Command
 
     // northlink service
     private NorthlinkService $northlinkService;
+    private ConfigService $configService;
 
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct(NorthlinkService $northlinkService)
-    {
+    public function __construct(
+        NorthlinkService $northlinkService,
+        ConfigService $configService
+    ) {
         parent::__construct();
         $this->northlinkService = $northlinkService;
+        $this->configService = $configService;
     }
 
     /**
@@ -40,7 +45,16 @@ class ScrapeTwoPaxData extends Command
         $routeCode = $this->choice('Which token do you want to use?', ['ABLE', 'LEAB']);
 
         $continueCounter = 0;
-        $this->northlinkService->fetchToken();
+
+        $payload = $this->configService->formatRequest(
+            Trip::LERWICK_TO_ABERDEEN,
+            TRIP::ABERDEEN_TO_LERWICK,
+            date('Y-m-d', strtotime("+1 day")),
+            date('Y-m-d', strtotime("+5 days")),
+            $paxAmount = "2",
+        );
+
+        $this->northlinkService->fetchToken($payload);
         // create array of dates from 2022-10-05 to 2022-12-30
         $dates = $this->createDatesArray();
 
