@@ -28,6 +28,10 @@ Route::get('/pets', function() {
     return Inertia::render('PetCabinAvailability');
 })->name('pets');
 
+Route::get('/cars', function() {
+    return Inertia::render('CarAvailabilityPage');
+})->name('cars');
+
 Route::get('/capacity', function() {
     return Inertia::render('CapacityPage');
 })->name('capacity');

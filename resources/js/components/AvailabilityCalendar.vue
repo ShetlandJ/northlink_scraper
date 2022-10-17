@@ -4,14 +4,6 @@ import axios from "axios";
 import { ref } from "@vue/runtime-core";
 
 const props = defineProps({
-    requestData: {
-        type: Function,
-        required: true,
-    },
-    dates: {
-        type: Object,
-        required: true,
-    },
     title: {
         type: String,
         required: true,
@@ -20,13 +12,33 @@ const props = defineProps({
         type: String,
         required: true,
     },
+    apiRoute: {
+        type: String,
+        required: true,
+    },
 });
+
+const dates = ref({
+    LEAB: [],
+    ABLE: [],
+});
+
+const requestData = async (month, year, route = null) => {
+    const { data } = await axios.get(`/api/${props.apiRoute}/${month}/${year}`);
+
+    if (!route) {
+        dates.value.LEAB = data.LEAB;
+        dates.value.ABLE = data.ABLE;
+    } else {
+        dates.value[route] = data[route];
+    }
+};
 
 const today = new Date();
 const month = today.getMonth() + 1;
 const year = today.getFullYear();
 
-props.requestData(month, year);
+requestData(month, year);
 
 const getAvailabilityClass = (date, route) => {
     const year = date.getFullYear();
@@ -35,7 +47,7 @@ const getAvailabilityClass = (date, route) => {
 
     const formattedDate = `${year}-${month}-${day}`;
 
-    const foundDate = props.dates[route].find(
+    const foundDate = dates.value[route].find(
         (item) => item.date === formattedDate
     );
 
@@ -49,7 +61,7 @@ const getAvailabilityClass = (date, route) => {
 };
 
 const updateFromPage = ({ month, year }, route) => {
-    props.requestData(month, year, route);
+    requestData(month, year, route);
 };
 </script>
 
