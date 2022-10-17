@@ -69,7 +69,7 @@ class PetCabinController extends NorthlinkController
                 $availableTrips[$trip->date] = [
                     'date' => $trip->date,
                     'available' => 0,
-                    'in_the_past' => strtotime($trip->date) < strtotime(date('Y-m-d')),
+                    'past' => strtotime($trip->date) < strtotime(date('Y-m-d')),
                 ];
             }
 

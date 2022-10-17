@@ -3,7 +3,53 @@ import { ref, computed } from "vue";
 import { Head, useForm, Link } from "@inertiajs/inertia-vue3";
 import Container from "../components/Container.vue";
 import NavBar from "../components/NavBar.vue";
-import PetCabinAvailabilityCalendar from "../components/PetCabinAvailabilityCalendar.vue";
+import AvailabilityCalendar from "../components/AvailabilityCalendar.vue";
+
+const dates = ref({
+    LEAB: [],
+    ABLE: [],
+});
+
+const getPetCabinData = async (month, year, route = null) => {
+    const { data } = await axios.get(`/api/pet-cabins/${month}/${year}`);
+
+    if (!route) {
+        dates.value.LEAB = data.LEAB;
+        dates.value.ABLE = data.ABLE;
+    } else {
+        dates.value[route] = data[route];
+    }
+};
+
+// const today = new Date();
+// const month = today.getMonth() + 1;
+// const year = today.getFullYear();
+
+// getPetCabinData(month, year);
+
+// const getAvailabilityClass = (date, route) => {
+//     const year = date.getFullYear();
+//     const month = date.getMonth() + 1;
+//     const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+
+//     const formattedDate = `${year}-${month}-${day}`;
+
+//     const foundDate = dates.value[route].find(
+//         (item) => item.date === formattedDate
+//     );
+
+//     if (!foundDate) {
+//         return "bg-gray-200";
+//     }
+
+//     if (foundDate.past) return "bg-indigo-300";
+
+//     return foundDate.available ? "bg-green-500" : "bg-red-500";
+// };
+
+// const updateFromPage = ({ month, year }, route) => {
+//     getPetCabinData(month, year, route);
+// };
 </script>
 
 <template>
@@ -22,34 +68,14 @@ import PetCabinAvailabilityCalendar from "../components/PetCabinAvailabilityCale
     >
         <NavBar />
         <Container>
-            <div class="flex justify-center pt-8 sm:justify-start sm:pt-0 mb-4">
-                <h1 class="text-4xl text-gray-600 dark:text-gray-200">
-                    Pet Cabin Availability
-                </h1>
-            </div>
-
-            <p class="mb-2">
-                This tool helps to determine pet cabin availability on the
-                Lerwick/Aberdeen routes.
-            </p>
-            <div class="mb-2">
-                <div class="flex items-center">
-                    <div class="availability-dot bg-green-500" />
-                    <span class="ml-3">Available</span>
-                </div>
-                <div class="flex items-center">
-                    <div class="availability-dot bg-red-500" />
-                    <span class="ml-3">Unavailable</span>
-                </div>
-                <div class="flex items-center">
-                    <div class="availability-dot bg-gray-200" />
-                    <span class="ml-3">Unknown</span>
-                </div>
-            </div>
-
-            <hr class="my-4" />
-
-            <PetCabinAvailabilityCalendar :start-date="new Date(2022, 9, 1)" />
+            <AvailabilityCalendar
+                :start-date="new Date(2022, 9, 1)"
+                :request-data="getPetCabinData"
+                :dates="dates"
+                title="Pet cabin availabililty"
+                description="This tool helps to determine pet cabin availability on the
+                Lerwick/Aberdeen routes."
+            />
         </Container>
     </div>
 </template>
