@@ -132,8 +132,6 @@ class NorthlinkService
         $data = json_decode($json, true);
         $results = isset($data["res"]['result'][0]) ? $data["res"]['result'][0] : null;
 
-        // $this->fetchAccomodationsForDate($token);
-
         return $results;
     }
 
@@ -293,7 +291,6 @@ class NorthlinkService
         // reset all TripAccommodations
         TripAccommodation::where('trip_id', $outbound->id)->delete();
 
-        logger("A");
         try {
             $res = $this->client->request(
                 'POST',
@@ -305,7 +302,6 @@ class NorthlinkService
                     'http_errors' => false
                 ],
             );
-            logger("B");
 
             $json = $res->getBody();
             $data = json_decode($json, true);
@@ -340,92 +336,4 @@ class NorthlinkService
             ]);
         }
     }
-
-    public function fetchAccomodationsForDate($token)
-    {
-        $part1 = [
-            'route' => 'LEAB',
-            'date' => '2022-10-14',
-            'resources' => [
-                'amount' => 2,
-                'resourceCode' => 'PAX',
-                'resourceType' => 'A',
-                'type' => 'STD'
-            ],
-            'hashId' => 'LEAB120221201900',
-        ];
-
-        $part2 = [
-            'route' => 'ABLE',
-            'date' => '2022-10-16',
-            'resources' => [
-                'amount' => 2,
-                'resourceCode' => 'PAX',
-                'resourceType' => 'A',
-                'type' => 'STD'
-            ],
-            'hashId' => 'ABLE202211241700',
-        ];
-
-        $data = [
-            $part1, $part2
-        ];
-
-                // create a get request with form data to https://www.northlinkferries.co.uk/api/accommodations/LEAB
-        $firstToken = Trip::where('startDate', '>', '2022-10-14 00:00:00')
-            ->first()
-            ->identifier;
-
-        logger(["SECOND TOKEN", $token]);
-
-        $res = $this->client->request(
-            'POST',
-            'https://www.northlinkferries.co.uk/api/book/departures',
-            [
-                'headers' => [
-                    'Authorization' => $token,
-                ],
-                'form_params' => [
-                    'identifiers' => [
-                        'Tk9STXxMRUFCfDIwMjItMTEtMjAgMTk6MDB8UEFYfFNURHxBQXxCZXN0UHJpY2VBbW91bnQ=&',
-                        'Tk9STXxBQkxFfDIwMjItMTEtMjQgMTc6MDB8UEFYfFNURHxBQXxCZXN0UHJpY2VBbW91bnQ=&',
-                    ]
-                ]
-            ],
-        );
-
-        $res = $this->client->request(
-            'POST',
-            'https://www.northlinkferries.co.uk/api/accommodations/LEAB',
-            [
-                'headers' => [
-                    'Authorization' => $token,
-                ],
-            ],
-        );
-
-        $json = $res->getBody();
-        $data = json_decode($json, true);
-        dd($data);
-
-
-
-        // [
-        //     "data[0][route]"=> "LEAB",
-        //     "data[0][date]" => "2022-11-20",
-        //     "data[0][resources][0][amount]" => 2,
-        //     "data[0][resources][0][resourceCode]" =>"PAX",
-        //     "data[0][resources][0][resourceType]" => "A",
-        //     "data[0][resources][0][type]" => "STD",
-        //     "data[0][hashId]" => "LEAB20221120",
-        //     "data[1][route]" => "ABLE",
-        //     "data[1][date]" => "2022-11-24",
-        //     "data[1][resources][0][amount]" => 2,
-        //     "data[1][resources][0][resourceCode]" => "PAX",
-        //     "data[1][resources][0][resourceType]" => "A",
-        //     "data[1][resources][0][type]" => "STD",
-        //     "data[1][hashId]" => "ABLE20221124",
-        // ]
-    }
-
 }
