@@ -4,29 +4,34 @@ namespace App\Console\Commands;
 
 use App\Models\Trip;
 use App\Models\Token;
+use App\Services\ConfigService;
 use App\Services\NorthlinkService;
 use Illuminate\Console\Command;
 
-class ScrapeData extends Command
+class ScrapeCarDataOnePax extends Command
 {
     // signature
-    protected $signature = 'scrape:data';
+    protected $signature = 'scrape:car-2';
 
     // description
-    protected $description = 'Scrape data from Northlink';
+    protected $description = 'Scrape car data from Northlink';
 
     // northlink service
     private NorthlinkService $northlinkService;
+    private ConfigService $configService;
 
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct(NorthlinkService $northlinkService)
-    {
+    public function __construct(
+        NorthlinkService $northlinkService,
+        ConfigService $configService
+    ) {
         parent::__construct();
         $this->northlinkService = $northlinkService;
+        $this->configService = $configService;
     }
 
     /**
@@ -36,18 +41,24 @@ class ScrapeData extends Command
      */
     public function handle()
     {
-        // start timer
-        $start = microtime(true);
-
         // give users an option to choose between ABLE or LEAB
-        $routeCode = $this->choice('Which token do you want to use?', ['ABLE', 'LEAB'], 'LEAB');
+        $routeCode = $this->choice('Which token do you want to use?', ['ABLE', 'LEAB']);
 
         $continueCounter = 0;
-        $this->northlinkService->fetchToken();
-        // create array of dates from 2022-10-05 to 2022-12-30
+
+        $payload = $this->configService->formatRequest(
+            Trip::LERWICK_TO_ABERDEEN,
+            TRIP::ABERDEEN_TO_LERWICK,
+            date('Y-m-d', strtotime("+1 day")),
+            date('Y-m-d', strtotime("+5 days")),
+            $paxAmount = "1",
+            $vehicleCode = 'CAR'
+        );
+
+        $this->northlinkService->fetchToken($payload);
+
         $dates = $this->createDatesArray();
 
-        // create progrss
         $bar = $this->output->createProgressBar(count($dates));
 
         foreach ($dates as $dateString) {
@@ -60,26 +71,20 @@ class ScrapeData extends Command
                 $continueCounter++;
                 continue;
             }
-            // dd($data);
             $this->northlinkService->updateOrCreateTripRecords($data, $dateString, $routeCode);
-
+            // advance progress bar
             $bar->advance();
         }
 
-        $end = microtime(true);
 
-        $minutes = ($end - $start) / 60;
-        $this->info(sprintf('The operation took %s minutes', $minutes));
-
-        $bar->finish();
         return 0;
     }
 
     private function createDatesArray(): array
     {
         $dates = [];
-        $startDate = date("Y-m-d", strtotime('tomorrow'));
-        $endDate = '2022-10-30';
+        $startDate = date('Y-m-d');
+        $endDate = '2022-12-30';
         $currentDate = $startDate;
         while ($currentDate <= $endDate) {
             $dates[] = $currentDate;
