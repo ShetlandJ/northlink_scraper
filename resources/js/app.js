@@ -13,6 +13,7 @@ import { SetupCalendar, Calendar, DatePicker } from 'v-calendar';
 // // Use the components
 // app.component('Calendar', Calendar)
 // app.component('DatePicker', DatePicker)
+import easySpinner from 'vue-easy-spinner';
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -20,6 +21,7 @@ createInertiaApp({
     setup({ el, app, props, plugin }) {
         return createApp({ render: () => h(app, props) })
             .use(plugin)
+            .use(easySpinner, {prefix: 'easy'})
             .use(SetupCalendar)
             .mixin({ methods: { route } })
             .mixin({

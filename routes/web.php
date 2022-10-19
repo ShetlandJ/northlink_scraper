@@ -32,6 +32,10 @@ Route::get('/cars', function() {
     return Inertia::render('CarAvailabilityPage');
 })->name('cars');
 
+Route::get('/rooms', function() {
+    return Inertia::render('RoomsAvailabilityPage');
+})->name('accommodation');
+
 Route::get('/capacity', function() {
     return Inertia::render('CapacityPage');
 })->name('capacity');

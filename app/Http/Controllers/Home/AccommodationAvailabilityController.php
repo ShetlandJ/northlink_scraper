@@ -40,34 +40,45 @@ class AccommodationAvailabilityController extends NorthlinkController
         $trip->select(
             'trips.id',
             'trips.date',
-            'trip_accommodations.resourceCode',
-            'trip_accommodations.capacity',
+            'trip_accommodations.resourceCode as roomType',
+            'trip_accommodations.capacity as roomCapacity',
             'trip_accommodations.price',
-            'trip_accommodations.description'
+            'trip_accommodations.description',
         );
         $trip->join('trip_accommodations', 'trips.id', '=', 'trip_accommodations.trip_id');
-        $trip->where('trip_accommodations.resourceCode', $roomType);
+        // $trip->where('trip_accommodations.resourceCode', $roomType);
         $trip->where('trips.date', '>=', $firstDayOfMonth);
         $trip->where('trips.date', '<=', date('Y-m-d', strtotime($firstDayOfMonth . ' + 1 month')));
         $trip->where('trips.routeCode', $routeCode);
 
         $trips = $trip->get();
 
-        $availableTrips = [];
+        $roomAvailability = [];
 
         foreach ($trips as $trip) {
-            if (!isset($availableTrips[$trip->date])) {
-                $availableTrips[$trip->date] = [
+            if (isset($roomAvailability[$trip->date]) && $trip->roomType !== $roomType) {
+                continue;
+            }
+
+            $roomAvailability[$trip->date] = [
+                'date' => $trip->date,
+                'available' => false,
+                'price' => $trip->price,
+                'past' => strtotime($trip->date) < strtotime(date('Y-m-d')),
+            ];
+
+            if ($trip->roomType === $roomType) {
+                $roomAvailability[$trip->date] = [
                     'date' => $trip->date,
-                    'available' => $trip->capacity,
-                    'past' => strtotime($trip->date) < strtotime(date('Y-m-d')),
+                    'available' => (bool) $trip->roomCapacity,
                     'price' => $trip->price,
+                    'past' => strtotime($trip->date) < strtotime(date('Y-m-d')),
                 ];
             }
         }
 
-        $availableTrips = array_values($availableTrips);
+        $roomAvailability = array_values($roomAvailability);
 
-        return $availableTrips;
+        return $roomAvailability;
     }
 }
