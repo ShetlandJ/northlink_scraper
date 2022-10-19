@@ -14,7 +14,7 @@ class GetTripAccommodation extends Command
     protected $signature = 'scrape:accom';
 
     // description
-    protected $description = 'Syncs available accomodation with per trip route';
+    protected $description = 'Syncs available accommodation with per trip route';
 
     // northlink service
     private NorthlinkService $northlinkService;
