@@ -8,11 +8,6 @@ const appName = window.document.getElementsByTagName('title')[0]?.innerText || '
 
 import { SetupCalendar, Calendar, DatePicker } from 'v-calendar';
 
-// Setup plugin for defaults or `$screens` (optional)
-// app.use(SetupCalendar, {})
-// // Use the components
-// app.component('Calendar', Calendar)
-// app.component('DatePicker', DatePicker)
 import easySpinner from 'vue-easy-spinner';
 
 createInertiaApp({

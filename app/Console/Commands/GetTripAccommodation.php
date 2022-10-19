@@ -77,7 +77,6 @@ class GetTripAccommodation extends Command
             $bar->advance();
         }
 
-
         return 0;
     }
 

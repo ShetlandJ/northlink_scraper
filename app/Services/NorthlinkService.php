@@ -142,8 +142,11 @@ class NorthlinkService
             ->first();
     }
 
-    public function updateOrCreateTripRecords(array $data, string $date, string $routeCode)
-    {
+    public function updateOrCreateTripRecords(
+        array $data,
+        string $date,
+        string $routeCode
+    ): void {
         $trip = $this->getTripByRouteAndDate($routeCode, $date);
 
         if ($trip && $trip->created_at->diffInMinutes(now()) < 15) {
@@ -151,7 +154,6 @@ class NorthlinkService
         }
 
         if ($trip) {
-            logger($data['identifier']);
             $trip->date = $date;
             $trip->routeCode = $routeCode;
             $trip->price = (float) $data['price'];

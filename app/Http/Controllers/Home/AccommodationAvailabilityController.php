@@ -46,7 +46,6 @@ class AccommodationAvailabilityController extends NorthlinkController
             'trip_accommodations.description',
         );
         $trip->join('trip_accommodations', 'trips.id', '=', 'trip_accommodations.trip_id');
-        // $trip->where('trip_accommodations.resourceCode', $roomType);
         $trip->where('trips.date', '>=', $firstDayOfMonth);
         $trip->where('trips.date', '<=', date('Y-m-d', strtotime($firstDayOfMonth . ' + 1 month')));
         $trip->where('trips.routeCode', $routeCode);
