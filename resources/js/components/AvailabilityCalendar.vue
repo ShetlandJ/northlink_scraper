@@ -85,7 +85,7 @@ const updateFromPage = ({ month, year }, route) => {
     requestData(month, year, route);
 };
 
-watch(() => props.routePayload, (newValue, oldValue) => requestData(viewingMonth.value, viewingYear.value));
+watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYear.value));
 
 </script>
 
@@ -123,7 +123,7 @@ watch(() => props.routePayload, (newValue, oldValue) => requestData(viewingMonth
 
         <hr class="my-4" />
 
-        <div v-for="route in ['LEAB', 'ABLE']" :key="route">
+        <div v-for="(route, index) in ['LEAB', 'ABLE']" :key="route">
             <div class="flex justify-center">
                 <p
                     v-if="route === 'LEAB'"
@@ -170,9 +170,10 @@ watch(() => props.routePayload, (newValue, oldValue) => requestData(viewingMonth
                     </template>
                 </Calendar>
             </div>
+
+            <hr v-if="index === 0" class="mb-4" />
         </div>
 
-        <!-- <hr v-if="index === 0" class="mb-4" /> -->
     </div>
 </template>
 
