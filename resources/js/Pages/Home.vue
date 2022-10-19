@@ -34,7 +34,7 @@ import Tool from "../components/home/Tool.vue";
                 These are the tools that are currently available:
             </p>
 
-            <div class="bg-gray-300 text-center py-4 lg:px-4">
+            <div class="bg-gray-200 text-center py-4 lg:px-4">
                 <Tool
                     emoji="📆"
                     text="Check available capacity"
@@ -54,6 +54,13 @@ import Tool from "../components/home/Tool.vue";
                     text="Check car availability"
                     route-name="cars"
                     colour="yellow"
+                />
+
+                <Tool
+                    emoji="🛏"
+                    text="Room availability"
+                    route-name="accommodation"
+                    colour="red"
                 />
             </div>
         </Container>

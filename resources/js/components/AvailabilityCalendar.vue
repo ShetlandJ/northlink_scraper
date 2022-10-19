@@ -1,7 +1,7 @@
 <script setup>
 import "v-calendar/dist/style.css";
 import axios from "axios";
-import { ref } from "@vue/runtime-core";
+import { ref, watch } from "@vue/runtime-core";
 
 const props = defineProps({
     title: {
@@ -16,6 +16,10 @@ const props = defineProps({
         type: String,
         required: true,
     },
+    routePayload: {
+        type: Object,
+        default: null,
+    },
 });
 
 const dates = ref({
@@ -23,8 +27,24 @@ const dates = ref({
     ABLE: [],
 });
 
+const loading = ref(false);
+
+const viewingMonth = ref(null);
+const viewingYear = ref(null);
+
 const requestData = async (month, year, route = null) => {
-    const { data } = await axios.get(`/api/${props.apiRoute}/${month}/${year}`);
+    loading.value = true;
+    let params = "";
+    if (props.routePayload) {
+        params = new URLSearchParams(props.routePayload).toString();
+    }
+
+    viewingMonth.value = month;
+    viewingYear.value = year;
+
+    const { data } = await axios.get(
+        `/api/${props.apiRoute}/${month}/${year}?${params}`
+    );
 
     if (!route) {
         dates.value.LEAB = data.LEAB;
@@ -32,6 +52,7 @@ const requestData = async (month, year, route = null) => {
     } else {
         dates.value[route] = data[route];
     }
+    loading.value = false;
 };
 
 const today = new Date();
@@ -63,6 +84,9 @@ const getAvailabilityClass = (date, route) => {
 const updateFromPage = ({ month, year }, route) => {
     requestData(month, year, route);
 };
+
+watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYear.value));
+
 </script>
 
 <template>
@@ -95,6 +119,8 @@ const updateFromPage = ({ month, year }, route) => {
             </div>
         </div>
 
+        <slot name="before-calendar" />
+
         <hr class="my-4" />
 
         <div v-for="(route, index) in ['LEAB', 'ABLE']" :key="route">
@@ -113,30 +139,52 @@ const updateFromPage = ({ month, year }, route) => {
                 </p>
             </div>
 
-            <Calendar
-                class="mb-6"
-                is-expanded
-                @update:from-page="(value) => updateFromPage(value, route)"
-            >
-                <template v-slot:day-content="{ day, dayEvents }">
-                    <div v-on="dayEvents">
-                        <div class="flex justify-center">{{ day.label }}</div>
-                        <div class="flex justify-center mb-4">
-                            <div
-                                class="availability-dot"
-                                :class="getAvailabilityClass(day.date, route)"
-                            />
+            <div>
+                <div class="calendar-spinner" v-if="loading">
+                    <easy-spinner
+                        type="spins"
+                        size="50"
+                        color="#22C55E"
+                    />
+                </div>
+
+                <Calendar
+                    class="mb-6"
+                    is-expanded
+                    @update:from-page="(value) => updateFromPage(value, route)"
+                >
+                    <template v-slot:day-content="{ day, dayEvents }">
+                        <div v-on="dayEvents">
+                            <div class="flex justify-center">
+                                {{ day.label }}
+                            </div>
+                            <div class="flex justify-center mb-4">
+                                <div
+                                    class="availability-dot"
+                                    :class="
+                                        getAvailabilityClass(day.date, route)
+                                    "
+                                />
+                            </div>
                         </div>
-                    </div>
-                </template>
-            </Calendar>
+                    </template>
+                </Calendar>
+            </div>
 
             <hr v-if="index === 0" class="mb-4" />
         </div>
+
     </div>
 </template>
 
 <style scoped>
+.calendar-spinner {
+    z-index: 9999;
+    position: absolute;
+    top: 57%;
+    left: 48%;
+}
+
 .availability-dot {
     width: 10px;
     height: 10px;

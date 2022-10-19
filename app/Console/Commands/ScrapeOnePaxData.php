@@ -5,16 +5,16 @@ namespace App\Console\Commands;
 use App\Models\Trip;
 use App\Models\Token;
 use App\Services\ConfigService;
-use App\Services\NorthlinkService;
 use Illuminate\Console\Command;
+use App\Services\NorthlinkService;
 
-class ScrapeCarDataOnePax extends Command
+class ScrapeOnePaxData extends Command
 {
     // signature
-    protected $signature = 'scrape:car-2';
+    protected $signature = 'scrape:pax-1';
 
     // description
-    protected $description = 'Scrape car data from Northlink';
+    protected $description = 'Scrape data from Northlink';
 
     // northlink service
     private NorthlinkService $northlinkService;
@@ -41,8 +41,11 @@ class ScrapeCarDataOnePax extends Command
      */
     public function handle()
     {
+        // start timer
+        $start = microtime(true);
+
         // give users an option to choose between ABLE or LEAB
-        $routeCode = $this->choice('Which token do you want to use?', ['ABLE', 'LEAB']);
+        $routeCode = $this->choice('Which token do you want to use?', ['ABLE', 'LEAB'], 'LEAB');
 
         $continueCounter = 0;
 
@@ -52,13 +55,13 @@ class ScrapeCarDataOnePax extends Command
             date('Y-m-d', strtotime("+1 day")),
             date('Y-m-d', strtotime("+5 days")),
             $paxAmount = "1",
-            $vehicleCode = 'CAR'
         );
 
         $this->northlinkService->fetchToken($payload);
-
+        // create array of dates from 2022-10-05 to 2022-12-30
         $dates = $this->createDatesArray();
 
+        // create progrss
         $bar = $this->output->createProgressBar(count($dates));
 
         foreach ($dates as $dateString) {
@@ -71,19 +74,25 @@ class ScrapeCarDataOnePax extends Command
                 $continueCounter++;
                 continue;
             }
+            // dd($data);
             $this->northlinkService->updateOrCreateTripRecords($data, $dateString, $routeCode);
-            // advance progress bar
+
             $bar->advance();
         }
 
+        $end = microtime(true);
 
+        $minutes = ($end - $start) / 60;
+        $this->info(sprintf('The operation took %s minutes', $minutes));
+
+        $bar->finish();
         return 0;
     }
 
     private function createDatesArray(): array
     {
         $dates = [];
-        $startDate = date('Y-m-d');
+        $startDate = date("Y-m-d", strtotime('tomorrow'));
         $endDate = '2022-12-30';
         $currentDate = $startDate;
         while ($currentDate <= $endDate) {

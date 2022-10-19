@@ -8,13 +8,13 @@ use App\Services\ConfigService;
 use App\Services\NorthlinkService;
 use Illuminate\Console\Command;
 
-class ScrapeCarDataOnePax extends Command
+class GetTripAccommodation extends Command
 {
     // signature
-    protected $signature = 'scrape:car-2';
+    protected $signature = 'scrape:accom';
 
     // description
-    protected $description = 'Scrape car data from Northlink';
+    protected $description = 'Syncs available accommodation with per trip route';
 
     // northlink service
     private NorthlinkService $northlinkService;
@@ -44,6 +44,8 @@ class ScrapeCarDataOnePax extends Command
         // give users an option to choose between ABLE or LEAB
         $routeCode = $this->choice('Which token do you want to use?', ['ABLE', 'LEAB']);
 
+        $unselectedRouteCode = $routeCode === 'ABLE' ? 'LEAB' : 'ABLE';
+
         $continueCounter = 0;
 
         $payload = $this->configService->formatRequest(
@@ -66,16 +68,14 @@ class ScrapeCarDataOnePax extends Command
                 $this->exit();
             }
 
-            $data = $this->northlinkService->fetchDataByDate($dateString, $routeCode);
-            if (!$data) {
-                $continueCounter++;
-                continue;
-            }
-            $this->northlinkService->updateOrCreateTripRecords($data, $dateString, $routeCode);
-            // advance progress bar
+            $this->northlinkService->fetchAccomodation(
+                $dateString,
+                $routeCode,
+                $unselectedRouteCode
+            );
+
             $bar->advance();
         }
-
 
         return 0;
     }
@@ -83,7 +83,7 @@ class ScrapeCarDataOnePax extends Command
     private function createDatesArray(): array
     {
         $dates = [];
-        $startDate = date('Y-m-d');
+        $startDate = date("Y-m-d", strtotime('tomorrow'));
         $endDate = '2022-12-30';
         $currentDate = $startDate;
         while ($currentDate <= $endDate) {

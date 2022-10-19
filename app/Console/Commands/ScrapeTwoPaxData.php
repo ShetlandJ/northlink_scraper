@@ -41,8 +41,11 @@ class ScrapeTwoPaxData extends Command
      */
     public function handle()
     {
+        // start timer
+        $start = microtime(true);
+
         // give users an option to choose between ABLE or LEAB
-        $routeCode = $this->choice('Which token do you want to use?', ['ABLE', 'LEAB']);
+        $routeCode = $this->choice('Which token do you want to use?', ['ABLE', 'LEAB'], 'LEAB');
 
         $continueCounter = 0;
 
@@ -66,37 +69,31 @@ class ScrapeTwoPaxData extends Command
                 $this->exit();
             }
 
-            // // if trip exists for date, skip
-            // $tripExists = Trip::where('date', $dateString)
-            //     ->where('routeCode', $routeCode)
-            //     ->exists();
-
-            // if ($tripExists) {
-            //     logger("Trip exists for date: {$dateString}");
-            //     continue;
-            // }
-
-
             $data = $this->northlinkService->fetchDataByDate($dateString, $routeCode);
             if (!$data) {
                 $continueCounter++;
                 continue;
             }
+            // dd($data);
             $this->northlinkService->updateOrCreateTripRecords($data, $dateString, $routeCode);
-            // advance progress bar
-            $bar->advance();
 
+            $bar->advance();
         }
 
+        $end = microtime(true);
 
+        $minutes = ($end - $start) / 60;
+        $this->info(sprintf('The operation took %s minutes', $minutes));
+
+        $bar->finish();
         return 0;
     }
 
     private function createDatesArray(): array
     {
         $dates = [];
-        $startDate = '2022-10-05';
-        $endDate = '2022-12-30';
+        $startDate = date("Y-m-d", strtotime('tomorrow'));
+        $endDate = '2022-10-30';
         $currentDate = $startDate;
         while ($currentDate <= $endDate) {
             $dates[] = $currentDate;
