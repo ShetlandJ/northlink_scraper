@@ -270,6 +270,15 @@ class NorthlinkService
         $outbound = $this->getTripByRouteAndDate($outboundRouteCode, $date);
         $return = $this->getTripByRouteAndDate($returnRouteCode, $date->addDays(2));
 
+        if (!$outbound || !$return) {
+            logger([
+                "dateString" => $dateString,
+                "outboundRouteCode" => $outboundRouteCode,
+                "returnRouteCode" => $returnRouteCode,
+            ]);
+            return;
+        }
+
         $success = $this->mockDepart(
             $token,
             $outbound->identifier,
@@ -323,14 +332,12 @@ class NorthlinkService
                     'sleeps' => $cabin['sleeps'],
                 ]);
             }
-        } catch (RequestException $e) {
-            logger("1");
-        } catch (ClientException $e) {
-            logger("2");
-        } catch (RequestException $e) {
-            logger("3");
-        } catch (ServerException $e) {
-            logger("4");
+        } catch (Exception $e) {
+            logger([
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+            ]);
         }
     }
 
