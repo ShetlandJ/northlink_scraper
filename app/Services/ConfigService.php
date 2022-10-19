@@ -73,32 +73,4 @@ class ConfigService
             ]
         ];
     }
-
-    // = [
-    //     "departureRequests" => [
-    //         [
-    //             "route" => $outbound,
-    //             "date" => date("Y-m-d"),
-    //             "resources" => [[
-    //                 "resourceCode" => "PAX",
-    //                 "amount" => "2",
-    //                 "resourceType" => "A",
-    //                 "type" => "STD"
-    //             ]],
-    //             "vehicles" => [],
-    //         ],
-    //         [
-    //             "route" => $return,
-    //             "date" => date("Y-m-d", strtotime("+5 days")),
-    //             "resources" => [[
-    //                 "resourceCode" => "PAX",
-    //                 "amount" => "2",
-    //                 "resourceType" => "A",
-    //                 "type" => "STD"
-    //             ]],
-    //             "vehicles" => [],
-    //         ],
-    //     ]
-    // ];
-
 }
