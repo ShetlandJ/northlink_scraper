@@ -48,6 +48,13 @@ import Tool from "../components/home/Tool.vue";
                     route-name="pets"
                     colour="indigo"
                 />
+
+                <Tool
+                    emoji="🚗"
+                    text="Check car availability"
+                    route-name="cars"
+                    colour="yellow"
+                />
             </div>
         </Container>
     </div>

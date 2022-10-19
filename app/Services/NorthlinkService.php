@@ -72,10 +72,8 @@ class NorthlinkService
         ];
     }
 
-    public function fetchToken(): string
+    public function fetchToken(array $payload): string
     {
-        $payload = $this->generatePayloadForToken();
-
         $client = new Client();
 
         $options = [

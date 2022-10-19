@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Home\CapacityController;
+use App\Http\Controllers\Home\CarAvailabillityController;
 use App\Http\Controllers\Home\PetCabinController;
 use App\Models\Word;
 use Illuminate\Support\Str;
@@ -27,4 +28,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/pet-cabins/{month}/{year}', PetCabinController::class);
+Route::get('/cars/{month}/{year}', CarAvailabillityController::class);
 Route::get('/capacity/{month}/{year}/{routeCode}', CapacityController::class);

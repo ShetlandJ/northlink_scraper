@@ -11,6 +11,9 @@ class Trip extends Model
 {
     protected $table = 'trips';
 
+    public const LERWICK_TO_ABERDEEN = 'LEAB';
+    public const ABERDEEN_TO_LERWICK = 'ABLE';
+
     protected $fillable = [
         'date',
         'price',

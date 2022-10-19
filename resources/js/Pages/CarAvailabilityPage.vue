@@ -22,10 +22,10 @@ import AvailabilityCalendar from "../components/AvailabilityCalendar.vue";
         <NavBar />
         <Container>
             <AvailabilityCalendar
-                title="Pet cabin availabililty"
-                description="This tool helps to determine pet cabin availability on the
+                title="Ca availabililty"
+                description="This tool helps to determine car availability on the
                 Lerwick/Aberdeen routes."
-                api-route="pet-cabins"
+                api-route="cars"
             />
         </Container>
     </div>
