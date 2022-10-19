@@ -8,7 +8,7 @@ use App\Services\ConfigService;
 use App\Services\NorthlinkService;
 use Illuminate\Console\Command;
 
-class GetTripAccomodation extends Command
+class GetTripAccommodation extends Command
 {
     // signature
     protected $signature = 'scrape:accom';

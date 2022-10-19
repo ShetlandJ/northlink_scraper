@@ -6,7 +6,7 @@ use Exception;
 use Carbon\Carbon;
 use App\Models\Trip;
 use App\Models\Token;
-use App\Models\TripAccomodation;
+use App\Models\TripAccommodation;
 use GuzzleHttp\Client;
 use App\Models\TripPrice;
 use Illuminate\Support\Facades\DB;
@@ -290,14 +290,14 @@ class NorthlinkService
             return;
         }
 
-        // reset all TripAccomodations
-        TripAccomodation::where('trip_id', $outbound->id)->delete();
+        // reset all TripAccommodations
+        TripAccommodation::where('trip_id', $outbound->id)->delete();
 
         logger("A");
         try {
             $res = $this->client->request(
                 'POST',
-                'https://www.northlinkferries.co.uk/api/accommodations/LEAB',
+                'https://www.northlinkferries.co.uk/api/accommodations/ABLE',
                 [
                     'headers' => [
                         'Authorization' => $token,
@@ -317,7 +317,7 @@ class NorthlinkService
             $cabins = $data['res']['result']['cabins'];
 
             foreach ($cabins as $cabin) {
-                TripAccomodation::create([
+                TripAccommodation::create([
                     'trip_id' => $outbound->id,
                     'amount' => $cabin['amount'],
                     'bnBIncluded' => $cabin['bnBIncluded'],

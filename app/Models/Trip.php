@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Models\TripPrice;
-use App\Models\TripAccomodation;
+use App\Models\TripAccommodation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -38,7 +38,7 @@ class Trip extends Model
 
     public function accomodation(): HasMany
     {
-        return $this->hasMany(TripAccomodation::class);
+        return $this->hasMany(TripAccommodation::class);
     }
 
     public function getCapacityAttribute(): int

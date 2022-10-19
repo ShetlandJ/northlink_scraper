@@ -22,7 +22,7 @@ import AvailabilityCalendar from "../components/AvailabilityCalendar.vue";
         <NavBar />
         <Container>
             <AvailabilityCalendar
-                title="Ca availabililty"
+                title="Car availabililty"
                 description="This tool helps to determine car availability on the
                 Lerwick/Aberdeen routes."
                 api-route="cars"

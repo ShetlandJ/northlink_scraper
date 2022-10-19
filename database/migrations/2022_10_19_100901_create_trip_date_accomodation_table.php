@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateTripDateAccomodationTable extends Migration
 {
-    private const TABLE = 'trip_accomodations';
+    private const TABLE = 'trip_accommodations';
 
     public function up()
     {

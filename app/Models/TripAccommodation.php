@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class TripAccomodation extends Model
+class TripAccommodation extends Model
 {
-    protected $table = 'trip_accomodations';
+    protected $table = 'trip_accommodations';
 
     public const LERWICK_TO_ABERDEEN = 'LEAB';
     public const ABERDEEN_TO_LERWICK = 'ABLE';
