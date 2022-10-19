@@ -3,11 +3,17 @@
 namespace App\Services;
 
 use Exception;
+use Carbon\Carbon;
 use App\Models\Trip;
 use App\Models\Token;
+use App\Models\TripAccomodation;
 use GuzzleHttp\Client;
 use App\Models\TripPrice;
 use Illuminate\Support\Facades\DB;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\BadResponseException;
 
 class NorthlinkService
 {
@@ -47,7 +53,7 @@ class NorthlinkService
         }
     }
 
-    public function generatePayloadForToken(
+    public function generateSinglePersonPayloadForToken(
         string $outbound = self::LERWICK_TO_ABERDEEN,
         string $return = self::ABERDEEN_TO_LERWICK
     ): array {
@@ -99,6 +105,11 @@ class NorthlinkService
         return $token;
     }
 
+    public function fetchTokenForSinglePerson(): string
+    {
+        return $this->fetchToken($this->generateSinglePersonPayloadForToken());
+    }
+
     public function fetchDataByDate(string $date, string $routeCode = self::LERWICK_TO_ABERDEEN): ?array
     {
         $token = $this->getToken();
@@ -117,28 +128,32 @@ class NorthlinkService
             ]
         );
 
-        logger(["TOKEN!", $token]);
-
         $json = $res->getBody();
         $data = json_decode($json, true);
         $results = isset($data["res"]['result'][0]) ? $data["res"]['result'][0] : null;
 
-        $this->fetchAccomodationsForDate($token);
+        // $this->fetchAccomodationsForDate($token);
 
         return $results;
     }
 
+    public function getTripByRouteAndDate(string $route, string $date): ?Trip
+    {
+        return Trip::where('routeCode', $route)
+            ->where('date', $date)
+            ->first();
+    }
+
     public function updateOrCreateTripRecords(array $data, string $date, string $routeCode)
     {
-        $trip = Trip::where('date', $date)
-            ->where('routeCode', $routeCode)
-            ->first();
+        $trip = $this->getTripByRouteAndDate($routeCode, $date);
 
         if ($trip && $trip->created_at->diffInMinutes(now()) < 15) {
             return;
         }
 
         if ($trip) {
+            logger($data['identifier']);
             $trip->date = $date;
             $trip->routeCode = $routeCode;
             $trip->price = (float) $data['price'];
@@ -214,6 +229,111 @@ class NorthlinkService
         return (object) $payload;
     }
 
+    public function mockDepart(
+        string $token,
+        string $outboundToken,
+        string $returnToken
+    ): bool {
+        try {
+            $this->client->request(
+                'POST',
+                'https://www.northlinkferries.co.uk/api/book/departures',
+                [
+                    'headers' => [
+                        'Authorization' => $token,
+                    ],
+                    'form_params' => [
+                        'identifiers' => [
+                            $outboundToken,
+                            $returnToken,
+                        ],
+                    'http_errors' => false,
+                    ]
+                ],
+            );
+
+            return true;
+        } catch (ServerException $e) {
+            logger($e->getMessage());
+            return false;
+        }
+    }
+
+    public function fetchAccomodation(
+        string $dateString,
+        string $outboundRouteCode,
+        string $returnRouteCode
+    ) {
+        $token = $this->fetchTokenForSinglePerson();
+        $date = Carbon::parse($dateString);
+
+        $outbound = $this->getTripByRouteAndDate($outboundRouteCode, $date);
+        $return = $this->getTripByRouteAndDate($returnRouteCode, $date->addDays(2));
+
+        $success = $this->mockDepart(
+            $token,
+            $outbound->identifier,
+            $return->identifier
+        );
+
+        if (!$success) {
+            logger("Failed to mock depart");
+            return;
+        }
+
+        // reset all TripAccomodations
+        TripAccomodation::where('trip_id', $outbound->id)->delete();
+
+        logger("A");
+        try {
+            $res = $this->client->request(
+                'POST',
+                'https://www.northlinkferries.co.uk/api/accommodations/LEAB',
+                [
+                    'headers' => [
+                        'Authorization' => $token,
+                    ],
+                    'http_errors' => false
+                ],
+            );
+            logger("B");
+
+            $json = $res->getBody();
+            $data = json_decode($json, true);
+            if (!isset($data['res']['result']['cabins'])) {
+                logger("No cabins found");
+                return;
+            }
+
+            $cabins = $data['res']['result']['cabins'];
+
+            foreach ($cabins as $cabin) {
+                TripAccomodation::create([
+                    'trip_id' => $outbound->id,
+                    'amount' => $cabin['amount'],
+                    'bnBIncluded' => $cabin['bnBIncluded'],
+                    'capacity' => $cabin['capacity'],
+                    'description' => $cabin['description'],
+                    'extrasIncluded' => $cabin['extrasIncluded'],
+                    'hasSeaView' => $cabin['hasSeaView'],
+                    'identifier' => $cabin['identifier'],
+                    'isAccessibleCabin' => $cabin['isAccessibleCabin'],
+                    'price' => $cabin['price'],
+                    'resourceCode' => $cabin['resourceCode'],
+                    'sleeps' => $cabin['sleeps'],
+                ]);
+            }
+        } catch (RequestException $e) {
+            logger("1");
+        } catch (ClientException $e) {
+            logger("2");
+        } catch (RequestException $e) {
+            logger("3");
+        } catch (ServerException $e) {
+            logger("4");
+        }
+    }
+
     public function fetchAccomodationsForDate($token)
     {
         $part1 = [
@@ -251,7 +371,7 @@ class NorthlinkService
 
         logger(["SECOND TOKEN", $token]);
 
-        $res =$this->client->request(
+        $res = $this->client->request(
             'POST',
             'https://www.northlinkferries.co.uk/api/book/departures',
             [
