@@ -34,7 +34,14 @@ import Tool from "../components/home/Tool.vue";
                 These are the tools that are currently available:
             </p>
 
-            <div class="bg-gray-200 text-center py-4 lg:px-4">
+            <div class="text-center py-4 lg:px-4">
+                <Tool
+                    emoji="🚢"
+                    text="Find a trip"
+                    route-name="find-a-trip"
+                    colour="blue"
+                />
+
                 <Tool
                     emoji="📆"
                     text="Check available capacity"
