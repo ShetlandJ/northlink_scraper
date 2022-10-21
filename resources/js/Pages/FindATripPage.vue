@@ -4,14 +4,46 @@ import Container from "../components/Container.vue";
 import NavBar from "../components/NavBar.vue";
 import AvailabilityCalendar from "../components/AvailabilityCalendar.vue";
 import { useForm } from "@inertiajs/inertia-vue3";
+import { ref } from "@vue/runtime-core";
 
-const form = useForm({
+const form = ref({
     outbound: "LEAB",
-    dates: [],
+    dates: {
+        start: new Date(),
+        end: new Date(),
+    },
     passengers: 1,
     car: false,
     pet: false,
 });
+
+const setRangeToNextSevenDays = () => {
+    const today = new Date();
+    const nextWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
+
+    console.log("test", form.value.dates);
+    form.value.dates.start = today
+    form.value.dates.end = nextWeek;
+    console.log("test", form.value.dates);
+};
+
+const setRangeToThisMonth = () => {
+    const today = new Date();
+    const endOfThisMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+    form.value.dates.start = today
+    form.value.dates.end = endOfThisMonth;
+};
+
+const setRangeToNextMonth = () => {
+    const today = new Date();
+    const startOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    const endOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 2, 0);
+
+    form.value.dates.start = startOfNextMonth
+    form.value.dates.end = endOfNextMonth;
+};
+
 </script>
 
 <template>
@@ -120,7 +152,30 @@ const form = useForm({
                         When are you looking to travel?
                     </label>
                     <div>
+                        <!-- create <a> link that says next 7 days -->
+                        <div>
+                            <button
+                                class="text-blue-500 text-sm underline mr-4"
+                                @click="setRangeToNextSevenDays"
+                            >
+                                Next 7 days
+                            </button>
+                            <button
+                                class="text-blue-500 text-sm underline mr-4"
+                                @click="setRangeToThisMonth"
+                            >
+                                This month
+                            </button>
+                            <button
+                                class="text-blue-500 text-sm underline mr-4"
+                                @click="setRangeToNextMonth"
+                            >
+                                Next month
+                            </button>
+                        </div>
+
                         <date-picker
+                            :key="form.dates"
                             class="mb-6"
                             is-range
                             mode="range"
