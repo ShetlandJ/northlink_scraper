@@ -12,6 +12,7 @@ const form = ref({
         start: new Date(),
         end: new Date(),
     },
+    range: "none",
     passengers: 1,
     car: false,
     pet: false,
@@ -19,31 +20,49 @@ const form = ref({
 
 const setRangeToNextSevenDays = () => {
     const today = new Date();
-    const nextWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
+    const nextWeek = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate() + 7
+    );
 
     console.log("test", form.value.dates);
-    form.value.dates.start = today
+    form.value.dates.start = today;
     form.value.dates.end = nextWeek;
+    form.value.range = "last7days";
     console.log("test", form.value.dates);
 };
 
 const setRangeToThisMonth = () => {
     const today = new Date();
-    const endOfThisMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    const endOfThisMonth = new Date(
+        today.getFullYear(),
+        today.getMonth() + 1,
+        0
+    );
 
-    form.value.dates.start = today
+    form.value.dates.start = today;
     form.value.dates.end = endOfThisMonth;
+    form.value.range = "thismonth";
 };
 
 const setRangeToNextMonth = () => {
     const today = new Date();
-    const startOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-    const endOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 2, 0);
+    const startOfNextMonth = new Date(
+        today.getFullYear(),
+        today.getMonth() + 1,
+        1
+    );
+    const endOfNextMonth = new Date(
+        today.getFullYear(),
+        today.getMonth() + 2,
+        0
+    );
 
-    form.value.dates.start = startOfNextMonth
+    form.value.dates.start = startOfNextMonth;
     form.value.dates.end = endOfNextMonth;
+    form.value.range = "nextmonth";
 };
-
 </script>
 
 <template>
@@ -152,7 +171,6 @@ const setRangeToNextMonth = () => {
                         When are you looking to travel?
                     </label>
                     <div>
-                        <!-- create <a> link that says next 7 days -->
                         <div>
                             <button
                                 class="text-blue-500 text-sm underline mr-4"
@@ -175,7 +193,7 @@ const setRangeToNextMonth = () => {
                         </div>
 
                         <date-picker
-                            :key="form.dates"
+                            :key="form.range"
                             class="mb-6"
                             is-range
                             mode="range"
@@ -183,6 +201,193 @@ const setRangeToNextMonth = () => {
                             :date="form.dates"
                         >
                         </date-picker>
+                    </div>
+                </div>
+
+                <div class="form-group mb-6">
+                    <label
+                        for="paxInput"
+                        class="
+                            form-label
+                            inline-block
+                            mb-2
+                            dark:text-white
+                            text-gray-700
+                        "
+                    >
+                        How many people are travelling?
+                    </label>
+                    <input
+                        v-model="form.passengers"
+                        type="number"
+                        class="
+                            form-control
+                            block
+                            w-2/12
+                            px-3
+                            py-1.5
+                            text-base
+                            font-normal
+                            text-gray-700
+                            bg-white bg-clip-padding
+                            border border-solid border-gray-300
+                            rounded
+                            transition
+                            ease-in-out
+                            m-0
+                            focus:text-gray-700
+                            focus:bg-white
+                            focus:border-blue-600
+                            focus:outline-none
+                        "
+                        id="paxInput"
+                        aria-describedby="wordHelp"
+                    />
+                    <small
+                        id="wordHelp"
+                        class="block mt-1 text-xs dark:text-white text-gray-600"
+                    >
+                        Include children in this count
+                    </small>
+                </div>
+
+                <div class="form-group mb-6">
+                    <label
+                        class="
+                            form-label
+                            inline-block
+                            mb-2
+                            dark:text-white
+                            text-gray-700
+                        "
+                    >
+                        Taking a car?
+                    </label>
+                    <div>
+                        <button
+                            @click="form.car = true"
+                            :class="{
+                                'bg-blue-500 text-white': form.car === true,
+                                'bg-gray-200 text-black': form.car !== true,
+                            }"
+                            class="
+                                py-2
+                                px-4
+                                shadow-md
+                                no-underline
+                                rounded-lg
+                                font-sans font-semibold
+                                text-sm
+                                border-blue
+                                btn-primary
+                                hover:shadow-lg
+                                focus:outline-none
+                                active:shadow-none
+                                mr-2
+                            "
+                        >
+                            <span class="mr-2" v-if="form.car === true"
+                                >✓</span
+                            >
+                            Yes
+                        </button>
+                        <button
+                            @click="form.car = false"
+                            class="
+                                py-2
+                                px-4
+                                shadow-md
+                                no-underline
+                                rounded-lg
+                                font-sans font-semibold
+                                text-sm
+                                border-orange
+                                btn-primary
+                                hover:shadow-lg
+                                focus:outline-none
+                                active:shadow-none
+                                mr-2
+                            "
+                            :class="{
+                                'bg-blue-500 text-white': form.car === false,
+                                'bg-gray-200 text-black': form.car !== false,
+                            }"
+                        >
+                            <span class="mr-2" v-if="form.car === false"
+                                >✓</span
+                            >
+                            No
+                        </button>
+                    </div>
+                    </div>
+
+                <div class="form-group mb-6">
+                    <label
+                        class="
+                            form-label
+                            inline-block
+                            mb-2
+                            dark:text-white
+                            text-gray-700
+                        "
+                    >
+                        Pet cabin required?
+                    </label>
+                    <div>
+                        <button
+                            @click="form.pet = true"
+                            :class="{
+                                'bg-blue-500 text-white': form.car === true,
+                                'bg-gray-200 text-black': form.car !== true,
+                            }"
+                            class="
+                                py-2
+                                px-4
+                                shadow-md
+                                no-underline
+                                rounded-lg
+                                font-sans font-semibold
+                                text-sm
+                                border-blue
+                                btn-primary
+                                hover:shadow-lg
+                                focus:outline-none
+                                active:shadow-none
+                                mr-2
+                            "
+                        >
+                            <span class="mr-2" v-if="form.pet === true"
+                                >✓</span
+                            >
+                            Yes
+                        </button>
+                        <button
+                            @click="form.pet = false"
+                            class="
+                                py-2
+                                px-4
+                                shadow-md
+                                no-underline
+                                rounded-lg
+                                font-sans font-semibold
+                                text-sm
+                                border-orange
+                                btn-primary
+                                hover:shadow-lg
+                                focus:outline-none
+                                active:shadow-none
+                                mr-2
+                            "
+                            :class="{
+                                'bg-blue-500 text-white': form.pet === false,
+                                'bg-gray-200 text-black': form.pet !== false,
+                            }"
+                        >
+                            <span class="mr-2" v-if="form.pet === false"
+                                >✓</span
+                            >
+                            No
+                        </button>
                     </div>
                 </div>
             </form>
