@@ -154,6 +154,11 @@ class NorthlinkService
         }
 
         if ($trip) {
+            logger([
+                "date" => $date,
+                "noVehicleCapacity" => $trip->noVehicleCapacity,
+            ]);
+
             $trip->date = $date;
             $trip->routeCode = $routeCode;
             $trip->price = (float) $data['price'];
@@ -199,6 +204,23 @@ class NorthlinkService
             $tripPrice->resourceType = $price['resourceType'];
 
             $tripPrice->save();
+        }
+    }
+    public function updateVehicleAvailabilityStatus(
+        array $data,
+        string $date,
+        string $routeCode
+    ): void {
+        $trip = $this->getTripByRouteAndDate($routeCode, $date);
+
+        if ($trip && $trip->created_at->diffInMinutes(now()) < 5) {
+            return;
+        }
+
+        if ($trip) {
+            $trip->noVehicleCapacity = $data['noVehicleCapacity'];
+
+            $trip->save();
         }
     }
 

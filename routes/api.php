@@ -1,15 +1,10 @@
 <?php
 
-use App\Models\Word;
-use Illuminate\Support\Str;
-use App\Models\WordOfTheDay;
 use Illuminate\Http\Request;
-use App\Services\WordService;
-use App\Services\AdminService;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Home\CapacityController;
 use App\Http\Controllers\Home\PetCabinController;
+use App\Http\Controllers\Home\FindATripController;
 use App\Http\Controllers\Home\CarAvailabillityController;
 use App\Http\Controllers\Home\AccommodationAvailabilityController;
 
@@ -32,3 +27,4 @@ Route::get('/pet-cabins/{month}/{year}', PetCabinController::class);
 Route::get('/cars/{month}/{year}', CarAvailabillityController::class);
 Route::get('/accommodation/{month}/{year}', AccommodationAvailabilityController::class);
 Route::get('/capacity/{month}/{year}/{routeCode}', CapacityController::class);
+Route::post('/find-a-trip', FindATripController::class);

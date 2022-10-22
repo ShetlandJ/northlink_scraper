@@ -5,15 +5,21 @@ import NavBar from "../components/NavBar.vue";
 import AvailabilityCalendar from "../components/AvailabilityCalendar.vue";
 import { useForm } from "@inertiajs/inertia-vue3";
 import { ref } from "@vue/runtime-core";
+import axios from "axios";
 
 const form = ref({
     outbound: "LEAB",
     dates: {
         start: new Date(),
-        end: new Date(),
+        end: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth(),
+            new Date().getDate() + 3
+        ),
     },
+    minimumDayGap: 5,
     range: "none",
-    passengers: 1,
+    passengers: 2,
     car: false,
     pet: false,
 });
@@ -63,6 +69,19 @@ const setRangeToNextMonth = () => {
     form.value.dates.end = endOfNextMonth;
     form.value.range = "nextmonth";
 };
+
+const search = () => {
+    // make axios post request to /find-a-trip with form data
+    // redirect to /find-a-trip/results
+    axios
+        .post("/api/find-a-trip", form.value)
+        .then((response) => {
+            console.log(response);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+}
 </script>
 
 <template>
@@ -81,7 +100,7 @@ const setRangeToNextMonth = () => {
     >
         <NavBar />
         <Container>
-            <form @submit.prevent="createWord">
+            <form @submit.prevent="search">
                 <div class="form-group mb-6">
                     <label
                         for="wordInput"
@@ -97,7 +116,7 @@ const setRangeToNextMonth = () => {
                     </label>
                     <div>
                         <button
-                            @click="form.outbound = 'LEAB'"
+                            @click.prevent="form.outbound = 'LEAB'"
                             :class="{
                                 'bg-blue-500 text-white':
                                     form.outbound === 'LEAB',
@@ -126,7 +145,7 @@ const setRangeToNextMonth = () => {
                             Lerwick
                         </button>
                         <button
-                            @click="form.outbound = 'ABLE'"
+                            @click.prevent="form.outbound = 'ABLE'"
                             class="
                                 py-2
                                 px-4
@@ -174,19 +193,19 @@ const setRangeToNextMonth = () => {
                         <div>
                             <button
                                 class="text-blue-500 text-sm underline mr-4"
-                                @click="setRangeToNextSevenDays"
+                                @click.prevent="setRangeToNextSevenDays"
                             >
                                 Next 7 days
                             </button>
                             <button
                                 class="text-blue-500 text-sm underline mr-4"
-                                @click="setRangeToThisMonth"
+                                @click.prevent="setRangeToThisMonth"
                             >
                                 This month
                             </button>
                             <button
                                 class="text-blue-500 text-sm underline mr-4"
-                                @click="setRangeToNextMonth"
+                                @click.prevent="setRangeToNextMonth"
                             >
                                 Next month
                             </button>
@@ -194,14 +213,77 @@ const setRangeToNextMonth = () => {
 
                         <date-picker
                             :key="form.range"
-                            class="mb-6"
+                            class=""
                             is-range
                             mode="range"
                             v-model="form.dates"
                             :date="form.dates"
+                        />
+                        <small
+                            id="wordHelp"
+                            class="
+                                block
+                                mt-1
+                                text-xs
+                                dark:text-white
+                                text-gray-600
+                            "
                         >
-                        </date-picker>
+                            Assume this to mean "I want to travel and return on
+                            any of these dates"
+                        </small>
                     </div>
+                </div>
+
+                <div class="form-group mb-6">
+                    <label
+                        for="minimumTimeAway"
+                        class="
+                            form-label
+                            inline-block
+                            mb-2
+                            dark:text-white
+                            text-gray-700
+                        "
+                    >
+                        Minimum day gap between trips
+                    </label>
+                    <input
+                        v-model="form.minimumDayGap"
+                        type="number"
+                        min="1"
+                        class="
+                            form-control
+                            block
+                            w-2/12
+                            px-3
+                            py-1.5
+                            text-base
+                            font-normal
+                            text-gray-700
+                            bg-white bg-clip-padding
+                            border border-solid border-gray-300
+                            rounded
+                            transition
+                            ease-in-out
+                            m-0
+                            focus:text-gray-700
+                            focus:bg-white
+                            focus:border-blue-600
+                            focus:outline-none
+                        "
+                        id="minimumTimeAway"
+                        aria-describedby="wordHelp"
+                    />
+                    <small
+                        id="wordHelp"
+                        class="block mt-1 text-xs dark:text-white text-gray-600"
+                    >
+                        For example, if you set this to be 3, an example trip
+                        would be 1st - 4th etc. This acts as a minimum, so if
+                        your preferred range isn't possible, the calculator
+                        might suggest a trip that is longer than this.
+                    </small>
                 </div>
 
                 <div class="form-group mb-6">
@@ -265,7 +347,7 @@ const setRangeToNextMonth = () => {
                     </label>
                     <div>
                         <button
-                            @click="form.car = true"
+                            @click.prevent="form.car = true"
                             :class="{
                                 'bg-blue-500 text-white': form.car === true,
                                 'bg-gray-200 text-black': form.car !== true,
@@ -286,13 +368,11 @@ const setRangeToNextMonth = () => {
                                 mr-2
                             "
                         >
-                            <span class="mr-2" v-if="form.car === true"
-                                >✓</span
-                            >
+                            <span class="mr-2" v-if="form.car === true">✓</span>
                             Yes
                         </button>
                         <button
-                            @click="form.car = false"
+                            @click.prevent="form.car = false"
                             class="
                                 py-2
                                 px-4
@@ -319,7 +399,7 @@ const setRangeToNextMonth = () => {
                             No
                         </button>
                     </div>
-                    </div>
+                </div>
 
                 <div class="form-group mb-6">
                     <label
@@ -335,10 +415,10 @@ const setRangeToNextMonth = () => {
                     </label>
                     <div>
                         <button
-                            @click="form.pet = true"
+                            @click.prevent="form.pet = true"
                             :class="{
-                                'bg-blue-500 text-white': form.car === true,
-                                'bg-gray-200 text-black': form.car !== true,
+                                'bg-blue-500 text-white': form.pet === true,
+                                'bg-gray-200 text-black': form.pet !== true,
                             }"
                             class="
                                 py-2
@@ -356,13 +436,11 @@ const setRangeToNextMonth = () => {
                                 mr-2
                             "
                         >
-                            <span class="mr-2" v-if="form.pet === true"
-                                >✓</span
-                            >
+                            <span class="mr-2" v-if="form.pet === true">✓</span>
                             Yes
                         </button>
                         <button
-                            @click="form.pet = false"
+                            @click.prevent="form.pet = false"
                             class="
                                 py-2
                                 px-4
@@ -389,6 +467,34 @@ const setRangeToNextMonth = () => {
                             No
                         </button>
                     </div>
+                </div>
+
+                <div class="flex justify-end">
+                    <button
+                        type="submit"
+                        class="
+                            px-6
+                            py-2.5
+                            bg-green-600
+                            text-white
+                            font-medium
+                            leading-tight
+                            rounded
+                            shadow-md
+                            hover:bg-blue-700 hover:shadow-lg
+                            focus:bg-blue-700
+                            focus:shadow-lg
+                            focus:outline-none
+                            focus:ring-0
+                            active:bg-blue-800 active:shadow-lg
+                            transition
+                            duration-150
+                            ease-in-out
+                            disabled:opacity-50
+                        "
+                    >
+                        Find a trip
+                    </button>
                 </div>
             </form>
         </Container>

@@ -71,7 +71,8 @@ class ScrapeCarDataOnePax extends Command
                 $continueCounter++;
                 continue;
             }
-            $this->northlinkService->updateOrCreateTripRecords($data, $dateString, $routeCode);
+
+            $this->northlinkService->updateVehicleAvailabilityStatus($data, $dateString, $routeCode);
             // advance progress bar
             $bar->advance();
         }
