@@ -8,6 +8,8 @@ use App\Models\Token;
 use GuzzleHttp\Client;
 use App\Models\TripPrice;
 use DateTime;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class SearchService
@@ -29,16 +31,34 @@ class SearchService
         // dd($routeCode, $minimumDayGap, $paxAmount, $hasVehicle, $hasPet);
 
         // get all trips by routeCode where the date is at least the day of the start date
-        $trips = Trip::where('routeCode', $routeCode)
+        $query = Trip::where('routeCode', $routeCode)
             ->where('date', '>=', $dates['start'])
-            ->where('date', '<=', $dates['end'])
+            ->where('date', '<=', $dates['end']);
 
         if ($hasVehicle) {
-            $trips->where('noVehicleCapacity', true);
+            $query->where('noVehicleCapacity', false);
         }
 
-        $get = $trips->get();
-        dd($get);
+        if ($hasPet) {
+            $query = $this->removeDatesWithoutPetCabinsAvailable($query);
+        }
+        dd($query->get());
+        $trips = $query->get();
+
+        $data = [];
+
+        return [
+            'data' => $data
+        ];
+    }
+
+    private function removeDatesWithoutPetCabinsAvailable(Builder $query)
+    {
+        $query->join('trip_prices', 'trips.id', '=', 'trip_prices.trip_id');
+        $query->where('trip_prices.resourceCode', 'like', '%NPET%');
+        $query->groupBy('trips.id');
+
+        return $query;
     }
 
 
