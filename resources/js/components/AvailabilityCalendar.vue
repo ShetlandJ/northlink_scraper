@@ -1,7 +1,7 @@
 <script setup>
 import "v-calendar/dist/style.css";
 import axios from "axios";
-import { ref, watch } from "@vue/runtime-core";
+import { computed, ref, watch } from "@vue/runtime-core";
 
 const props = defineProps({
     title: {
@@ -81,12 +81,120 @@ const getAvailabilityClass = (date, route) => {
     return foundDate.available ? "bg-green-500" : "bg-red-500";
 };
 
+const getPrice = (date, route) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+
+    const formattedDate = `${year}-${month}-${day}`;
+
+    const foundDate = dates.value[route].find(
+        (item) => item.date === formattedDate
+    );
+
+    if (!foundDate) {
+        return "";
+    }
+
+    return foundDate.price;
+};
+
+const isAvailable = (date, route) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+
+    const formattedDate = `${year}-${month}-${day}`;
+
+    const foundDate = dates.value[route].find(
+        (item) => item.date === formattedDate
+    );
+
+    if (!foundDate) {
+        return false;
+    }
+
+    return foundDate.available;
+};
+
+const inPast = (date, route) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+
+    const formattedDate = `${year}-${month}-${day}`;
+
+    const foundDate = dates.value[route].find(
+        (item) => item.date === formattedDate
+    );
+
+    if (!foundDate) {
+        return false;
+    }
+
+    return foundDate.past;
+};
+
+const pricesListConfig = computed(() => {
+    const prices = {
+        ABLE: [],
+        LEAB: [],
+    };
+
+    dates.value.ABLE.filter((item) => item.available).forEach((item) => {
+        prices.ABLE.push(item.price);
+    });
+    // remove duplicates
+    prices.ABLE = [...new Set(prices.ABLE)];
+
+    dates.value.LEAB.filter((item) => item.available).forEach((item) => {
+        prices.LEAB.push(item.price);
+    });
+    // remove duplicates
+    prices.LEAB = [...new Set(prices.LEAB)];
+
+    return prices;
+});
+
 const updateFromPage = ({ month, year }, route) => {
     requestData(month, year, route);
 };
 
-watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYear.value));
+const getPriceClass = (date, route) => {
+    // first get the date from dates
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
 
+    const formattedDate = `${year}-${month}-${day}`;
+
+    const foundDate = dates.value[route].find(
+        (item) => item.date === formattedDate
+    );
+
+    if (!foundDate) {
+        return "";
+    }
+
+    const prices = pricesListConfig.value[route];
+    const price = foundDate.price;
+    prices.sort((a, b) => a - b);
+    const pricesLength = prices.length;
+    const priceIndex = prices.indexOf(price);
+
+    if (priceIndex === 0) {
+        return "bg-green-300";
+    } else if (priceIndex === pricesLength - 1) {
+        return "bg-red-300";
+    } else {
+        return "bg-yellow-300";
+    }
+};
+
+watch(
+    () => props.routePayload,
+    () => requestData(viewingMonth.value, viewingYear.value)
+);
 </script>
 
 <template>
@@ -141,11 +249,7 @@ watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYea
 
             <div>
                 <div class="calendar-spinner" v-if="loading">
-                    <easy-spinner
-                        type="spins"
-                        size="50"
-                        color="#22C55E"
-                    />
+                    <easy-spinner type="spins" size="50" color="#22C55E" />
                 </div>
 
                 <Calendar
@@ -159,12 +263,32 @@ watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYea
                                 {{ day.label }}
                             </div>
                             <div class="flex justify-center mb-4">
-                                <div
-                                    class="availability-dot"
+                                <div v-if="inPast(day.date, route)">-</div>
+
+                                <div v-else-if="isAvailable(day.date, route)">
+                                    <div
+                                        class="
+                                            w-auto
+                                            rounded-full
+                                            pl-2
+                                            pr-2
+                                        "
+                                        :class="getPriceClass(day.date, route)"
+                                    >
+                                        £{{ getPrice(day.date, route) }}
+                                    </div>
+                                </div>
+                                <div v-else>
+                                    <p>-</p>
+                                </div>
+
+                                <!-- <div
+                                    class="justify-center availability-dot"
                                     :class="
                                         getAvailabilityClass(day.date, route)
                                     "
                                 />
+                                <div>£{{ getPrice(day.date, route) }}</div> -->
                             </div>
                         </div>
                     </template>
@@ -173,7 +297,6 @@ watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYea
 
             <hr v-if="index === 0" class="mb-4" />
         </div>
-
     </div>
 </template>
 
@@ -184,13 +307,13 @@ watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYea
     top: 57%;
     left: 48%;
 }
-
+/*
 .availability-dot {
     width: 10px;
     height: 10px;
     border-radius: 50%;
     margin: 0 5px;
-}
+} */
 
 .available {
     background-color: green;

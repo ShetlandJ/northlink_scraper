@@ -6,6 +6,7 @@ use App\Models\Trip;
 use App\Models\Token;
 use App\Services\ConfigService;
 use App\Services\NorthlinkService;
+use Exception;
 use Illuminate\Console\Command;
 
 class GetTripAccommodation extends Command
@@ -67,11 +68,18 @@ class GetTripAccommodation extends Command
                     $this->exit();
                 }
 
-                $this->northlinkService->fetchAccomodation(
-                    $dateString,
-                    $routeCode,
-                    $unselectedRouteCode
-                );
+                try {
+                    $this->northlinkService->fetchAccomodation(
+                        $dateString,
+                        $routeCode,
+                        $unselectedRouteCode
+                    );
+                } catch (Exception $e) {
+                    $continueCounter++;
+                    continue;
+                }
+
+                $continueCounter = 0;
 
                 $bar->advance();
             }
@@ -84,7 +92,7 @@ class GetTripAccommodation extends Command
     {
         $dates = [];
         $startDate = date("Y-m-d", strtotime('tomorrow'));
-        $endDate = '2022-12-30';
+        $endDate = '2023-04-01';
         $currentDate = $startDate;
         while ($currentDate <= $endDate) {
             $dates[] = $currentDate;
