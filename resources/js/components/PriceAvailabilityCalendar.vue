@@ -260,8 +260,8 @@ watch(
                                         £{{ getPrice(day.date, route) }}
                                     </div>
                                 </div>
-                                <div v-else class="bg-blue-200 pl-2 pr-2 rounded-full">
-                                    <p>N/A</p>
+                                <div v-else class="bg-gray-200 pl-2 pr-2 rounded-full text-sm">
+                                    <p>Sold out</p>
                                 </div>
                             </div>
                         </div>
