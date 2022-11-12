@@ -71,7 +71,7 @@ class AccommodationAvailabilityController extends NorthlinkController
                 $roomAvailability[$trip->date] = [
                     'date' => $trip->date,
                     'available' => (bool) $trip->roomCapacity,
-                    'price' => $trip->price,
+                    'price' => (int) $trip->price + (int) $trip->tripPrice,
                     'past' => strtotime($trip->date) < strtotime(date('Y-m-d')),
                 ];
             }

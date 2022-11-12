@@ -260,17 +260,9 @@ watch(
                                         £{{ getPrice(day.date, route) }}
                                     </div>
                                 </div>
-                                <div v-else>
-                                    <p>-</p>
+                                <div v-else class="bg-blue-200 pl-2 pr-2 rounded-full">
+                                    <p>N/A</p>
                                 </div>
-
-                                <!-- <div
-                                    class="justify-center availability-dot"
-                                    :class="
-                                        getAvailabilityClass(day.date, route)
-                                    "
-                                />
-                                <div>£{{ getPrice(day.date, route) }}</div> -->
                             </div>
                         </div>
                     </template>
