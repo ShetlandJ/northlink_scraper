@@ -2,7 +2,7 @@
 import { Head } from "@inertiajs/inertia-vue3";
 import Container from "../components/Container.vue";
 import NavBar from "../components/NavBar.vue";
-import AvailabilityCalendar from "../components/AvailabilityCalendar.vue";
+import PriceAvailabilityCalendar from "../components/PriceAvailabilityCalendar.vue";
 import { computed, ref } from "@vue/runtime-core";
 
 const roomType = ref('NI2');
@@ -47,7 +47,7 @@ const routePayload = computed(() => ({
     >
         <NavBar />
         <Container>
-            <AvailabilityCalendar
+            <PriceAvailabilityCalendar
                 title="Room availabililty"
                 description="Use this tool to determine available accommodation on future ferry sailings."
                 api-route="accommodation"
@@ -67,7 +67,7 @@ const routePayload = computed(() => ({
                         </option>
                     </select>
                 </template>
-            </AvailabilityCalendar>
+            </PriceAvailabilityCalendar>
         </Container>
     </div>
 </template>
