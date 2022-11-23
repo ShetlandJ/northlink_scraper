@@ -43,7 +43,7 @@ const routePayload = computed(() => ({
             dark:bg-gray-900
             sm:items-center sm:pt-0
         "
-        style="padding-bottom: 25px"
+        style="padding-bottom: 25px; width: fit-content;"
     >
         <NavBar />
         <Container>

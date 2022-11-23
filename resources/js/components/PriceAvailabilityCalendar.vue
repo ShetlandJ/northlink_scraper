@@ -223,9 +223,9 @@ watch(
                     <easy-spinner type="spins" size="50" color="#22C55E" />
                 </div>
 
+                    <!-- is-expanded -->
                 <Calendar
                     class="mb-6"
-                    is-expanded
                     @update:from-page="(value) => updateFromPage(value, route)"
                 >
                     <template v-slot:day-content="{ day, dayEvents }">
