@@ -42,8 +42,9 @@ const routePayload = computed(() => ({
             bg-gray-100
             dark:bg-gray-900
             sm:items-center sm:pt-0
+            fit
         "
-        style="padding-bottom: 25px; width: fit-content;"
+        style="padding-bottom: 25px;"
     >
         <NavBar />
         <Container>
@@ -73,3 +74,12 @@ const routePayload = computed(() => ({
         </Container>
     </div>
 </template>
+
+<style scoped>
+/* .fit class width: fit-content when mobile */
+@media (max-width: 640px) {
+    .fit {
+        width: fit-content;
+    }
+}
+</style>
