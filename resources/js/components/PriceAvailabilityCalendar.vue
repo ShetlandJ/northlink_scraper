@@ -62,16 +62,7 @@ const year = today.getFullYear();
 requestData(month, year);
 
 const getAvailabilityClass = (date, route) => {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-
-    const monthString = month.toString().length === 1 ? "0" + month : month;
-    const formattedDate = `${year}-${monthString}-${day}`;
-
-    const foundDate = dates.value[route].find(
-        (item) => item.date === formattedDate
-    );
+    const foundDate = findDate(date, route);
 
     if (!foundDate) {
         return "bg-gray-200";
@@ -83,18 +74,7 @@ const getAvailabilityClass = (date, route) => {
 };
 
 const getRemaining = (date, route) => {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-
-    const monthString = month.toString().length === 1 ? "0" + month : month;
-    const formattedDate = `${year}-${monthString}-${day}`;
-
-    if (!dates.value[route]) return 0;
-
-    const foundDate = dates.value[route].find(
-        (item) => item.date === formattedDate
-    );
+    const foundDate = findDate(date, route);
 
     if (!foundDate) {
         return 0;
@@ -104,16 +84,7 @@ const getRemaining = (date, route) => {
 };
 
 const getPrice = (date, route) => {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-
-    const monthString = month.toString().length === 1 ? "0" + month : month;
-    const formattedDate = `${year}-${monthString}-${day}`;
-
-    const foundDate = dates.value[route].find(
-        (item) => item.date === formattedDate
-    );
+    const foundDate = findDate(date, route);
 
     if (!foundDate) {
         return "";
@@ -123,16 +94,7 @@ const getPrice = (date, route) => {
 };
 
 const isAvailable = (date, route) => {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-
-    const monthString = month.toString().length === 1 ? "0" + month : month;
-    const formattedDate = `${year}-${monthString}-${day}`;
-
-    const foundDate = dates.value[route].find(
-        (item) => item.date === formattedDate
-    );
+    const foundDate = findDate(date, route);
 
     if (!foundDate) {
         return false;
@@ -142,16 +104,7 @@ const isAvailable = (date, route) => {
 };
 
 const inPast = (date, route) => {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-
-    const monthString = month.toString().length === 1 ? "0" + month : month;
-    const formattedDate = `${year}-${monthString}-${day}`;
-
-    const foundDate = dates.value[route].find(
-        (item) => item.date === formattedDate
-    );
+    const foundDate = findDate(date, route);
 
     if (!foundDate) {
         return false;
@@ -185,8 +138,7 @@ const updateFromPage = ({ month, year }, route) => {
     requestData(month, year, route);
 };
 
-const getPriceClass = (date, route) => {
-    // first get the date from dates
+const findDate = (date, route) => {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
@@ -194,13 +146,19 @@ const getPriceClass = (date, route) => {
     const monthString = month.toString().length === 1 ? "0" + month : month;
     const formattedDate = `${year}-${monthString}-${day}`;
 
+    if (!dates.value[route]) {
+        return null;
+    }
+
     const foundDate = dates.value[route].find(
         (item) => item.date === formattedDate
     );
 
-    if (!foundDate) {
-        return "";
-    }
+    return foundDate;
+}
+
+const getPriceClass = (date, route) => {
+    const foundDate = findDate(date, route);
 
     const prices = pricesListConfig.value[route];
     const price = foundDate.price;
