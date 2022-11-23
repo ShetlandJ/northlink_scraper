@@ -58,7 +58,7 @@ const showingNavigationDropdown = ref(false);
                 class="list-reset md:flex md:items-center"
                 style="width: max-content"
             >
-                <li class="md:ml-4 my-2">
+                <!-- <li class="md:ml-4 my-2">
                     <Link
                         class="
                             border-t
@@ -95,8 +95,8 @@ const showingNavigationDropdown = ref(false);
                         :class="{ 'font-bold': $page.url === '/capacity' }"
                     >
                         Capacity
-                    </Link>
-                </li>
+                    </Link> -->
+                <!-- </li> -->
                 <!-- <JetDropdown align="right" width="48">
                     <template #trigger>
                         <button

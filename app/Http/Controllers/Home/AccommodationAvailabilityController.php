@@ -40,6 +40,7 @@ class AccommodationAvailabilityController extends NorthlinkController
         $trip->select(
             'trips.id',
             'trips.date',
+            'trips.price as tripPrice',
             'trip_accommodations.resourceCode as roomType',
             'trip_accommodations.capacity as roomCapacity',
             'trip_accommodations.price',
@@ -62,15 +63,17 @@ class AccommodationAvailabilityController extends NorthlinkController
             $roomAvailability[$trip->date] = [
                 'date' => $trip->date,
                 'available' => false,
-                'price' => $trip->price,
+                'price' => (int) $trip->price + (int) $trip->tripPrice,
                 'past' => strtotime($trip->date) < strtotime(date('Y-m-d')),
+                'capacity' => $trip->roomCapacity,
             ];
 
             if ($trip->roomType === $roomType) {
                 $roomAvailability[$trip->date] = [
                     'date' => $trip->date,
                     'available' => (bool) $trip->roomCapacity,
-                    'price' => $trip->price,
+                    'capacity' => $trip->roomCapacity,
+                    'price' => (int) $trip->price + (int) $trip->tripPrice,
                     'past' => strtotime($trip->date) < strtotime(date('Y-m-d')),
                 ];
             }

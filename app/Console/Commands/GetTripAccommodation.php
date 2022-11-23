@@ -6,6 +6,7 @@ use App\Models\Trip;
 use App\Models\Token;
 use App\Services\ConfigService;
 use App\Services\NorthlinkService;
+use Exception;
 use Illuminate\Console\Command;
 
 class GetTripAccommodation extends Command
@@ -42,10 +43,6 @@ class GetTripAccommodation extends Command
     public function handle()
     {
         // give users an option to choose between ABLE or LEAB
-        $routeCode = $this->choice('Which token do you want to use?', ['ABLE', 'LEAB']);
-
-        $unselectedRouteCode = $routeCode === 'ABLE' ? 'LEAB' : 'ABLE';
-
         $continueCounter = 0;
 
         $payload = $this->configService->formatRequest(
@@ -61,20 +58,31 @@ class GetTripAccommodation extends Command
 
         $dates = $this->createDatesArray();
 
-        $bar = $this->output->createProgressBar(count($dates));
+        foreach (['LEAB', 'ABLE'] as $routeCode) {
+            $this->info("Fetching accommodation for $routeCode");
+            $bar = $this->output->createProgressBar(count($dates));
+            $unselectedRouteCode = $routeCode === 'ABLE' ? 'LEAB' : 'ABLE';
 
-        foreach ($dates as $dateString) {
-            if ($continueCounter > 5) {
-                $this->exit();
+            foreach ($dates as $dateString) {
+                if ($continueCounter > 5) {
+                    $this->exit();
+                }
+
+                try {
+                    $this->northlinkService->fetchAccomodation(
+                        $dateString,
+                        $routeCode,
+                        $unselectedRouteCode
+                    );
+                } catch (Exception $e) {
+                    $continueCounter++;
+                    continue;
+                }
+
+                $continueCounter = 0;
+
+                $bar->advance();
             }
-
-            $this->northlinkService->fetchAccomodation(
-                $dateString,
-                $routeCode,
-                $unselectedRouteCode
-            );
-
-            $bar->advance();
         }
 
         return 0;
@@ -84,7 +92,7 @@ class GetTripAccommodation extends Command
     {
         $dates = [];
         $startDate = date("Y-m-d", strtotime('tomorrow'));
-        $endDate = '2022-12-30';
+        $endDate = '2023-04-01';
         $currentDate = $startDate;
         while ($currentDate <= $endDate) {
             $dates[] = $currentDate;

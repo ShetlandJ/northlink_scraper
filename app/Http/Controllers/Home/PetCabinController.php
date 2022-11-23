@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-
 class PetCabinController extends NorthlinkController
 {
     public function __invoke()
@@ -65,6 +64,12 @@ class PetCabinController extends NorthlinkController
         $availableTrips = [];
 
         foreach ($trips as $trip) {
+            $availableTrips['2023-01-01'] = [
+                'date' => '2023-01-01',
+                'available' => 0,
+                'past' => false,
+            ];
+
             if (!isset($availableTrips[$trip->date])) {
                 $availableTrips[$trip->date] = [
                     'date' => $trip->date,

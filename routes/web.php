@@ -24,18 +24,22 @@ use Inertia\Inertia;
 Route::get('/', [HomeController::class, 'index'])
     ->name('home');
 
-Route::get('/pets', function() {
+Route::get('/pets', function () {
     return Inertia::render('PetCabinAvailability');
 })->name('pets');
 
-Route::get('/cars', function() {
+Route::get('/cars', function () {
     return Inertia::render('CarAvailabilityPage');
 })->name('cars');
 
-Route::get('/rooms', function() {
+Route::get('/rooms', function () {
     return Inertia::render('RoomsAvailabilityPage');
 })->name('accommodation');
 
-Route::get('/capacity', function() {
+Route::get('/capacity', function () {
     return Inertia::render('CapacityPage');
 })->name('capacity');
+
+Route::get('/find-a-trip', function () {
+    return Inertia::render('FindATripPage');
+})->name('find-a-trip');

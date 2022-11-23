@@ -26,7 +26,8 @@ const getCapacity = (date, route) => {
     const month = date.getMonth() + 1;
     const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
 
-    const formattedDate = `${year}-${month}-${day}`;
+    const monthString = month.toString().length === 1 ? "0" + month : month;
+    const formattedDate = `${year}-${monthString}-${day}`;
 
     const foundDate = dates.value[route].find(
         (item) => item.date === formattedDate
