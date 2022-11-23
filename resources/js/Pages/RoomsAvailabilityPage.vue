@@ -5,20 +5,20 @@ import NavBar from "../components/NavBar.vue";
 import PriceAvailabilityCalendar from "../components/PriceAvailabilityCalendar.vue";
 import { computed, ref } from "@vue/runtime-core";
 
-const roomType = ref('NI2');
+const roomType = ref('NI4');
 
 const roomTypes = [
-    { text: "Inside 2 berth cabin (bunk beds)", value: "NI2" },
     { text: "Inside 4 berth cabin (bunk beds)", value: "NI4" },
     { text: "Inside 4 berth cabin with Privacy Curtains (bunk beds)", value: "NI4S" },
-    { text: "Premium Outside 2 berth cabin", value: "NPREM" },
-    { text: "Executive Outside 2 berth cabin (bunk beds)", value: "NEXEC" },
-    { text: "Outside 2 berth cabin", value: "NO2" },
-    { text: "Outside 3 berth cabin (bunk beds)", value: "NO3" },
-    { text: "Premium Outside 2 berth Pet-friendly cabin", value: "NPETPR" },
-    { text: "Inside 2 berth Pet-friendly cabin", value: "NPETI2" },
-    { text: "Outside 2 berth Pet-friendly cabin", value: "NPETO2" },
     { text: "Inside 4 berth Pet-friendly cabin (bunk beds)", value: "NPETI4" },
+    { text: "Inside 2 berth cabin (bunk beds)", value: "NI2" },
+    { text: "Inside 2 berth Pet-friendly cabin", value: "NPETI2" },
+    { text: "Outside 2 berth cabin", value: "NO2" },
+    { text: "Outside 2 berth Pet-friendly cabin", value: "NPETO2" },
+    { text: "Outside 3 berth cabin (bunk beds)", value: "NO3" },
+    { text: "Premium Outside 2 berth cabin", value: "NPREM" },
+    { text: "Premium Outside 2 berth Pet-friendly cabin", value: "NPETPR" },
+    { text: "Executive Outside 2 berth cabin (bunk beds)", value: "NEXEC" },
     { text: "Pod in Pod Lounge 1", value: "POD" },
     { text: "Pod in Pod Lounge 2", value: "POD2" },
     { text: "Pod in Pod Lounge 3", value: "POD3" },

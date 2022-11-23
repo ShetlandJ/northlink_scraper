@@ -154,11 +154,6 @@ class NorthlinkService
         }
 
         if ($trip) {
-            logger([
-                "date" => $date,
-                "noVehicleCapacity" => $trip->noVehicleCapacity,
-            ]);
-
             $trip->date = $date;
             $trip->routeCode = $routeCode;
             $trip->price = (float) $data['price'];

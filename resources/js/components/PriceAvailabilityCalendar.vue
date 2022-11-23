@@ -66,7 +66,8 @@ const getAvailabilityClass = (date, route) => {
     const month = date.getMonth() + 1;
     const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
 
-    const formattedDate = `${year}-${month}-${day}`;
+    const monthString = month.toString().length === 1 ? "0" + month : month;
+    const formattedDate = `${year}-${monthString}-${day}`;
 
     const foundDate = dates.value[route].find(
         (item) => item.date === formattedDate
@@ -81,12 +82,34 @@ const getAvailabilityClass = (date, route) => {
     return foundDate.available ? "bg-green-500" : "bg-red-500";
 };
 
+const getRemaining = (date, route) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+
+    const monthString = month.toString().length === 1 ? "0" + month : month;
+    const formattedDate = `${year}-${monthString}-${day}`;
+
+    if (!dates.value[route]) return 0;
+
+    const foundDate = dates.value[route].find(
+        (item) => item.date === formattedDate
+    );
+
+    if (!foundDate) {
+        return 0;
+    }
+
+    return foundDate.capacity;
+};
+
 const getPrice = (date, route) => {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
 
-    const formattedDate = `${year}-${month}-${day}`;
+    const monthString = month.toString().length === 1 ? "0" + month : month;
+    const formattedDate = `${year}-${monthString}-${day}`;
 
     const foundDate = dates.value[route].find(
         (item) => item.date === formattedDate
@@ -104,7 +127,8 @@ const isAvailable = (date, route) => {
     const month = date.getMonth() + 1;
     const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
 
-    const formattedDate = `${year}-${month}-${day}`;
+    const monthString = month.toString().length === 1 ? "0" + month : month;
+    const formattedDate = `${year}-${monthString}-${day}`;
 
     const foundDate = dates.value[route].find(
         (item) => item.date === formattedDate
@@ -122,7 +146,8 @@ const inPast = (date, route) => {
     const month = date.getMonth() + 1;
     const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
 
-    const formattedDate = `${year}-${month}-${day}`;
+    const monthString = month.toString().length === 1 ? "0" + month : month;
+    const formattedDate = `${year}-${monthString}-${day}`;
 
     const foundDate = dates.value[route].find(
         (item) => item.date === formattedDate
@@ -166,7 +191,8 @@ const getPriceClass = (date, route) => {
     const month = date.getMonth() + 1;
     const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
 
-    const formattedDate = `${year}-${month}-${day}`;
+    const monthString = month.toString().length === 1 ? "0" + month : month;
+    const formattedDate = `${year}-${monthString}-${day}`;
 
     const foundDate = dates.value[route].find(
         (item) => item.date === formattedDate
@@ -209,6 +235,11 @@ watch(
             {{ description }}
         </p>
 
+        <div class="flex items-center mb-3">
+            <div class="availability-dot bg-gray-300" />
+            <span class="ml-3">Sold out or unavailable</span>
+        </div>
+
         <slot name="before-calendar" />
 
         <hr class="my-4" />
@@ -249,19 +280,24 @@ watch(
 
                                 <div v-else-if="isAvailable(day.date, route)">
                                     <div
-                                        class="
-                                            w-auto
-                                            rounded-full
-                                            pl-2
-                                            pr-2
-                                        "
+                                        class="w-auto rounded-full text-center pl-3 pr-3 text-sm"
                                         :class="getPriceClass(day.date, route)"
                                     >
+                                    <div>
                                         £{{ getPrice(day.date, route) }}
                                     </div>
+                                    <div>{{getRemaining(day.date, route)}} left</div>
+                                    </div>
                                 </div>
-                                <div v-else class="bg-gray-200 pl-2 pr-2 rounded-full text-sm">
-                                    <p>Sold out</p>
+                                <div
+                                    v-else
+                                    class="
+                                        availability-dot
+                                        bg-gray-300
+                                        text-sm
+                                    "
+                                >
+                                    <!-- <p>N/A</p> -->
                                 </div>
                             </div>
                         </div>
@@ -281,13 +317,13 @@ watch(
     top: 57%;
     left: 48%;
 }
-/*
+
 .availability-dot {
     width: 10px;
     height: 10px;
     border-radius: 50%;
     margin: 0 5px;
-} */
+}
 
 .available {
     background-color: green;
