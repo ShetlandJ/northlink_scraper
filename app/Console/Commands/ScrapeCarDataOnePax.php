@@ -42,7 +42,7 @@ class ScrapeCarDataOnePax extends Command
     public function handle()
     {
         // give users an option to choose between ABLE or LEAB
-        $routeCode = $this->choice('Which token do you want to use?', ['ABLE', 'LEAB']);
+        // $routeCode = $this->choice('Which token do you want to use?', ['ABLE', 'LEAB']);
 
         $continueCounter = 0;
 
@@ -57,34 +57,36 @@ class ScrapeCarDataOnePax extends Command
 
         $this->northlinkService->fetchToken($payload);
 
+
         $dates = $this->createDatesArray();
 
-        $bar = $this->output->createProgressBar(count($dates));
+        foreach (['LEAB', 'ABLE'] as $routeCode) {
+            $bar = $this->output->createProgressBar(count($dates));
 
-        $continueCounter = 0;
-        foreach ($dates as $dateString) {
-            if ($continueCounter > 5) {
-                $this->exit();
-            }
+            $continueCounter = 0;
+            foreach ($dates as $dateString) {
+                if ($continueCounter > 5) {
+                    $this->exit();
+                }
 
-            try {
-                $data = $this->northlinkService->fetchDataByDate($dateString, $routeCode);
-                if (!$data) {
+                try {
+                    $data = $this->northlinkService->fetchDataByDate($dateString, $routeCode);
+                    if (!$data) {
+                        $continueCounter++;
+                        continue;
+                    }
+                } catch (\Exception $e) {
                     $continueCounter++;
                     continue;
                 }
-            } catch (\Exception $e) {
-                $continueCounter++;
-                continue;
+
+                $continueCounter = 0;
+
+                $this->northlinkService->updateVehicleAvailabilityStatus($data, $dateString, $routeCode);
+                // advance progress bar
+                $bar->advance();
             }
-
-            $continueCounter = 0;
-
-            $this->northlinkService->updateVehicleAvailabilityStatus($data, $dateString, $routeCode);
-            // advance progress bar
-            $bar->advance();
         }
-
 
         return 0;
     }

@@ -44,9 +44,6 @@ class ScrapeOnePaxData extends Command
         // start timer
         $start = microtime(true);
 
-        // give users an option to choose between ABLE or LEAB
-        $routeCode = $this->choice('Which token do you want to use?', ['ABLE', 'LEAB'], 'LEAB');
-
         $continueCounter = 0;
 
         $payload = $this->configService->formatRequest(
@@ -61,23 +58,26 @@ class ScrapeOnePaxData extends Command
         // create array of dates from 2022-10-05 to 2022-12-30
         $dates = $this->createDatesArray();
 
-        // create progrss
-        $bar = $this->output->createProgressBar(count($dates));
+        foreach (['LEAB', 'ABLE'] as $routeCode) {
+            // create progrss
+            $bar = $this->output->createProgressBar(count($dates));
+            foreach ($dates as $dateString) {
+                if ($continueCounter > 5) {
+                    exit;
+                }
 
-        foreach ($dates as $dateString) {
-            if ($continueCounter > 5) {
-                $this->exit();
+                $data = $this->northlinkService->fetchDataByDate($dateString, $routeCode);
+                if (!$data) {
+                    $continueCounter++;
+                    continue;
+                }
+
+                $continueCounter = 0;
+                // dd($data);
+                $this->northlinkService->updateOrCreateTripRecords($data, $dateString, $routeCode);
+
+                $bar->advance();
             }
-
-            $data = $this->northlinkService->fetchDataByDate($dateString, $routeCode);
-            if (!$data) {
-                $continueCounter++;
-                continue;
-            }
-            // dd($data);
-            $this->northlinkService->updateOrCreateTripRecords($data, $dateString, $routeCode);
-
-            $bar->advance();
         }
 
         $end = microtime(true);
@@ -93,7 +93,7 @@ class ScrapeOnePaxData extends Command
     {
         $dates = [];
         $startDate = date("Y-m-d", strtotime('tomorrow'));
-        $endDate = '2022-12-30';
+        $endDate = '2023-04-01';
         $currentDate = $startDate;
         while ($currentDate <= $endDate) {
             $dates[] = $currentDate;

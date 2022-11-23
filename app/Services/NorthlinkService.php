@@ -174,7 +174,7 @@ class NorthlinkService
 
             $trip->save();
         } else {
-            Trip::create([
+            $trip = Trip::create([
                 'date' => $date,
                 'routeCode' => $routeCode,
                 'price' => $data['price'],
@@ -184,6 +184,9 @@ class NorthlinkService
                 'noPassengerCapacity' => $data['noPassengerCapacity'],
                 'departFrom' => $this->getRouteString($data['supplier'])->departFrom,
                 'returnFrom' => $this->getRouteString($data['supplier'])->returnFrom,
+                'identifier' => $data['identifier'],
+                'hashId' => $data['hashId'],
+                'startDate' => $data['startDate'],
             ]);
         }
 
@@ -217,8 +220,24 @@ class NorthlinkService
             return;
         }
 
+        if (!$trip) {
+            $trip = Trip::create([
+                'date' => $date,
+                'routeCode' => $routeCode,
+                'price' => $data['price'],
+                'bookable' => $data['bookable'],
+                'noAccommodationsAvailable' => $data['noAccommodationsAvailable'],
+                'noVehicleCapacity' => $data['noVehicleCapacity'],
+                'noPassengerCapacity' => $data['noPassengerCapacity'],
+                'departFrom' => $this->getRouteString($data['supplier'])->departFrom,
+                'returnFrom' => $this->getRouteString($data['supplier'])->returnFrom,
+            ]);
+        }
+
         if ($trip) {
             $trip->noVehicleCapacity = $data['noVehicleCapacity'];
+            $trip->identifier = $data['identifier'];
+            $trip->hashId = $data['hashId'];
 
             $trip->save();
         }
@@ -293,6 +312,15 @@ class NorthlinkService
         $return = $this->getTripByRouteAndDate($returnRouteCode, $date->addDays(2));
 
         if (!$outbound || !$return) {
+            logger([
+                "dateString" => $dateString,
+                "outboundRouteCode" => $outboundRouteCode,
+                "returnRouteCode" => $returnRouteCode,
+            ]);
+            return;
+        }
+
+        if (!isset($return->identifier)) {
             logger([
                 "dateString" => $dateString,
                 "outboundRouteCode" => $outboundRouteCode,
