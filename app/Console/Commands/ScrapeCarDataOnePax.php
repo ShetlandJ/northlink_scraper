@@ -11,7 +11,7 @@ use Illuminate\Console\Command;
 class ScrapeCarDataOnePax extends Command
 {
     // signature
-    protected $signature = 'scrape:car-2';
+    protected $signature = 'scrape:car-1';
 
     // description
     protected $description = 'Scrape car data from Northlink';

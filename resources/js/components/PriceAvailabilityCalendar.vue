@@ -175,6 +175,22 @@ const getPriceClass = (date, route) => {
     }
 };
 
+const getRemainingClass = (date, route) => {
+    const foundDate = findDate(date, route);
+
+    const remaining = foundDate.capacity;
+
+    if (remaining < 3) {
+        return "bg-red-200";
+    } else if (remaining <= 7) {
+        return "bg-orange-200";
+    } else if (remaining <= 10) {
+        return "bg-yellow-200";
+    }
+
+    return 'bg-purple-200';
+};
+
 watch(
     () => props.routePayload,
     () => requestData(viewingMonth.value, viewingYear.value)
@@ -223,8 +239,8 @@ watch(
                     <easy-spinner type="spins" size="50" color="#22C55E" />
                 </div>
 
-                    <!-- is-expanded -->
                 <Calendar
+                    is-expanded
                     class="mb-6"
                     @update:from-page="(value) => updateFromPage(value, route)"
                 >
@@ -241,10 +257,16 @@ watch(
                                         class="w-auto rounded-full text-center pl-3 pr-3 text-sm"
                                         :class="getPriceClass(day.date, route)"
                                     >
-                                    <div>
-                                        £{{ getPrice(day.date, route) }}
+                                        <div>
+                                            £{{ getPrice(day.date, route) }}
+                                        </div>
                                     </div>
-                                    <div>{{getRemaining(day.date, route)}} left</div>
+                                    <div
+                                        class="w-auto rounded-full text-center pl-3 pr-3 mt-2 text-sm"
+                                        :class="getRemainingClass(day.date, route)"
+                                    >
+
+                                        <div>{{getRemaining(day.date, route)}} left</div>
                                     </div>
                                 </div>
                                 <div
@@ -255,6 +277,7 @@ watch(
                                         text-sm
                                     "
                                 >
+                                <!-- none -->
                                     <!-- <p>N/A</p> -->
                                 </div>
                             </div>
