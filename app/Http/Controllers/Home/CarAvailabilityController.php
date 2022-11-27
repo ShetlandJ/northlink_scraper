@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Home;
 
 use App\Http\Controllers\NorthlinkController;
 use App\Models\Trip;
+use App\Models\TripPrice;
 use Inertia\Inertia;
 use GuzzleHttp\Client;
 use App\Services\NorthlinkService;
@@ -11,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-class CarAvailabillityController extends NorthlinkController
+class CarAvailabilityController extends NorthlinkController
 {
     public function __invoke()
     {
@@ -32,6 +33,7 @@ class CarAvailabillityController extends NorthlinkController
         $trip->where('trips.date', '>=', $firstDayOfMonth);
         $trip->where('trips.date', '<=', date('Y-m-d', strtotime($firstDayOfMonth . ' + 1 month')));
         $trip->where('trips.routeCode', $routeCode);
+        $trip->with('prices');
 
         $trips = $trip->get();
 
@@ -43,6 +45,9 @@ class CarAvailabillityController extends NorthlinkController
                     'date' => $trip->date,
                     'available' => 0,
                     'past' => strtotime($trip->date) < strtotime(date('Y-m-d')),
+                    "price" => $trip->carListing ? $trip->carListing->price : null,
+                    "capacity" => $trip->carListing ? $trip->carListing->capacity : null,
+                    "capacityClass" => $trip->carListing ? $this->getCapacityClass($trip->carListing) : null,
                 ];
             }
 
@@ -52,5 +57,18 @@ class CarAvailabillityController extends NorthlinkController
         $availableTrips = array_values($availableTrips);
 
         return $availableTrips;
+    }
+
+    private function getCapacityClass(TripPrice $tripPrice)
+    {
+        if ($tripPrice->capacity <= 20) {
+            return 'bg-red-300';
+        }
+
+        if ($tripPrice->capacity <= 70) {
+            return 'bg-yellow-300';
+        }
+
+        return 'bg-green-300';
     }
 }

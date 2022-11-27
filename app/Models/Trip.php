@@ -47,6 +47,16 @@ class Trip extends Model
         return $tripPrice ? $tripPrice->capacity : 0;
     }
 
+    public function getCarListingAttribute()
+    {
+        $tripPrice = $this->prices
+            ->where('resourceCode', 'CAR')
+            ->where('ticketType', 'STD')
+            ->first();
+
+        return $tripPrice;
+    }
+
     public function scopeWithPrices(Builder $query): Builder
     {
         return $query->with('prices');

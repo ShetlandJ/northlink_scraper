@@ -1,15 +1,50 @@
 <script setup>
 import "v-calendar/dist/style.css";
 import axios from "axios";
-import { ref } from "@vue/runtime-core";
+import { ref, watch } from "@vue/runtime-core";
 
 const dates = ref({
     LEAB: [],
     ABLE: [],
 });
 
-const getPetCabinData = async (month, year, route = null) => {
-    const { data } = await axios.get(`/api/pet-cabins/${month}/${year}`);
+const props = defineProps({
+    title: {
+        type: String,
+        required: true,
+    },
+    description: {
+        type: String,
+        required: true,
+    },
+    apiRoute: {
+        type: String,
+        required: true,
+    },
+    routePayload: {
+        type: Object,
+        default: null,
+    },
+});
+
+const loading = ref(false);
+
+const viewingMonth = ref(null);
+const viewingYear = ref(null);
+
+const requestData = async (month, year, route = null) => {
+    loading.value = true;
+    let params = "";
+    if (props.routePayload) {
+        params = new URLSearchParams(props.routePayload).toString();
+    }
+
+    viewingMonth.value = month;
+    viewingYear.value = year;
+
+    const { data } = await axios.get(
+        `/api/${props.apiRoute}/${month}/${year}?${params}`
+    );
 
     if (!route) {
         dates.value.LEAB = data.LEAB;
@@ -17,34 +52,42 @@ const getPetCabinData = async (month, year, route = null) => {
     } else {
         dates.value[route] = data[route];
     }
+    loading.value = false;
 };
 
 const today = new Date();
 const month = today.getMonth() + 1;
 const year = today.getFullYear();
 
-getPetCabinData(month, year);
+requestData(month, year);
 
 const getAvailabilityClass = (date, route) => {
-    const year = date.getFullYear()
+    const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
 
     const monthString = month.toString().length === 1 ? "0" + month : month;
     const formattedDate = `${year}-${monthString}-${day}`;
 
-    const foundDate = dates.value[route].find((item) => item.date === formattedDate);
+    const foundDate = dates.value[route].find(
+        (item) => item.date === formattedDate
+    );
 
     if (!foundDate) {
         return "bg-gray-200";
     }
 
-    return foundDate.available ? "bg-green-500" : "bg-red-500";
+    return foundDate.capacityClass;
 };
 
 const updateFromPage = ({ month, year }, route) => {
-    getPetCabinData(month, year, route);
+    requestData(month, year, route);
 };
+
+watch(
+    () => props.routePayload,
+    () => requestData(viewingMonth.value, viewingYear.value)
+);
 </script>
 
 <template>
@@ -62,6 +105,10 @@ const updateFromPage = ({ month, year }, route) => {
             >
                 Aberdeen to Lerwick
             </p>
+        </div>
+
+        <div class="calendar-spinner" v-if="loading">
+            <easy-spinner type="spins" size="50" color="#22C55E" />
         </div>
 
         <Calendar
@@ -87,6 +134,13 @@ const updateFromPage = ({ month, year }, route) => {
 </template>
 
 <style scoped>
+.calendar-spinner {
+    z-index: 9999;
+    position: absolute;
+    top: 57%;
+    left: 48%;
+}
+
 .availability-dot {
     width: 10px;
     height: 10px;

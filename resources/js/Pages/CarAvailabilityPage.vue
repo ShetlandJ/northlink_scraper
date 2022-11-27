@@ -2,7 +2,7 @@
 import { Head } from "@inertiajs/inertia-vue3";
 import Container from "../components/Container.vue";
 import NavBar from "../components/NavBar.vue";
-import AvailabilityCalendar from "../components/AvailabilityCalendar.vue";
+import CarAvailabilityCalendar from "../components/CarAvailabilityCalendar.vue";
 </script>
 
 <template>
@@ -21,7 +21,7 @@ import AvailabilityCalendar from "../components/AvailabilityCalendar.vue";
     >
         <NavBar />
         <Container>
-            <AvailabilityCalendar
+            <CarAvailabilityCalendar
                 title="Car availabililty"
                 description="This tool helps to determine car availability on the
                 Lerwick/Aberdeen routes."

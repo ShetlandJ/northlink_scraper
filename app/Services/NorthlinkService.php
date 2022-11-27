@@ -6,9 +6,10 @@ use Exception;
 use Carbon\Carbon;
 use App\Models\Trip;
 use App\Models\Token;
-use App\Models\TripAccommodation;
 use GuzzleHttp\Client;
 use App\Models\TripPrice;
+use App\Models\TripAccommodation;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
@@ -235,6 +236,50 @@ class NorthlinkService
             $trip->hashId = $data['hashId'];
 
             $trip->save();
+        }
+
+        foreach ($data['prices'] as $tripPrice) {
+            if ($tripPrice['resourceCode'] !== 'CAR') {
+                continue;
+            }
+
+            $carResourceTypes = ['BST', 'STD', 'DD0', 'VCN'];
+
+            if (in_array($tripPrice['ticketType'], $carResourceTypes)) {
+                $this->updateOrCreateCarRecords($tripPrice, $trip, $tripPrice['ticketType']);
+            }
+        }
+    }
+
+    public function updateOrCreateCarRecords(
+        array $northlinkTripPrice,
+        Trip $trip,
+        string $ticketType
+    ) {
+        $existingTripPrice = TripPrice::where('trip_id', $trip->id)
+            ->where('ticketType', $ticketType)
+            ->where('resourceCode', 'CAR')
+            ->first();
+
+        if ($existingTripPrice) {
+            $existingTripPrice->available = $northlinkTripPrice['available'];
+            $existingTripPrice->capacity = $northlinkTripPrice['capacity'];
+
+            $existingTripPrice->save();
+        } else {
+            $tripPrice = new TripPrice();
+            $tripPrice->trip_id = $trip->id;
+            $tripPrice->resourceCode = $northlinkTripPrice['resourceCode'];
+            $tripPrice->price = $northlinkTripPrice['price'];
+            $tripPrice->ticketType = $northlinkTripPrice['ticketType'];
+            $tripPrice->type = $northlinkTripPrice['type'];
+            $tripPrice->available = $northlinkTripPrice['available'];
+            $tripPrice->yieldClass = $northlinkTripPrice['yieldClass'];
+            $tripPrice->capacity = $northlinkTripPrice['capacity'];
+            $tripPrice->intervalValue = $northlinkTripPrice['intervalValue'];
+            $tripPrice->resourceType = $northlinkTripPrice['resourceType'];
+
+            $tripPrice->save();
         }
     }
 
