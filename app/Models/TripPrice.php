@@ -48,4 +48,9 @@ class TripPrice extends Model
     {
         return $this->belongsTo(Trip::class);
     }
+
+    public function getPastAttribute(): bool
+    {
+        return strtotime($this->trip->date) < strtotime(date('Y-m-d'));
+    }
 }

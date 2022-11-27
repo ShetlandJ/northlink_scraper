@@ -77,6 +77,10 @@ const getAvailabilityClass = (date, route) => {
         return "bg-gray-200";
     }
 
+    if (foundDate.past) {
+        return "bg-blue-300";
+    }
+
     return foundDate.capacityClass;
 };
 
@@ -106,6 +110,9 @@ watch(
                 Aberdeen to Lerwick
             </p>
         </div>
+
+        <slot name="before-calendar" />
+        <hr class='my-4' />
 
         <div class="calendar-spinner" v-if="loading">
             <easy-spinner type="spins" size="50" color="#22C55E" />

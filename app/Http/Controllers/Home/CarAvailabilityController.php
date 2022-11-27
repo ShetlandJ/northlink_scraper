@@ -59,7 +59,7 @@ class CarAvailabilityController extends NorthlinkController
         return $availableTrips;
     }
 
-    private function getCapacityClass(TripPrice $tripPrice)
+    private function getCapacityClass(TripPrice $tripPrice): string
     {
         if ($tripPrice->capacity <= 20) {
             return 'bg-red-300';

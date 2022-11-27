@@ -26,7 +26,41 @@ import CarAvailabilityCalendar from "../components/CarAvailabilityCalendar.vue";
                 description="This tool helps to determine car availability on the
                 Lerwick/Aberdeen routes."
                 api-route="cars"
-            />
+            >
+                <template #before-calendar>
+                    <div class="mb-2">
+                        <div class="flex items-center">
+                            <div class="availability-dot bg-green-400" />
+                            <span class="ml-3">Good availability</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="availability-dot bg-yellow-400" />
+                            <span class="ml-3">Medium availability</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="availability-dot bg-red-400" />
+                            <span class="ml-3">Low availabililty</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="availability-dot bg-gray-200" />
+                            <span class="ml-3">No availabililty / unknown</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="availability-dot bg-blue-400" />
+                            <span class="ml-3">This ship has sailed</span>
+                        </div>
+                    </div>
+                </template>
+            </CarAvailabilityCalendar>
         </Container>
     </div>
 </template>
+
+<style scoped>
+.availability-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin: 0 5px;
+}
+</style>
