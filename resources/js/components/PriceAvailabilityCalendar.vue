@@ -167,11 +167,11 @@ const getPriceClass = (date, route) => {
     const priceIndex = prices.indexOf(price);
 
     if (priceIndex === 0) {
-        return "bg-green-300";
+        return "green";
     } else if (priceIndex === pricesLength - 1) {
-        return "bg-red-300";
+        return "red";
     } else {
-        return "bg-yellow-300";
+        return "yellow";
     }
 };
 
@@ -181,14 +181,14 @@ const getRemainingClass = (date, route) => {
     const remaining = foundDate.capacity;
 
     if (remaining < 3) {
-        return "bg-red-200";
+        return "red";
     } else if (remaining <= 7) {
-        return "bg-orange-200";
+        return "orange";
     } else if (remaining <= 10) {
-        return "bg-yellow-200";
+        return "yellow";
     }
 
-    return 'bg-purple-200';
+    return 'blue';
 };
 
 watch(
@@ -210,7 +210,7 @@ watch(
         </p>
 
         <div class="flex items-center mb-3">
-            <div class="availability-dot bg-gray-300" />
+            <div class="availability-dot bg-gray-200" />
             <span class="ml-3">Sold out or unavailable</span>
         </div>
 

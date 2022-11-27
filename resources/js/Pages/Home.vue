@@ -35,25 +35,25 @@ import Tool from "../components/home/Tool.vue";
             </p>
 
             <div class="text-center py-4 lg:px-4">
-                <Tool
+                <!-- <Tool
                     emoji="🚢"
                     text="Find a trip"
                     route-name="find-a-trip"
                     colour="blue"
-                />
+                /> -->
 
-                <Tool
+                <!-- <Tool
                     emoji="📆"
                     text="Check available capacity"
                     route-name="capacity"
                     colour="green"
-                />
+                /> -->
 
                 <Tool
                     emoji="🐶"
                     text="Check pet cabin availability"
                     route-name="pets"
-                    colour="indigo"
+                    colour="blue"
                 />
 
                 <Tool
@@ -67,7 +67,7 @@ import Tool from "../components/home/Tool.vue";
                     emoji="🛏"
                     text="Room availability"
                     route-name="accommodation"
-                    colour="red"
+                    colour="green"
                 />
             </div>
         </Container>

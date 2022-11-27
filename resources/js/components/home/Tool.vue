@@ -22,7 +22,6 @@ const props = defineProps({
 });
 
 const outerClasses = computed(() => {
-    console.log(props.colour);
     return `
     p-2
     items-center
@@ -31,7 +30,8 @@ const outerClasses = computed(() => {
     flex
     lg:inline-flex
     cursor-pointer
-    bg-${props.colour}-800 text-${props.colour}-100
+    bg-${props.colour}-600
+    text-white
 `});
 </script>
 

@@ -77,9 +77,9 @@ const getAvailabilityClass = (date, route) => {
         return "bg-gray-200";
     }
 
-    if (foundDate.past) return "bg-indigo-300";
+    if (foundDate.past) return "blue";
 
-    return foundDate.available ? "bg-green-500" : "bg-red-500";
+    return foundDate.available ? "green" : "red";
 };
 
 const updateFromPage = ({ month, year }, route) => {
@@ -111,8 +111,8 @@ watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYea
                 <span class="ml-3">Unavailable</span>
             </div>
             <div class="flex items-center">
-                <div class="availability-dot bg-indigo-300" />
-                <span class="ml-3">In the past</span>
+                <div class="availability-dot blue" />
+                <span class="ml-3">This ship has sailed</span>
             </div>
             <div class="flex items-center">
                 <div class="availability-dot bg-gray-200" />
