@@ -78,7 +78,7 @@ const getAvailabilityClass = (date, route) => {
     }
 
     if (foundDate.past) {
-        return "bg-blue-300";
+        return "blue";
     }
 
     return foundDate.capacityClass;

@@ -28,25 +28,29 @@ import CarAvailabilityCalendar from "../components/CarAvailabilityCalendar.vue";
                 api-route="cars"
             >
                 <template #before-calendar>
-                    <div class="mb-2">
+                    <div class="mb-2 pink">
                         <div class="flex items-center">
-                            <div class="availability-dot bg-green-400" />
+                            <div class="availability-dot green" />
                             <span class="ml-3">Good availability</span>
                         </div>
                         <div class="flex items-center">
-                            <div class="availability-dot bg-yellow-400" />
+                            <div class="availability-dot yellow" />
                             <span class="ml-3">Medium availability</span>
                         </div>
                         <div class="flex items-center">
-                            <div class="availability-dot bg-red-400" />
+                            <div class="availability-dot orange" />
                             <span class="ml-3">Low availabililty</span>
                         </div>
                         <div class="flex items-center">
-                            <div class="availability-dot bg-gray-200" />
-                            <span class="ml-3">No availabililty / unknown</span>
+                            <div class="availability-dot red" />
+                            <span class="ml-3">No availabililty</span>
                         </div>
                         <div class="flex items-center">
-                            <div class="availability-dot bg-blue-400" />
+                            <div class="availability-dot bg-gray-200" />
+                            <span class="ml-3">Unknown</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="availability-dot blue" />
                             <span class="ml-3">This ship has sailed</span>
                         </div>
                     </div>
