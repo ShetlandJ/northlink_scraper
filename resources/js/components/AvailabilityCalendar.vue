@@ -204,4 +204,24 @@ watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYea
 .unknown {
     background-color: gray;
 }
+
+.red {
+  background-color: #DB4325;
+}
+
+.orange {
+  background-color: #EDA247;
+}
+
+.yellow {
+  background-color: #FFC20A;
+}
+
+.green {
+  background-color: #57C4AD;
+}
+
+.blue {
+  background-color: #0571B0;
+}
 </style>
