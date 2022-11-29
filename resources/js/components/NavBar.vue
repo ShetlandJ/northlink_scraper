@@ -36,7 +36,7 @@ const showingNavigationDropdown = ref(false);
                         "
                         :href="route('home')"
                     >
-                        <span class="dark:text-white"> Northlink Available Tool </span>
+                        <span class="dark:text-white"> Northlink Scanner </span>
                     </Link>
                 </h1>
             </div>
