@@ -48,10 +48,10 @@ const showingNavigationDropdown = ref(false);
             />
         </div>
 
-        <MobileMenu
+        <!-- <MobileMenu
             :showing-navigation-dropdown="showingNavigationDropdown"
             class="lg:hidden"
-        />
+        /> -->
 
         <nav class="hidden lg:flex sm:justify-center">
             <ul
