@@ -252,7 +252,7 @@ watch(
                             <div class="flex justify-center mb-4">
                                 <div v-if="inPast(day.date, route)">-</div>
 
-                                <div v-else-if="isAvailable(day.date, route)" class="text-white">
+                                <div v-else-if="isAvailable(day.date, route)" class="dark:text-white">
                                     <div
                                         class="w-auto rounded-full text-center px-2 text-sm"
                                         :class="getPriceClass(day.date, route)"
