@@ -50,10 +50,10 @@ import Tool from "../components/home/Tool.vue";
                 /> -->
 
                 <Tool
-                    emoji="🐶"
-                    text="Check pet cabin availability"
-                    route-name="pets"
-                    colour="blue"
+                    emoji="🛏"
+                    text="Room availability"
+                    route-name="accommodation"
+                    colour="green"
                 />
 
                 <Tool
@@ -64,10 +64,10 @@ import Tool from "../components/home/Tool.vue";
                 />
 
                 <Tool
-                    emoji="🛏"
-                    text="Room availability"
-                    route-name="accommodation"
-                    colour="green"
+                    emoji="🐶"
+                    text="Check pet cabin availability"
+                    route-name="pets"
+                    colour="blue"
                 />
             </div>
         </Container>
