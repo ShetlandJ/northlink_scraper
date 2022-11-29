@@ -24,6 +24,8 @@ class ScrapeAll extends Command
 
     public function handle()
     {
+        ini_set('max_execution_time', 0);
+
         $s1 = microtime(true);
         // run ScrapeOnePaxData
         $this->info('Running ScrapeOnePaxData');
