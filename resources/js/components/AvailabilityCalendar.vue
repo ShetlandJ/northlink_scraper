@@ -103,11 +103,11 @@ watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYea
         </p>
         <div class="mb-2">
             <div class="flex items-center">
-                <div class="availability-dot bg-green-500" />
+                <div class="availability-dot green" />
                 <span class="ml-3">Available</span>
             </div>
             <div class="flex items-center">
-                <div class="availability-dot bg-red-500" />
+                <div class="availability-dot red" />
                 <span class="ml-3">Unavailable</span>
             </div>
             <div class="flex items-center">
