@@ -41,6 +41,8 @@ class ScrapeOnePaxData extends Command
      */
     public function handle()
     {
+        ini_set('max_execution_time', 10000);
+
         // start timer
         $start = microtime(true);
 
