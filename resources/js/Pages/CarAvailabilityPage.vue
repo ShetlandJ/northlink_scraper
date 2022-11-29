@@ -60,7 +60,7 @@ import CarAvailabilityCalendar from "../components/CarAvailabilityCalendar.vue";
     </div>
 </template>
 
-<style scoped>
+<style>
 .availability-dot {
     width: 10px;
     height: 10px;
