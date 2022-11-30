@@ -226,9 +226,7 @@ watch(
             <span class="ml-3">Sold out or unavailable</span>
         </div>
 
-        <div class="dark:text-white">
-            <slot name="before-calendar" />
-        </div>
+        <slot name="before-calendar" />
 
         <hr class="my-4" />
 

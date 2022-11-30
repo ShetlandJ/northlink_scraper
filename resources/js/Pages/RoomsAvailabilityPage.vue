@@ -55,7 +55,7 @@ const routePayload = computed(() => ({
                 :route-payload="routePayload"
             >
                 <template #before-calendar>
-                    <p>Select a room type from the below list:</p>
+                    <p class="dark:text-white">Select a room type from the below list:</p>
 
                     <select
                         class="form-select block w-full mt-1"
