@@ -101,8 +101,8 @@ watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYea
 
 <template>
     <div>
-        <div class="flex justify-between sm:pt-0 mb-4">
-            <h1 class="text-4xl text-gray-600 dark:text-white">
+        <div class="sm:flex justify-between sm:pt-0 mb-4">
+            <h1 class="text-4xl mb-2 md:mb-0 text-gray-600 dark:text-white">
                 {{ title }}
             </h1>
 

@@ -47,42 +47,48 @@ onMounted(() => {
                 <h1 class="text-4xl text-gray-600 dark:text-gray-200">About</h1>
             </div>
 
-            <p class="mb-2">
-                Hello! I'm
-                <a class="underline" href="https://www.twitter.com/JAStewart">
-                    James Stewart</a
-                >, an ex-pat Shetlander living in Ayrshire working as a software
-                engineer.
-            </p>
+            <div class="dark:text-white">
+                <p class="mb-2">
+                    Hello! I'm
+                    <a
+                        class="underline"
+                        href="https://www.twitter.com/JAStewart"
+                    >
+                        James Stewart</a
+                    >, an ex-pat Shetlander living in Ayrshire working as a
+                    software engineer.
+                </p>
 
-            <p class="mb-2">
-                Northlink scanner is a project I have created to make it easier
-                to get information about the Northlink ferry service, which
-                operates between the North of Scotland, Shetland and Orkney. As
-                of December 2022, the site only shows information about the
-                Lerwick to Aberdeen route, but the Orkney routes will probably
-                be added in the future.
-            </p>
+                <p class="mb-2">
+                    Northlink scanner is a project I have created to make it
+                    easier to get information about the Northlink ferry service,
+                    which operates between the North of Scotland, Shetland and
+                    Orkney. As of December 2022, the site only shows information
+                    about the Lerwick to Aberdeen route, but the Orkney routes
+                    will probably be added in the future.
+                </p>
 
-            <p class="mb-4">
-                The idea for this project came from complaints made by my wife
-                and brother separately about the difficulty in trying to find
-                available pet cabins when traveling back north to see family.
-                The process of booking with Northlink's booking system can be
-                <a href="https://streamable.com/dprxym" class="underline"
-                    >painful and slow.</a
-                >
-            </p>
+                <p class="mb-4">
+                    The idea for this project came from complaints made by my
+                    wife and brother separately about the difficulty in trying
+                    to find available pet cabins when traveling back north to
+                    see family. The process of booking with Northlink's booking
+                    system can be
+                    <a href="https://streamable.com/dprxym" class="underline"
+                        >painful and slow.</a
+                    >
+                </p>
 
-            <p class="mb-4">
-                If you work for this and work for Northlink,
-                <a id="contact" href="" class="underline"
-                    >please reach out to me</a
-                >! The purpose of this project is not to replace the booking
-                website, nor antagonise the company, but to make it easier for
-                people to get information about the service. We could make it
-                better if we work together.
-            </p>
+                <p class="mb-4">
+                    If you work for this and work for Northlink,
+                    <a id="contact" href="" class="underline"
+                        >please reach out to me</a
+                    >! The purpose of this project is not to replace the booking
+                    website, nor antagonise the company, but to make it easier
+                    for people to get information about the service. We could
+                    make it better if we work together.
+                </p>
+            </div>
 
             <div class="mb-4 border p-4">
                 <p class="dark:text-white mb-4 text-lg font-bold">
