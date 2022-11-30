@@ -96,7 +96,7 @@ watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYea
 
 <template>
     <div>
-        <div class="flex justify-center sm:pt-8 sm:justify-start sm:pt-0 mb-4">
+        <div class="flex justify-center sm:justify-start mb-4">
             <h1 class="text-4xl text-gray-600 dark:text-white">
                 {{ title }}
             </h1>
