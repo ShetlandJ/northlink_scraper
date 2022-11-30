@@ -80,7 +80,7 @@ onMounted(() => {
                 </p>
 
                 <p class="mb-4">
-                    If you work for this and work for Northlink,
+                    If you work for Northlink,
                     <a id="contact" href="" class="underline"
                         >please reach out to me</a
                     >! The purpose of this project is not to replace the booking
