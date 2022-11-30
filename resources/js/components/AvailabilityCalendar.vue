@@ -93,7 +93,7 @@ watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYea
 <template>
     <div>
         <div class="flex justify-center sm:pt-8 sm:justify-start sm:pt-0 mb-4">
-            <h1 class="text-4xl text-gray-600 dark:text-gray-200">
+            <h1 class="text-4xl text-gray-600 dark:text-white">
                 {{ title }}
             </h1>
         </div>
@@ -101,7 +101,7 @@ watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYea
         <p class="mb-2 dark:text-white">
             {{ description }}
         </p>
-        <div class="mb-2">
+        <div class="mb-2 dark:text-white">
             <div class="flex items-center">
                 <div class="availability-dot green" />
                 <span class="ml-3">Available</span>
@@ -128,7 +128,7 @@ watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYea
             <div class="flex justify-center">
                 <p
                     v-if="route === 'LEAB'"
-                    class="text-2xl text-gray-600 dark:text-gray-200"
+                    class="text-2xl text-gray-600 dark:text-white"
                 >
                     Lerwick to Aberdeen
                 </p>
