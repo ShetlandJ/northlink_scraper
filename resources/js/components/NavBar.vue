@@ -41,11 +41,28 @@ const showingNavigationDropdown = ref(false);
                 </h1>
             </div>
 
-            <Hamburger
+            <!-- <Hamburger
                 class="md:flex lg:hidden"
                 :showing-navigation-dropdown="showingNavigationDropdown"
                 @toggle="showingNavigationDropdown = !showingNavigationDropdown"
-            />
+            /> -->
+            <Link
+                        class="
+                            border-t
+                            block
+                            no-underline
+                            hover:underline
+                            py-2
+                            text-grey-darkest
+                            hover:text-black
+                            md:border-none md:p-0
+                            dark:text-white dark:hover:text-white
+                        "
+                        :href="route('about')"
+                        :class="{ 'font-bold': $page.url === '/about' }"
+                    >
+                        About
+                    </Link>
         </div>
 
         <!-- <MobileMenu

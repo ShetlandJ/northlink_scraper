@@ -43,3 +43,7 @@ Route::get('/capacity', function () {
 Route::get('/find-a-trip', function () {
     return Inertia::render('FindATripPage');
 })->name('find-a-trip');
+
+Route::get('/about', function () {
+    return Inertia::render('AboutPage');
+})->name('about');

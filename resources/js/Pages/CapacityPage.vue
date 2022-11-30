@@ -31,20 +31,6 @@ import CapacityCalendar from "../components/CapacityCalendar.vue";
             <p class="mb-2">
                 This tool shows the availability per day.
             </p>
-            <!-- <div class="mb-2">
-                <div class="flex items-center">
-                    <div class="availability-dot bg-green-500" />
-                    <span class="ml-3">Available</span>
-                </div>
-                <div class="flex items-center">
-                    <div class="availability-dot bg-red-500" />
-                    <span class="ml-3">Unavailable</span>
-                </div>
-                <div class="flex items-center">
-                    <div class="availability-dot bg-gray-200" />
-                    <span class="ml-3">Unknown</span>
-                </div>
-            </div> -->
 
             <hr class="my-4" />
 

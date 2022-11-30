@@ -2,12 +2,14 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use App\Models\Trip;
 use App\Models\Token;
+use App\Models\JobRun;
 use App\Services\ConfigService;
-use App\Services\NorthlinkService;
-use Exception;
+use App\Services\JobRunService;
 use Illuminate\Console\Command;
+use App\Services\NorthlinkService;
 
 class GetTripAccommodation extends Command
 {
@@ -20,6 +22,7 @@ class GetTripAccommodation extends Command
     // northlink service
     private NorthlinkService $northlinkService;
     private ConfigService $configService;
+    private JobRunService $jobRunService;
 
     /**
      * Create a new command instance.
@@ -28,11 +31,13 @@ class GetTripAccommodation extends Command
      */
     public function __construct(
         NorthlinkService $northlinkService,
-        ConfigService $configService
+        ConfigService $configService,
+        JobRunService $jobRunService
     ) {
         parent::__construct();
         $this->northlinkService = $northlinkService;
         $this->configService = $configService;
+        $this->jobRunService = $jobRunService;
     }
 
     /**
@@ -57,6 +62,8 @@ class GetTripAccommodation extends Command
         $this->northlinkService->fetchToken($payload);
 
         $dates = $this->createDatesArray();
+
+        $jobRun = $this->jobRunService->create('GetTripAccommodation');
 
         foreach (['LEAB', 'ABLE'] as $routeCode) {
             $this->info("Fetching accommodation for $routeCode");
@@ -84,6 +91,10 @@ class GetTripAccommodation extends Command
                 $bar->advance();
             }
         }
+
+        $bar->finish();
+
+        $this->jobRunService->endJob($jobRun);
 
         return 0;
     }

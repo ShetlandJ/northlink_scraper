@@ -4,9 +4,11 @@ namespace App\Console\Commands;
 
 use App\Models\Trip;
 use App\Models\Token;
+use App\Models\JobRun;
 use App\Services\ConfigService;
-use App\Services\NorthlinkService;
+use App\Services\JobRunService;
 use Illuminate\Console\Command;
+use App\Services\NorthlinkService;
 
 class ScrapeCarDataOnePax extends Command
 {
@@ -19,6 +21,7 @@ class ScrapeCarDataOnePax extends Command
     // northlink service
     private NorthlinkService $northlinkService;
     private ConfigService $configService;
+    private JobRunService $jobRunService;
 
     /**
      * Create a new command instance.
@@ -27,11 +30,13 @@ class ScrapeCarDataOnePax extends Command
      */
     public function __construct(
         NorthlinkService $northlinkService,
-        ConfigService $configService
+        ConfigService $configService,
+        JobRunService $jobRunService
     ) {
         parent::__construct();
         $this->northlinkService = $northlinkService;
         $this->configService = $configService;
+        $this->jobRunService = $jobRunService;
     }
 
     /**
@@ -57,8 +62,9 @@ class ScrapeCarDataOnePax extends Command
 
         $this->northlinkService->fetchToken($payload);
 
-
         $dates = $this->createDatesArray();
+
+        $jobRun = $this->jobRunService->create('ScrapeCarDataOnePax');
 
         foreach (['LEAB', 'ABLE'] as $routeCode) {
             $bar = $this->output->createProgressBar(count($dates));
@@ -87,6 +93,8 @@ class ScrapeCarDataOnePax extends Command
                 $bar->advance();
             }
         }
+
+        $this->jobRunService->endJob($jobRun);
 
         return 0;
     }
