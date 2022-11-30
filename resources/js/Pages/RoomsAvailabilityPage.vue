@@ -5,11 +5,15 @@ import NavBar from "../components/NavBar.vue";
 import PriceAvailabilityCalendar from "../components/PriceAvailabilityCalendar.vue";
 import { computed, ref } from "@vue/runtime-core";
 
-const roomType = ref('NI4');
+const roomType = ref("NI4");
+const paxNumber = ref(1);
 
 const roomTypes = [
     { text: "Inside 4 berth cabin (bunk beds)", value: "NI4" },
-    { text: "Inside 4 berth cabin with Privacy Curtains (bunk beds)", value: "NI4S" },
+    {
+        text: "Inside 4 berth cabin with Privacy Curtains (bunk beds)",
+        value: "NI4S",
+    },
     { text: "Inside 4 berth Pet-friendly cabin (bunk beds)", value: "NPETI4" },
     { text: "Inside 2 berth cabin (bunk beds)", value: "NI2" },
     { text: "Inside 2 berth Pet-friendly cabin", value: "NPETI2" },
@@ -28,7 +32,6 @@ const roomTypes = [
 const routePayload = computed(() => ({
     roomType: roomType.value,
 }));
-
 </script>
 
 <template>
@@ -44,7 +47,7 @@ const routePayload = computed(() => ({
             sm:items-center sm:pt-0
             fit
         "
-        style="padding-bottom: 25px;"
+        style="padding-bottom: 25px"
     >
         <NavBar />
         <Container>
@@ -53,9 +56,34 @@ const routePayload = computed(() => ({
                 description="Use this tool to determine available accommodation on future ferry sailings. The top pill is the cost of the room and the bottom is how many are remaining"
                 api-route="accommodation"
                 :route-payload="routePayload"
+                :pax-number="paxNumber"
             >
                 <template #before-calendar>
-                    <p class="dark:text-white">Select a room type from the below list:</p>
+                    <hr class="my-4" />
+
+                    <div class="flex items-center mb-4">
+                        <input
+                            type="number"
+                            style="width: 10%"
+                            v-model="paxNumber"
+                            min="1"
+                            max="20"
+                        />
+
+                        <label
+                            for="paxNumber"
+                            class="
+                                dark:text-gray-200
+                                ml-3
+                            "
+                        >
+                            Traveller{{paxNumber === 1 ? '' : 's'}} (change to see prices)
+                        </label>
+                    </div>
+
+                    <p class="dark:text-white">
+                        Select a room type from the below list:
+                    </p>
 
                     <select
                         class="form-select block w-full mt-1"

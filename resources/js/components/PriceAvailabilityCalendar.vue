@@ -22,6 +22,10 @@ const props = defineProps({
         type: Object,
         default: null,
     },
+    paxNumber: {
+        type: Number,
+        default: 1,
+    },
 });
 
 const jobStatus = usePage().props.value.jobStatus;
@@ -98,7 +102,9 @@ const getPrice = (date, route) => {
         return "";
     }
 
-    return foundDate.price;
+    const multiplier = props.paxNumber < 1 || props.paxNumber > 20 ? 1 : props.paxNumber
+
+    return foundDate.price + (foundDate.trip_price * multiplier);
 };
 
 const isAvailable = (date, route) => {

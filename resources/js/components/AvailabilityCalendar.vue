@@ -118,6 +118,11 @@ watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYea
         <p class="mb-2 dark:text-white">
             {{ description }}
         </p>
+
+        <p class="mb-3 dark:text-white">
+            Please note: This data is for information and should not be fully relied upon for trip planning. We attempt to sync data every 15 minutes.
+        </p>
+
         <div class="mb-2 dark:text-white">
             <div class="flex items-center">
                 <div class="availability-dot green" />
