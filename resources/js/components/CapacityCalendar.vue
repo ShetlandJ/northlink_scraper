@@ -50,13 +50,13 @@ const updateFromPage = ({ month, year }, route) => {
         <div class="flex justify-center">
             <p
                 v-if="route === 'LEAB'"
-                class="text-2xl text-gray-600 dark:text-gray-200"
+                class="text-2xl text-gray-600 dark:text-white"
             >
                 Lerwick to Aberdeen
             </p>
             <p
                 v-if="route === 'ABLE'"
-                class="text-2xl text-gray-600 dark:text-gray-200"
+                class="text-2xl text-gray-600 dark:text-white"
             >
                 Aberdeen to Lerwick
             </p>

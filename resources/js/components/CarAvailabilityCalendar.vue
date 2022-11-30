@@ -109,13 +109,13 @@ watch(
         <div class="flex justify-center">
             <p
                 v-if="route === 'LEAB'"
-                class="text-2xl text-gray-600 dark:text-gray-100 mb-3"
+                class="text-2xl text-gray-600 dark:text-white mb-3"
             >
                 Lerwick to Aberdeen
             </p>
             <p
                 v-if="route === 'ABLE'"
-                class="text-2xl text-gray-600 dark:text-gray-100 mb-3"
+                class="text-2xl text-gray-600 dark:text-white mb-3"
             >
                 Aberdeen to Lerwick
             </p>
