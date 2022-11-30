@@ -186,11 +186,18 @@ class NorthlinkService
             ]);
         }
 
-        // delete all tripPrices
-        TripPrice::where('trip_id', $trip->id)->delete();
 
+        // create or update trip prices
         foreach ($data['prices'] as $price) {
-            $tripPrice = new TripPrice();
+            $tripPrice = TripPrice::where('trip_id', $trip->id)
+                ->where('resourceCode', $price['resourceCode'])
+                ->where('ticketType', $price['ticketType'])
+                ->first();
+
+            if ( ! $tripPrice) {
+                $tripPrice = new TripPrice();
+            }
+
             $tripPrice->trip_id = $trip->id;
             $tripPrice->resourceCode = $price['resourceCode'];
             $tripPrice->price = $price['price'];
@@ -205,6 +212,7 @@ class NorthlinkService
             $tripPrice->save();
         }
     }
+
     public function updateVehicleAvailabilityStatus(
         array $data,
         string $date,
