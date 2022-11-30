@@ -209,7 +209,7 @@ watch(
             </h1>
         </div>
 
-        <p class="mb-2 dark:text-white">
+        <p class="mb-2 dark:text-white text-md">
             {{ description }}
         </p>
 
