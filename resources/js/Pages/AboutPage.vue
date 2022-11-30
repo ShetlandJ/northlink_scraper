@@ -127,6 +127,7 @@ onMounted(() => {
                         More details please!
                     </button>
                 </div>
+                <div class="dark:text-white">
                 <p v-if="explain === 'simple'">
                     Northlink has publically accessible data which I have
                     grabbed and collated. No hacking or security breaches were
@@ -161,6 +162,7 @@ onMounted(() => {
                         store the data in a MySQL database (rather than pulling
                         live data) for the sake of latency.
                     </p>
+                    </div>
                 </div>
             </div>
 
