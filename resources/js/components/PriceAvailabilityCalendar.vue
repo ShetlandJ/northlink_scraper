@@ -188,7 +188,7 @@ const getRemainingClass = (date, route) => {
         return "yellow";
     }
 
-    return 'blue';
+    return 'blue text-white';
 };
 
 watch(
