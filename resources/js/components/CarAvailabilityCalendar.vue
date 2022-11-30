@@ -113,8 +113,12 @@ watch(
         </div>
     </div>
 
-    <p class="mb-4 dark:text-white">
+    <p class="mb-2 dark:text-white">
         {{ description }}
+    </p>
+
+    <p class="mb-3 dark:text-white">
+        Please note: This data is for information and should not be fully relied upon for trip planning. We attempt to sync data every 15 minutes.
     </p>
 
     <div v-for="(route, index) in ['LEAB', 'ABLE']" :key="route">

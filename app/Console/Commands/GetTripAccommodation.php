@@ -104,7 +104,8 @@ class GetTripAccommodation extends Command
     {
         $dates = [];
         $startDate = date("Y-m-d", strtotime('tomorrow'));
-        $endDate = '2023-04-01';
+        // $endDate = '2023-04-01';
+        $endDate = '2022-12-31';
         $currentDate = $startDate;
         while ($currentDate <= $endDate) {
             $dates[] = $currentDate;
