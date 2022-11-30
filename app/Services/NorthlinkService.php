@@ -360,20 +360,10 @@ class NorthlinkService
         $return = $this->getTripByRouteAndDate($returnRouteCode, $date->addDays(2));
 
         if (!$outbound || !$return) {
-            logger([
-                "dateString" => $dateString,
-                "outboundRouteCode" => $outboundRouteCode,
-                "returnRouteCode" => $returnRouteCode,
-            ]);
             return;
         }
 
         if (!isset($return->identifier)) {
-            logger([
-                "dateString" => $dateString,
-                "outboundRouteCode" => $outboundRouteCode,
-                "returnRouteCode" => $returnRouteCode,
-            ]);
             return;
         }
 
@@ -383,8 +373,7 @@ class NorthlinkService
             $return->identifier
         );
 
-        if (!$success) {
-            logger("Failed to mock depart");
+        if ( ! $success) {
             return;
         }
 
@@ -394,7 +383,7 @@ class NorthlinkService
         try {
             $res = $this->client->request(
                 'POST',
-                'https://www.northlinkferries.co.uk/api/accommodations/ABLE',
+                sprintf('https://www.northlinkferries.co.uk/api/accommodations/%s', $outboundRouteCode),
                 [
                     'headers' => [
                         'Authorization' => $token,
