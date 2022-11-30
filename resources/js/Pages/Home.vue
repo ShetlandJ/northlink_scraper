@@ -23,16 +23,18 @@ import Tool from "../components/home/Tool.vue";
         <NavBar />
 
         <Container>
-            <p class="mb-2 text-xl">Welcome to Northlink Scanner.</p>
+            <div class="dark:text-white">
+                <p class="mb-2 text-xl">Welcome to Northlink Scanner.</p>
 
-            <p class="mb-2">
-                The aim of this website is to help those travelling on the
-                Northlink ferry to find cheaper bookings and check availability
-                most easily than using Northlink's booking service.
-            </p>
-            <p class="mb-2">
-                These are the tools that are currently available:
-            </p>
+                <p class="mb-2">
+                    The aim of this website is to help those travelling on the
+                    Northlink ferry to find cheaper bookings and check availability
+                    most easily than using Northlink's booking service.
+                </p>
+                <p class="mb-2">
+                    These are the tools that are currently available:
+                </p>
+            </div>
 
             <div class="text-center py-4 lg:px-4">
                 <!-- <Tool

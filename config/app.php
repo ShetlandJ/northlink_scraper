@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Spaektionary'),
+    'name' => env('APP_NAME', 'Northlink scanner'),
 
     /*
     |--------------------------------------------------------------------------
