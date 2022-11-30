@@ -205,7 +205,7 @@ watch(
             </h1>
         </div>
 
-        <p class="mb-2">
+        <p class="mb-2 dark:text-white">
             {{ description }}
         </p>
 
@@ -226,7 +226,9 @@ watch(
             <span class="ml-3">Sold out or unavailable</span>
         </div>
 
-        <slot name="before-calendar" />
+        <div class="dark:text-white">
+            <slot name="before-calendar" />
+        </div>
 
         <hr class="my-4" />
 
