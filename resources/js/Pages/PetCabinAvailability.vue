@@ -22,7 +22,7 @@ import AvailabilityCalendar from "../components/AvailabilityCalendar.vue";
         <NavBar />
         <Container>
             <AvailabilityCalendar
-                title="Pet cabin availabililty"
+                title="Pet cabin availability"
                 description="This tool helps to determine pet cabin availability on the
                 Lerwick/Aberdeen routes."
                 api-route="pet-cabins"

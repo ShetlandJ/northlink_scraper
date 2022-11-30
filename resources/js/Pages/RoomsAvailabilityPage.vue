@@ -49,7 +49,7 @@ const routePayload = computed(() => ({
         <NavBar />
         <Container>
             <PriceAvailabilityCalendar
-                title="Room availabililty"
+                title="Room availability"
                 description="Use this tool to determine available accommodation on future ferry sailings."
                 api-route="accommodation"
                 :route-payload="routePayload"

@@ -22,7 +22,7 @@ import CarAvailabilityCalendar from "../components/CarAvailabilityCalendar.vue";
         <NavBar />
         <Container>
             <CarAvailabilityCalendar
-                title="Car availabililty"
+                title="Car availability"
                 description="This tool helps to determine car availability on the
                 Lerwick/Aberdeen routes."
                 api-route="cars"
@@ -39,11 +39,11 @@ import CarAvailabilityCalendar from "../components/CarAvailabilityCalendar.vue";
                         </div>
                         <div class="flex items-center">
                             <div class="availability-dot orange" />
-                            <span class="ml-3">Low availabililty</span>
+                            <span class="ml-3">Low availability</span>
                         </div>
                         <div class="flex items-center">
                             <div class="availability-dot red" />
-                            <span class="ml-3">No availabililty</span>
+                            <span class="ml-3">No availability</span>
                         </div>
                         <div class="flex items-center">
                             <div class="availability-dot bg-gray-200" />

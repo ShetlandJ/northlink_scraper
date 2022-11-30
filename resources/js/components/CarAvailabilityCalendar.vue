@@ -95,24 +95,34 @@ watch(
 </script>
 
 <template>
+    <div class="flex justify-center sm:pt-8 sm:justify-start sm:pt-0 mb-4">
+        <h1 class="text-4xl text-gray-600 dark:text-gray-200">
+            {{ title }}
+        </h1>
+    </div>
+
+    <p class="mb-4 dark:text-white">
+        {{ description }}
+    </p>
+
     <div v-for="(route, index) in ['LEAB', 'ABLE']" :key="route">
         <div class="flex justify-center">
             <p
                 v-if="route === 'LEAB'"
-                class="text-2xl text-gray-600 dark:text-gray-200"
+                class="text-2xl text-gray-600 dark:text-gray-100 mb-3"
             >
                 Lerwick to Aberdeen
             </p>
             <p
                 v-if="route === 'ABLE'"
-                class="text-2xl text-gray-600 dark:text-gray-200"
+                class="text-2xl text-gray-600 dark:text-gray-100 mb-3"
             >
                 Aberdeen to Lerwick
             </p>
         </div>
 
         <slot name="before-calendar" />
-        <hr class='my-4' />
+        <hr class="my-4" />
 
         <div class="calendar-spinner" v-if="loading">
             <easy-spinner type="spins" size="50" color="#22C55E" />

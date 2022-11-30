@@ -199,7 +199,7 @@ watch(
 
 <template>
     <div>
-        <div class="flex justify-center pt-8 sm:justify-start sm:pt-0 mb-4">
+        <div class="flex justify-center sm:pt-8 sm:justify-start sm:pt-0 mb-4">
             <h1 class="text-4xl text-gray-600 dark:text-gray-200">
                 {{ title }}
             </h1>
