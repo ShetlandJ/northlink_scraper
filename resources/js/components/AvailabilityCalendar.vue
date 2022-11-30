@@ -22,6 +22,10 @@ const props = defineProps({
     },
 });
 
+const isDarkMode = ref(false);
+const darkTheme = window.matchMedia("(prefers-color-scheme: dark)");
+isDarkMode.value = darkTheme.matches;
+
 const dates = ref({
     LEAB: [],
     ABLE: [],
@@ -152,6 +156,7 @@ watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYea
                 <Calendar
                     class="mb-6"
                     is-expanded
+                    :is-dark="isDarkMode"
                     @update:from-page="(value) => updateFromPage(value, route)"
                 >
                     <template v-slot:day-content="{ day, dayEvents }">
