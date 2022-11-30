@@ -200,7 +200,7 @@ watch(
 <template>
     <div>
         <div class="flex justify-center sm:pt-8 sm:justify-start sm:pt-0 mb-4">
-            <h1 class="text-4xl text-gray-600 dark:text-gray-200">
+            <h1 class="text-4xl text-gray-600 dark:text-white">
                 {{ title }}
             </h1>
         </div>
@@ -221,8 +221,8 @@ watch(
             </div>
         </div>
 
-        <div class="flex items-center mb-3">
-            <div class="availability-dot bg-gray-200 dark:text-white" />
+        <div class="flex items-center mb-3 dark:text-white">
+            <div class="availability-dot bg-gray-200" />
             <span class="ml-3">Sold out or unavailable</span>
         </div>
 

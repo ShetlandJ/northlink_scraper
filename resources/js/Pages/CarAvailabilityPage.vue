@@ -28,7 +28,7 @@ import CarAvailabilityCalendar from "../components/CarAvailabilityCalendar.vue";
                 api-route="cars"
             >
                 <template #before-calendar>
-                    <div class="mb-2 pink">
+                    <div class="mb-2 dark:text-white">
                         <div class="flex items-center">
                             <div class="availability-dot green" />
                             <span class="ml-3">Good availability</span>
