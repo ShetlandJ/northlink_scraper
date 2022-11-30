@@ -222,7 +222,7 @@ watch(
         </div>
 
         <div class="flex items-center mb-3">
-            <div class="availability-dot bg-gray-200" />
+            <div class="availability-dot bg-gray-200 dark:text-white" />
             <span class="ml-3">Sold out or unavailable</span>
         </div>
 
