@@ -63,7 +63,8 @@ class GetTripAccommodation extends Command
 
         $dates = $this->createDatesArray();
 
-        $jobRun = $this->jobRunService->create('GetTripAccommodation');
+        $jobRun = $this->jobRunService->findByJobNameOrCreate('GetTripAccommodation');
+        $this->jobRunService->startJob($jobRun);
 
         foreach (['LEAB', 'ABLE'] as $routeCode) {
             $this->info("Fetching accommodation for $routeCode");

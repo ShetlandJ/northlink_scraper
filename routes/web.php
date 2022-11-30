@@ -1,14 +1,15 @@
 <?php
 
+use Inertia\Inertia;
+use App\Models\JobRun;
 use App\Models\Ingredient;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Home\HomeController;
 use App\Http\Controllers\Home\RecipeController;
 use App\Http\Controllers\Home\CategoryController;
+use App\Http\Controllers\Home\SupplierController;
 use App\Http\Controllers\Home\IngredientController;
 use App\Http\Controllers\Home\RecipeCreateController;
-use App\Http\Controllers\Home\SupplierController;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,15 +26,42 @@ Route::get('/', [HomeController::class, 'index'])
     ->name('home');
 
 Route::get('/pets', function () {
-    return Inertia::render('PetCabinAvailability');
+    $job = JobRun::where('job_name', 'ScrapeOnePaxData')->first();
+
+    $payload = [
+        'lastFetched' => $job->finished_at->diffForHumans(),
+        'currentlyRunning' => $job->currentlyRunning,
+    ];
+
+    return Inertia::render('PetCabinAvailability', [
+        'jobStatus' => $payload,
+    ]);
 })->name('pets');
 
 Route::get('/cars', function () {
-    return Inertia::render('CarAvailabilityPage');
+    $job = JobRun::where('job_name', 'ScrapeCarDataOnePax')->first();
+
+    $payload = [
+        'lastFetched' => $job->finished_at->diffForHumans(),
+        'currentlyRunning' => $job->currentlyRunning,
+    ];
+
+    return Inertia::render('CarAvailabilityPage', [
+        'jobStatus' => $payload,
+    ]);
 })->name('cars');
 
 Route::get('/rooms', function () {
-    return Inertia::render('RoomsAvailabilityPage');
+    $job = JobRun::where('job_name', 'GetTripAccommodation')->first();
+
+    $payload = [
+        'lastFetched' => $job->finished_at->diffForHumans(),
+        'currentlyRunning' => $job->currentlyRunning,
+    ];
+
+    return Inertia::render('RoomsAvailabilityPage', [
+        'jobStatus' => $payload,
+    ]);
 })->name('accommodation');
 
 Route::get('/capacity', function () {

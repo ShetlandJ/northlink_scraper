@@ -2,6 +2,8 @@
 import "v-calendar/dist/style.css";
 import axios from "axios";
 import { ref, watch } from "@vue/runtime-core";
+import { usePage } from "@inertiajs/inertia-vue3";
+import Pulse from './Pulse.vue';
 
 const props = defineProps({
     title: {
@@ -21,6 +23,9 @@ const props = defineProps({
         default: null,
     },
 });
+
+const jobStatus = usePage().props.value.jobStatus;
+
 
 const isDarkMode = ref(false);
 const darkTheme = window.matchMedia("(prefers-color-scheme: dark)");
@@ -96,10 +101,18 @@ watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYea
 
 <template>
     <div>
-        <div class="flex justify-center sm:justify-start mb-4">
+        <div class="flex justify-between sm:pt-0 mb-4">
             <h1 class="text-4xl text-gray-600 dark:text-white">
                 {{ title }}
             </h1>
+
+            <div v-if="jobStatus.lastFetched" class="text-sm dark:text-white">
+                <p>Last fetched: {{ jobStatus.lastFetched }}</p>
+                <div class="flex items-center mt-2" v-if="jobStatus.currentlyRunning">
+                    <span>currently syncing</span>
+                    <Pulse class="ml-4" />
+                </div>
+            </div>
         </div>
 
         <p class="mb-2 dark:text-white">

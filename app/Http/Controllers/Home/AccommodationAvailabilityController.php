@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Home;
 
 use App\Http\Controllers\NorthlinkController;
+use App\Models\JobRun;
 use App\Models\Trip;
 use Inertia\Inertia;
 use GuzzleHttp\Client;

@@ -2,11 +2,15 @@
 import "v-calendar/dist/style.css";
 import axios from "axios";
 import { ref, watch } from "@vue/runtime-core";
+import { usePage } from "@inertiajs/inertia-vue3";
+import Pulse from './Pulse.vue';
 
 const dates = ref({
     LEAB: [],
     ABLE: [],
 });
+
+const jobStatus = usePage().props.value.jobStatus;
 
 const props = defineProps({
     title: {
@@ -95,10 +99,18 @@ watch(
 </script>
 
 <template>
-    <div class="flex justify-center sm:pt-8 sm:justify-start sm:pt-0 mb-4">
-        <h1 class="text-4xl text-gray-600 dark:text-gray-200">
+    <div class="flex justify-between sm:pt-0 mb-4">
+        <h1 class="text-4xl text-gray-600 dark:text-white">
             {{ title }}
         </h1>
+
+        <div v-if="jobStatus.lastFetched" class="text-sm dark:text-white">
+            <p>Last fetched: {{ jobStatus.lastFetched }}</p>
+            <div class="flex items-center mt-2" v-if="jobStatus.currentlyRunning">
+                <span>currently syncing</span>
+                <Pulse class="ml-4" />
+            </div>
+        </div>
     </div>
 
     <p class="mb-4 dark:text-white">

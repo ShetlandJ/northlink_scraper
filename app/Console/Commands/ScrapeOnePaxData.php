@@ -65,8 +65,8 @@ class ScrapeOnePaxData extends Command
         // create array of dates from 2022-10-05 to 2022-12-30
         $dates = $this->createDatesArray();
 
-        // create JobRun
-        $jobRun = $this->jobRunService->create('ScrapeOnePaxData');
+        $jobRun = $this->jobRunService->findByJobNameOrCreate('ScrapeOnePaxData');
+        $this->jobRunService->startJob($jobRun);
 
         foreach (['LEAB', 'ABLE'] as $routeCode) {
             // create progrss

@@ -20,4 +20,9 @@ class JobRun extends Model
         'started_at',
         'finished_at',
     ];
+
+    public function getCurrentlyRunningAttribute(): bool
+    {
+        return $this->started_at && !$this->finished_at || $this->started_at > $this->finished_at;
+    }
 }

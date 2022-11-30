@@ -2,6 +2,8 @@
 import "v-calendar/dist/style.css";
 import axios from "axios";
 import { computed, ref, watch } from "@vue/runtime-core";
+import { usePage } from "@inertiajs/inertia-vue3";
+import Pulse from './Pulse.vue';
 
 const props = defineProps({
     title: {
@@ -21,6 +23,8 @@ const props = defineProps({
         default: null,
     },
 });
+
+const jobStatus = usePage().props.value.jobStatus;
 
 const isDarkMode = ref(false);
 const darkTheme = window.matchMedia("(prefers-color-scheme: dark)");
@@ -159,7 +163,7 @@ const findDate = (date, route) => {
     );
 
     return foundDate;
-}
+};
 
 const getPriceClass = (date, route) => {
     const foundDate = findDate(date, route);
@@ -192,7 +196,7 @@ const getRemainingClass = (date, route) => {
         return "yellow";
     }
 
-    return 'blue text-white';
+    return "blue text-white";
 };
 
 watch(
@@ -203,10 +207,18 @@ watch(
 
 <template>
     <div>
-        <div class="flex justify-center sm:justify-start sm:pt-0 mb-4">
+        <div class="flex justify-between sm:pt-0 mb-4">
             <h1 class="text-4xl text-gray-600 dark:text-white">
                 {{ title }}
             </h1>
+
+            <div v-if="jobStatus.lastFetched" class="text-sm dark:text-white">
+                <p>Last fetched: {{ jobStatus.lastFetched }}</p>
+                <div class="flex items-center mt-2" v-if="jobStatus.currentlyRunning">
+                    <span>currently syncing</span>
+                    <Pulse class="ml-4" />
+                </div>
+            </div>
         </div>
 
         <p class="mb-2 dark:text-white text-md">
@@ -214,7 +226,16 @@ watch(
         </p>
 
         <div class="flex items-center mb-2">
-            <div class="w-auto rounded-full text-center px-2 green text-white text-sm">
+            <div
+                class="
+                    w-auto
+                    rounded-full
+                    text-center
+                    px-2
+                    green
+                    text-white text-sm
+                "
+            >
                 £price
             </div>
         </div>
@@ -269,9 +290,18 @@ watch(
                             <div class="flex justify-center mb-4">
                                 <div v-if="inPast(day.date, route)">-</div>
 
-                                <div v-else-if="isAvailable(day.date, route)" class="dark:text-white">
+                                <div
+                                    v-else-if="isAvailable(day.date, route)"
+                                    class="dark:text-white"
+                                >
                                     <div
-                                        class="w-auto rounded-full text-center px-2 text-sm"
+                                        class="
+                                            w-auto
+                                            rounded-full
+                                            text-center
+                                            px-2
+                                            text-sm
+                                        "
                                         :class="getPriceClass(day.date, route)"
                                     >
                                         <div>
@@ -279,22 +309,27 @@ watch(
                                         </div>
                                     </div>
                                     <div
-                                        class="w-auto rounded-full text-center px-2 mt-2 text-sm"
-                                        :class="getRemainingClass(day.date, route)"
+                                        class="
+                                            w-auto
+                                            rounded-full
+                                            text-center
+                                            px-2
+                                            mt-2
+                                            text-sm
+                                        "
+                                        :class="
+                                            getRemainingClass(day.date, route)
+                                        "
                                     >
-
-                                        <div>{{getRemaining(day.date, route)}}</div>
+                                        <div>
+                                            {{ getRemaining(day.date, route) }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div
                                     v-else
-                                    class="
-                                        availability-dot
-                                        bg-gray-200
-                                        text-sm
-                                    "
-                                >
-                                </div>
+                                    class="availability-dot bg-gray-200 text-sm"
+                                ></div>
                             </div>
                         </div>
                     </template>
@@ -334,22 +369,90 @@ watch(
 }
 
 .red {
-  background-color: #DB4325;
+    background-color: #db4325;
 }
 
 .orange {
-  background-color: #EDA247;
+    background-color: #eda247;
 }
 
 .yellow {
-  background-color: #FFC20A;
+    background-color: #ffc20a;
 }
 
 .green {
-  background-color: #57C4AD;
+    background-color: #57c4ad;
 }
 
 .blue {
-  background-color: #0571B0;
+    background-color: #0571b0;
 }
+
+/* .pulsating-circle {
+  width: 12px;
+  height: 12px;
+}
+.pulsating-circle:before {
+  content: "";
+  position: relative;
+  display: block;
+  width: 300%;
+  height: 300%;
+  box-sizing: border-box;
+  margin-left: -100%;
+  margin-top: -100%;
+  border-radius: 45px;
+  background-color: #01a4e9;
+  -webkit-animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+          animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+.pulsating-circle:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@-webkit-keyframes pulse-ring {
+  0% {
+    transform: scale(0.33);
+  }
+  80%, 100% {
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.33);
+  }
+  80%, 100% {
+    opacity: 0;
+  }
+}
+@-webkit-keyframes pulse-dot {
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.8);
+  }
+}
+@keyframes pulse-dot {
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.8);
+  }
+} */
 </style>
