@@ -167,9 +167,9 @@ const getPriceClass = (date, route) => {
     const priceIndex = prices.indexOf(price);
 
     if (priceIndex === 0) {
-        return "green";
+        return "green text-white";
     } else if (priceIndex === pricesLength - 1) {
-        return "red";
+        return "red text-white";
     } else {
         return "yellow";
     }
@@ -181,7 +181,7 @@ const getRemainingClass = (date, route) => {
     const remaining = foundDate.capacity;
 
     if (remaining < 3) {
-        return "red";
+        return "red text-white";
     } else if (remaining <= 7) {
         return "orange";
     } else if (remaining <= 10) {
@@ -208,6 +208,18 @@ watch(
         <p class="mb-2">
             {{ description }}
         </p>
+
+        <div class="flex items-center mb-2">
+            <div class="w-auto rounded-full text-center px-2 green text-white text-sm">
+                £price
+            </div>
+        </div>
+
+        <div class="flex items-center mb-3">
+            <div class="w-auto rounded-full text-center px-2 yellow text-sm">
+                Rooms left
+            </div>
+        </div>
 
         <div class="flex items-center mb-3">
             <div class="availability-dot bg-gray-200" />
@@ -266,19 +278,17 @@ watch(
                                         :class="getRemainingClass(day.date, route)"
                                     >
 
-                                        <div>{{getRemaining(day.date, route)}} left</div>
+                                        <div>{{getRemaining(day.date, route)}}</div>
                                     </div>
                                 </div>
                                 <div
                                     v-else
                                     class="
                                         availability-dot
-                                        bg-gray-300
+                                        bg-gray-200
                                         text-sm
                                     "
                                 >
-                                <!-- none -->
-                                    <!-- <p>N/A</p> -->
                                 </div>
                             </div>
                         </div>
