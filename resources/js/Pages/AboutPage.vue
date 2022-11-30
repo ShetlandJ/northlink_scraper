@@ -128,40 +128,41 @@ onMounted(() => {
                     </button>
                 </div>
                 <div class="dark:text-white">
-                <p v-if="explain === 'simple'">
-                    Northlink has publically accessible data which I have
-                    grabbed and collated. No hacking or security breaches were
-                    involved! I sync my data every 15 minutes with the Northlink
-                    data.
-                </p>
-                <div v-else>
-                    <p class="mb-3">
-                        Northlink uses booking software called BOOKIT. I noticed
-                        that their booking process is handled via a REST API
-                        which is publicly accessible. I examined the payloads
-                        used as part of and found that I could use the tokens
-                        that get passed between the client and server to be able
-                        to pull data.
+                    <p v-if="explain === 'simple'">
+                        Northlink has publically accessible data which I have
+                        grabbed and collated. No hacking or security breaches
+                        were involved! I sync my data every 15 minutes with the
+                        Northlink data.
                     </p>
-                    <p class="mb-3">
-                        I started building jobs to pull the data through trial
-                        and error. At the moment, I run three jobs - one that
-                        simulates a booking for 1 person, one that simulates a
-                        booking for 2 people and a car, and one which pulls all
-                        available accommodations. The first two allow me to
-                        answer surface level questions like "does this date have
-                        car space" while the accommodations one allows me to
-                        answer more complex questions like "how many cabins are
-                        available on this date" and "what is the price for the
-                        cabin?".
-                    </p>
-                    <p class="mb-3">
-                        The site is built in Laravel and Vue using Inertia. The
-                        three jobs are combined into one single job which runs
-                        every 15 minutes via a CRON job through Laravel Forge. I
-                        store the data in a MySQL database (rather than pulling
-                        live data) for the sake of latency.
-                    </p>
+                    <div v-else>
+                        <p class="mb-3">
+                            Northlink uses booking software called BOOKIT. I
+                            noticed that their booking process is handled via a
+                            REST API which is publicly accessible. I examined
+                            the payloads used as part of and found that I could
+                            use the tokens that get passed between the client
+                            and server to be able to pull data.
+                        </p>
+                        <p class="mb-3">
+                            I started building jobs to pull the data through
+                            trial and error. At the moment, I run three jobs -
+                            one that simulates a booking for 1 person, one that
+                            simulates a booking for 2 people and a car, and one
+                            which pulls all available accommodations. The first
+                            two allow me to answer surface level questions like
+                            "does this date have car space" while the
+                            accommodations one allows me to answer more complex
+                            questions like "how many cabins are available on
+                            this date" and "what is the price for the cabin?".
+                        </p>
+                        <p class="mb-3">
+                            The site is built in Laravel and Vue using Inertia.
+                            The three jobs are combined into one single job
+                            which runs every 15 minutes via a CRON job through
+                            Laravel Forge. I store the data in a MySQL database
+                            (rather than pulling live data) for the sake of
+                            latency.
+                        </p>
                     </div>
                 </div>
             </div>
