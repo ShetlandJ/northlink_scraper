@@ -12,7 +12,8 @@ class JobRun extends Model
     protected $fillable = [
         'job_name',
         'started_at',
-        'finished_at'
+        'finished_at',
+        'seconds_taken'
     ];
 
     protected $dates = [
