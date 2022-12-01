@@ -136,13 +136,13 @@ const pricesListConfig = computed(() => {
     dates.value.ABLE.filter((item) => item.available).forEach((item) => {
         prices.ABLE.push(item.price);
     });
-    // remove duplicates
+
     prices.ABLE = [...new Set(prices.ABLE)];
 
     dates.value.LEAB.filter((item) => item.available).forEach((item) => {
         prices.LEAB.push(item.price);
     });
-    // remove duplicates
+
     prices.LEAB = [...new Set(prices.LEAB)];
 
     return prices;
