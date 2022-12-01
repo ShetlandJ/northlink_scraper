@@ -64,7 +64,7 @@ const routePayload = computed(() => ({
                     <div class="flex items-center mb-4">
                         <input
                             type="number"
-                            style="width: 10%"
+                            style="width: 20%"
                             v-model="paxNumber"
                             min="1"
                             max="20"
