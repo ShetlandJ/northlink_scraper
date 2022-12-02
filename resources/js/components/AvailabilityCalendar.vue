@@ -82,11 +82,9 @@ const getAvailabilityClass = (date, route) => {
         (item) => item.date === formattedDate
     );
 
-    if (!foundDate) {
+    if (!foundDate || foundDate.past) {
         return "bg-gray-200";
     }
-
-    if (foundDate.past) return "blue";
 
     return foundDate.available ? "green" : "red";
 };
@@ -131,10 +129,6 @@ watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYea
             <div class="flex items-center">
                 <div class="availability-dot red" />
                 <span class="ml-3">Unavailable</span>
-            </div>
-            <div class="flex items-center">
-                <div class="availability-dot blue" />
-                <span class="ml-3">This ship has sailed</span>
             </div>
             <div class="flex items-center">
                 <div class="availability-dot bg-gray-200" />
