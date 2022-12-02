@@ -112,7 +112,6 @@ watch(
                 text-4xl
                 mb-2
                 md:mb-0
-                sm:text-lg
                 text-gray-600
                 dark:text-white
             "
