@@ -60,14 +60,14 @@ import Tool from "../components/home/Tool.vue";
 
                 <Tool
                     emoji="🚗"
-                    text="Check car availability"
+                    text="Car availability"
                     route-name="cars"
                     colour="yellow"
                 />
 
                 <Tool
                     emoji="🐶"
-                    text="Check pet cabin availability"
+                    text="Pet cabin availability"
                     route-name="pets"
                     colour="blue"
                 />
