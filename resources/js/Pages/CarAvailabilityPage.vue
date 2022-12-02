@@ -38,20 +38,12 @@ import CarAvailabilityCalendar from "../components/CarAvailabilityCalendar.vue";
                             <span class="ml-3">Medium availability</span>
                         </div>
                         <div class="flex items-center">
-                            <div class="availability-dot orange" />
-                            <span class="ml-3">Low availability</span>
-                        </div>
-                        <div class="flex items-center">
                             <div class="availability-dot red" />
                             <span class="ml-3">No availability</span>
                         </div>
                         <div class="flex items-center">
                             <div class="availability-dot bg-gray-200" />
                             <span class="ml-3">Unknown</span>
-                        </div>
-                        <div class="flex items-center">
-                            <div class="availability-dot blue" />
-                            <span class="ml-3">This ship has sailed</span>
                         </div>
                     </div>
                 </template>

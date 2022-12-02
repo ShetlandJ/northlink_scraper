@@ -65,11 +65,7 @@ class CarAvailabilityController extends NorthlinkController
             return 'red';
         }
 
-        if ($tripPrice->capacity <= 20) {
-            return 'orange';
-        }
-
-        if ($tripPrice->capacity <= 70) {
+        if ($tripPrice->capacity <= 50) {
             return 'yellow';
         }
 
