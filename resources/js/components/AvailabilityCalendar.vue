@@ -93,6 +93,17 @@ const updateFromPage = ({ month, year }, route) => {
     requestData(month, year, route);
 };
 
+const isToday = (day) => {
+    const today = new Date();
+    const date = new Date(day.id);
+
+    return (
+        date.getFullYear() === today.getFullYear() &&
+        date.getMonth() === today.getMonth() &&
+        date.getDate() === today.getDate()
+    );
+};
+
 watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYear.value));
 
 </script>
@@ -174,7 +185,8 @@ watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYea
                     <template v-slot:day-content="{ day, dayEvents }">
                         <div v-on="dayEvents">
                             <div class="flex justify-center">
-                                {{ day.label }}
+                                <span v-if="!isToday(day)">{{ day.label }}</span>
+                                <div v-else class="today">{{ day.label }}</div>
                             </div>
                             <div class="flex justify-center mb-4">
                                 <div

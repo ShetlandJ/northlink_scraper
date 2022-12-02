@@ -27,3 +27,38 @@
         @endenv
     </body>
 </html>
+
+<style>
+.availability-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  /* colourblind-friendly colours */
+.red {
+    background-color: #DB4325;
+  }
+
+  .orange {
+    background-color: #EDA247;
+  }
+
+  .yellow {
+    background-color: #FFC20A;
+  }
+
+  .green {
+    background-color: #57C4AD;
+  }
+  .today {
+    width: 25px;
+    height: 25px;
+    border: solid rgb(50, 50, 50) 1px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 3px;
+}
+
+</style>

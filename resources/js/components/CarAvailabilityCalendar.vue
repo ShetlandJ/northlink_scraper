@@ -3,7 +3,7 @@ import "v-calendar/dist/style.css";
 import axios from "axios";
 import { ref, watch } from "@vue/runtime-core";
 import { usePage } from "@inertiajs/inertia-vue3";
-import Pulse from './Pulse.vue';
+import Pulse from "./Pulse.vue";
 
 const dates = ref({
     LEAB: [],
@@ -88,6 +88,17 @@ const updateFromPage = ({ month, year }, route) => {
     requestData(month, year, route);
 };
 
+const isToday = (day) => {
+    const today = new Date();
+    const date = new Date(day.id);
+
+    return (
+        date.getFullYear() === today.getFullYear() &&
+        date.getMonth() === today.getMonth() &&
+        date.getDate() === today.getDate()
+    );
+};
+
 watch(
     () => props.routePayload,
     () => requestData(viewingMonth.value, viewingYear.value)
@@ -96,13 +107,25 @@ watch(
 
 <template>
     <div class="sm:flex justify-between sm:pt-0 mb-4">
-        <h1 class="text-4xl mb-2 md:mb-0 sm:text-lg text-gray-600 dark:text-white">
+        <h1
+            class="
+                text-4xl
+                mb-2
+                md:mb-0
+                sm:text-lg
+                text-gray-600
+                dark:text-white
+            "
+        >
             {{ title }}
         </h1>
 
         <div v-if="jobStatus.lastFetched" class="text-sm dark:text-white">
             <p>Last fetched: {{ jobStatus.lastFetched }}</p>
-            <div class="flex items-center mt-2" v-if="jobStatus.currentlyRunning">
+            <div
+                class="flex items-center mt-2"
+                v-if="jobStatus.currentlyRunning"
+            >
                 <span>currently syncing</span>
                 <Pulse class="ml-4" />
             </div>
@@ -114,7 +137,8 @@ watch(
     </p>
 
     <p class="mb-3 dark:text-white">
-        Please note: This data is for information and should not be fully relied upon for trip planning. We attempt to sync data every 15 minutes.
+        Please note: This data is for information and should not be fully relied
+        upon for trip planning. We attempt to sync data every 15 minutes.
     </p>
 
     <div v-for="(route, index) in ['LEAB', 'ABLE']" :key="route">
@@ -147,7 +171,10 @@ watch(
         >
             <template v-slot:day-content="{ day, dayEvents }">
                 <div v-on="dayEvents">
-                    <div class="flex justify-center">{{ day.label }}</div>
+                    <div class="flex justify-center">
+                        <span v-if="!isToday(day)">{{ day.label }}</span>
+                        <div v-else class="today">{{ day.label }}</div>
+                    </div>
                     <div class="flex justify-center mb-4">
                         <div
                             class="availability-dot"
