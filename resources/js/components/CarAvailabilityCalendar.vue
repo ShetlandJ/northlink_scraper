@@ -6,8 +6,14 @@ import { usePage } from "@inertiajs/inertia-vue3";
 import Pulse from "./Pulse.vue";
 
 const dates = ref({
-    LEAB: [],
+    ABKI: [],
     ABLE: [],
+    KIAB: [],
+    KILE: [],
+    LEAB: [],
+    LEKI: [],
+    SCST: [],
+    STSC: [],
 });
 
 const jobStatus = usePage().props.value.jobStatus;
@@ -39,23 +45,20 @@ const viewingYear = ref(null);
 const requestData = async (month, year, route = null) => {
     loading.value = true;
     let params = "";
+
     if (props.routePayload) {
-        params = new URLSearchParams(props.routePayload).toString();
+        params = `?${new URLSearchParams(props.routePayload).toString()}`;
     }
 
     viewingMonth.value = month;
     viewingYear.value = year;
 
     const { data } = await axios.get(
-        `/api/${props.apiRoute}/${month}/${year}?${params}`
+        `/api/${props.apiRoute}/${month}/${year}/${routeCode.value}${params}`
     );
 
-    if (!route) {
-        dates.value.LEAB = data.LEAB;
-        dates.value.ABLE = data.ABLE;
-    } else {
-        dates.value[route] = data[route];
-    }
+    dates.value[route] = data[routeCode.value];
+
     loading.value = false;
 };
 
@@ -63,7 +66,24 @@ const today = new Date();
 const month = today.getMonth() + 1;
 const year = today.getFullYear();
 
-requestData(month, year);
+const routeCode = ref("ABLE");
+
+const setRouteCode = (code) => {
+    routeCode.value = code;
+};
+
+const routesList = [
+    { code: "ABKI", name: "Aberdeen to Kirkwall" },
+    { code: "ABLE", name: "Aberdeen to Lerwick" },
+    { code: "KIAB", name: "Kirkwall to Aberdeen" },
+    { code: "KILE", name: "Kirkwall to Lerwick" },
+    { code: "LEAB", name: "Lerwick to Aberdeen" },
+    { code: "LEKI", name: "Lerwick to Kirkwall" },
+    { code: "SCST", name: "Scrabster to Stromness" },
+    { code: "STSC", name: "Stromness to Scrabster" },
+];
+
+requestData(month, year, routeCode.value);
 
 const getAvailabilityClass = (date, route) => {
     const year = date.getFullYear();
@@ -107,15 +127,7 @@ watch(
 
 <template>
     <div class="sm:flex justify-between sm:pt-0 mb-4">
-        <h1
-            class="
-                text-4xl
-                mb-2
-                md:mb-0
-                text-gray-600
-                dark:text-white
-            "
-        >
+        <h1 class="text-4xl mb-2 md:mb-0 text-gray-600 dark:text-white">
             {{ title }}
         </h1>
 
@@ -140,52 +152,71 @@ watch(
         upon for trip planning. We attempt to sync data every 15 minutes.
     </p>
 
-    <div v-for="(route, index) in ['LEAB', 'ABLE']" :key="route">
-        <div class="flex justify-center">
-            <p
-                v-if="route === 'LEAB'"
-                class="text-2xl text-gray-600 dark:text-white mb-3"
-            >
-                Lerwick to Aberdeen
-            </p>
-            <p
-                v-if="route === 'ABLE'"
-                class="text-2xl text-gray-600 dark:text-white mb-3"
-            >
-                Aberdeen to Lerwick
-            </p>
-        </div>
-
-        <slot name="before-calendar" />
-        <hr class="my-4" />
-
-        <div class="calendar-spinner" v-if="loading">
-            <easy-spinner type="spins" size="50" color="#22C55E" />
-        </div>
-
-        <Calendar
-            class="mb-6"
-            is-expanded
-            @update:from-page="(value) => updateFromPage(value, route)"
+    <div class="flex justify-center">
+        <select
+            v-model="routeCode"
+            class="border border-gray-300 rounded-md px-3 py-2 mb-4"
+            style="width: 50%"
+            @change="
+                updateFromPage(
+                    { month: viewingMonth, year: viewingYear },
+                    routeCode
+                )
+            "
         >
-            <template v-slot:day-content="{ day, dayEvents }">
-                <div v-on="dayEvents">
-                    <div class="flex justify-center">
-                        <span v-if="!isToday(day)">{{ day.label }}</span>
-                        <div v-else class="today">{{ day.label }}</div>
-                    </div>
-                    <div class="flex justify-center mb-4">
-                        <div
-                            class="availability-dot"
-                            :class="getAvailabilityClass(day.date, route)"
-                        />
-                    </div>
-                </div>
-            </template>
-        </Calendar>
+            <option
+                v-for="route in routesList"
+                :key="route.code"
+                :value="route.code"
+            >
+                {{ route.name }}
+            </option>
+        </select>
 
-        <hr v-if="index === 0" class="mb-4" />
+        <p
+            v-if="route === 'LEAB'"
+            class="text-2xl text-gray-600 dark:text-white mb-3"
+        >
+            Lerwick to Aberdeen
+        </p>
+        <p
+            v-if="route === 'ABLE'"
+            class="text-2xl text-gray-600 dark:text-white mb-3"
+        >
+            Aberdeen to Lerwick
+        </p>
     </div>
+
+    <slot name="before-calendar" />
+    <hr class="my-4" />
+
+    <div class="calendar-spinner" v-if="loading">
+        <easy-spinner type="spins" size="50" color="#22C55E" />
+    </div>
+
+    <Calendar
+        class="mb-6"
+        is-expanded
+        @update:from-page="(value) => updateFromPage(value, routeCode)"
+    >
+        <template v-slot:day-content="{ day, dayEvents }">
+            <div v-on="dayEvents">
+                <div class="flex justify-center">
+                    <span v-if="!isToday(day)">{{ day.label }}</span>
+                    <div v-else class="today">{{ day.label }}</div>
+                </div>
+                <div class="flex justify-center mb-4">
+                    <div
+                        class="availability-dot"
+                        :class="getAvailabilityClass(day.date, routeCode)"
+                    />
+                </div>
+            </div>
+        </template>
+    </Calendar>
+
+    <!-- <hr v-if="index === 0" class="mb-4" /> -->
+    <!-- </div> -->
 </template>
 
 <style scoped>

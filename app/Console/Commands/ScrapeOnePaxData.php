@@ -2,18 +2,20 @@
 
 namespace App\Console\Commands;
 
-use App\Models\JobRun;
 use App\Models\Trip;
 use App\Models\Token;
+use App\Models\JobRun;
 use App\Services\ConfigService;
 use App\Services\JobRunService;
 use Illuminate\Console\Command;
+use Illuminate\Http\Client\Pool;
 use App\Services\NorthlinkService;
+use Illuminate\Support\Facades\Http;
 
 class ScrapeOnePaxData extends Command
 {
     // signature
-    protected $signature = 'scrape:pax-1';
+    protected $signature = 'scrape:pax-1 {routeCode?}';
 
     // description
     protected $description = 'Scrape data from Northlink';
@@ -48,46 +50,60 @@ class ScrapeOnePaxData extends Command
     {
         ini_set('max_execution_time', 10000);
 
+        $routeCodeArg = $this->argument('routeCode');
+
         // start timer
         $start = microtime(true);
 
         $continueCounter = 0;
 
+        $returnRoute = $this->getReturnRoute($routeCodeArg);
+
         $payload = $this->configService->formatRequest(
-            Trip::LERWICK_TO_ABERDEEN,
-            TRIP::ABERDEEN_TO_LERWICK,
+            $routeCodeArg,
+            $returnRoute,
             date('Y-m-d', strtotime("+1 day")),
             date('Y-m-d', strtotime("+5 days")),
             $paxAmount = "1",
         );
 
-        $this->northlinkService->fetchToken($payload);
-        // create array of dates from 2022-10-05 to 2022-12-30
+        $token = $this->northlinkService->fetchToken($payload);
+
         $dates = $this->createDatesArray();
 
         $jobRun = $this->jobRunService->findByJobNameOrCreate('ScrapeOnePaxData');
         $this->jobRunService->startJob($jobRun);
 
-        foreach (['LEAB', 'ABLE'] as $routeCode) {
-            // create progrss
-            $bar = $this->output->createProgressBar(count($dates));
-            foreach ($dates as $dateString) {
-                if ($continueCounter > 5) {
-                    exit;
-                }
+        $routes = Trip::ALL_ROUTES;
 
-                $data = $this->northlinkService->fetchDataByDate($dateString, $routeCode);
-                if (!$data) {
+        if ($routeCodeArg) {
+            $routes = [$routeCodeArg];
+        }
+
+        foreach ($routes as $routeCode) {
+            $this->info('Scraping route ' . $routeCode);
+            $responses = Http::pool(fn (Pool $pool) =>
+                collect($dates)
+                    ->map(
+                        fn (string $date) => $pool->withHeaders([
+                        'Authorization' => $token
+                    ])->get(
+                        $this->getUrl($routeCode, $date)
+                    )));
+
+            foreach ($responses as $index => $res) {
+                $json = $res->getBody();
+                $data = json_decode($json, true);
+                $results = isset($data["res"]['result'][0]) ? $data["res"]['result'][0] : null;
+
+                if (!$results) {
                     $continueCounter++;
                     continue;
                 }
-
-                $continueCounter = 0;
-                // dd($data);
-                $this->northlinkService->updateOrCreateTripRecords($data, $dateString, $routeCode);
-
-                $bar->advance();
+                $this->northlinkService->updateOrCreateTripRecords($results, $dates[$index], $routeCode);
             }
+
+            $this->info($routeCode . ' scraping complete');
         }
 
         $end = microtime(true);
@@ -95,11 +111,18 @@ class ScrapeOnePaxData extends Command
         $minutes = ($end - $start) / 60;
         $this->info(sprintf('The operation took %s minutes', $minutes));
 
-        $bar->finish();
-
         $this->jobRunService->endJob($jobRun);
 
         return 0;
+    }
+
+    private function getUrl($routeCode, $date): string
+    {
+        return sprintf(
+            'https://www.northlinkferries.co.uk/api/departures/%s/prices/%s',
+            $routeCode,
+            $date,
+        );
     }
 
     private function createDatesArray(): array
@@ -113,5 +136,36 @@ class ScrapeOnePaxData extends Command
             $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
         }
         return $dates;
+    }
+
+    private function getReturnRoute($routeCodeArg): string
+    {
+        if ($routeCodeArg === Trip::LERWICK_TO_ABERDEEN) {
+            return Trip::ABERDEEN_TO_LERWICK;
+        }
+        if ($routeCodeArg === Trip::ABERDEEN_TO_LERWICK) {
+            return Trip::LERWICK_TO_ABERDEEN;
+        }
+        if ($routeCodeArg === Trip::ABERDEEN_TO_KIRKWALL) {
+            return Trip::KIRKWALL_TO_ABERDEEN;
+        }
+        if ($routeCodeArg === Trip::KIRKWALL_TO_ABERDEEN) {
+            return Trip::ABERDEEN_TO_KIRKWALL;
+        }
+        if ($routeCodeArg === Trip::KIRKWALL_TO_LERWICK) {
+            return Trip::LERWICK_TO_KIRKWALL;
+        }
+        if ($routeCodeArg === Trip::LERWICK_TO_KIRKWALL) {
+            return Trip::KIRKWALL_TO_LERWICK;
+        }
+        if ($routeCodeArg === Trip::SCRABSTER_TO_STROMNESS) {
+            return Trip::STROMNESS_TO_SCRABSTER;
+        }
+        if ($routeCodeArg === Trip::STROMNESS_TO_SCRABSTER) {
+            return Trip::SCRABSTER_TO_STROMNESS;
+        }
+
+
+        return '';
     }
 }

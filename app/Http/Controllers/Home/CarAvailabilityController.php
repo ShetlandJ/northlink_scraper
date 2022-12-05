@@ -18,13 +18,15 @@ class CarAvailabilityController extends NorthlinkController
     {
         $year = (int) Route::input('year');
         $month = (int) Route::input('month');
+        $routeCode = Route::input('routeCode');
 
         $firstDayOfMonth = date('Y-m-d', strtotime($year . '-' . $month . '-01'));
 
-        return [
-            'LEAB' => $this->getAvailableTrips('LEAB', $firstDayOfMonth),
-            'ABLE' => $this->getAvailableTrips('ABLE', $firstDayOfMonth),
-        ];
+        $output = [];
+
+        $output[$routeCode] = $this->getAvailableTrips($routeCode, $firstDayOfMonth);
+
+        return $output;
     }
 
     private function getAvailableTrips(string $routeCode, string $firstDayOfMonth)
@@ -55,6 +57,7 @@ class CarAvailabilityController extends NorthlinkController
         }
 
         $availableTrips = array_values($availableTrips);
+        dd($availableTrips);
 
         return $availableTrips;
     }
