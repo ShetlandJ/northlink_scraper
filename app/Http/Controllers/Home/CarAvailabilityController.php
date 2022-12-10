@@ -57,7 +57,6 @@ class CarAvailabilityController extends NorthlinkController
         }
 
         $availableTrips = array_values($availableTrips);
-        dd($availableTrips);
 
         return $availableTrips;
     }
