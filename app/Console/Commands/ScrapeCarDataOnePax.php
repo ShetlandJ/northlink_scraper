@@ -13,7 +13,7 @@ use App\Services\NorthlinkService;
 class ScrapeCarDataOnePax extends Command
 {
     // signature
-    protected $signature = 'scrape:car-1';
+    protected $signature = 'scrape:car-1 {routeCode}';
 
     // description
     protected $description = 'Scrape car data from Northlink';
@@ -48,12 +48,15 @@ class ScrapeCarDataOnePax extends Command
     {
         // give users an option to choose between ABLE or LEAB
         // $routeCode = $this->choice('Which token do you want to use?', ['ABLE', 'LEAB']);
+        $routeCodeArg = $this->argument('routeCode');
 
         $continueCounter = 0;
 
+        $returnRoute = $this->getReturnRoute($routeCodeArg);
+
         $payload = $this->configService->formatRequest(
-            Trip::LERWICK_TO_ABERDEEN,
-            TRIP::ABERDEEN_TO_LERWICK,
+            $routeCodeArg,
+            $returnRoute,
             date('Y-m-d', strtotime("+1 day")),
             date('Y-m-d', strtotime("+5 days")),
             $paxAmount = "1",
@@ -67,7 +70,6 @@ class ScrapeCarDataOnePax extends Command
         $jobRun = $this->jobRunService->findByJobNameOrCreate('ScrapeCarDataOnePax');
         $this->jobRunService->startJob($jobRun);
 
-        foreach (['LEAB', 'ABLE'] as $routeCode) {
             $bar = $this->output->createProgressBar(count($dates));
 
             $continueCounter = 0;
@@ -77,7 +79,7 @@ class ScrapeCarDataOnePax extends Command
                 }
 
                 try {
-                    $data = $this->northlinkService->fetchDataByDate($dateString, $routeCode);
+                    $data = $this->northlinkService->fetchDataByDate($dateString, $routeCodeArg);
                     if (!$data) {
                         $continueCounter++;
                         continue;
@@ -89,11 +91,10 @@ class ScrapeCarDataOnePax extends Command
 
                 $continueCounter = 0;
 
-                $this->northlinkService->updateVehicleAvailabilityStatus($data, $dateString, $routeCode);
-                // advance progress bar
+                $this->northlinkService->updateVehicleAvailabilityStatus($data, $dateString, $routeCodeArg);
+
                 $bar->advance();
             }
-        }
 
         $this->jobRunService->endJob($jobRun);
 
@@ -111,5 +112,36 @@ class ScrapeCarDataOnePax extends Command
             $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
         }
         return $dates;
+    }
+
+    private function getReturnRoute($routeCodeArg): string
+    {
+        if ($routeCodeArg === Trip::LERWICK_TO_ABERDEEN) {
+            return Trip::ABERDEEN_TO_LERWICK;
+        }
+        if ($routeCodeArg === Trip::ABERDEEN_TO_LERWICK) {
+            return Trip::LERWICK_TO_ABERDEEN;
+        }
+        if ($routeCodeArg === Trip::ABERDEEN_TO_KIRKWALL) {
+            return Trip::KIRKWALL_TO_ABERDEEN;
+        }
+        if ($routeCodeArg === Trip::KIRKWALL_TO_ABERDEEN) {
+            return Trip::ABERDEEN_TO_KIRKWALL;
+        }
+        if ($routeCodeArg === Trip::KIRKWALL_TO_LERWICK) {
+            return Trip::LERWICK_TO_KIRKWALL;
+        }
+        if ($routeCodeArg === Trip::LERWICK_TO_KIRKWALL) {
+            return Trip::KIRKWALL_TO_LERWICK;
+        }
+        if ($routeCodeArg === Trip::SCRABSTER_TO_STROMNESS) {
+            return Trip::STROMNESS_TO_SCRABSTER;
+        }
+        if ($routeCodeArg === Trip::STROMNESS_TO_SCRABSTER) {
+            return Trip::SCRABSTER_TO_STROMNESS;
+        }
+
+
+        return '';
     }
 }
