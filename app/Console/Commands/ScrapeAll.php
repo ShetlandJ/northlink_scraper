@@ -34,14 +34,14 @@ class ScrapeAll extends Command
 
         // run ScrapeOnePaxData
         $this->info('Running ScrapeOnePaxData');
-        $this->call(sprintf('scrape:pax-1 %s', $routeCode));
+        $this->call('scrape:pax-1', ["routeCode" => $routeCode]);
 
         // run ScrapeCarDataOnePax
         $this->info('Running ScrapeCarDataOnePax');
-        $this->call(sprintf('scrape:car-1 %s', $routeCode));
+        $this->call('scrape:car-1', ["routeCode" => $routeCode]);
 
         // run GetTripAccommodation
         $this->info('Running GetTripAccommodation');
-        $this->call(sprintf('scrape:accom %s', $routeCode));
+        $this->call('scrape:accom %s', ["routeCode" => $routeCode]);
     }
 }
