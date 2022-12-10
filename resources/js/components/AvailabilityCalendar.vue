@@ -26,7 +26,6 @@ const props = defineProps({
 
 const jobStatus = usePage().props.value.jobStatus;
 
-
 const isDarkMode = ref(false);
 const darkTheme = window.matchMedia("(prefers-color-scheme: dark)");
 isDarkMode.value = darkTheme.matches;
@@ -171,10 +170,10 @@ watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYea
 
         <hr class="my-4" />
 
-                <select
+        <select
             v-model="routeCode"
             class="border border-gray-300 rounded-md px-3 py-2 mb-4"
-            style="width: 50%"
+            style="width: 100%"
             @change="
                 updateFromPage(
                     { month: viewingMonth, year: viewingYear },
