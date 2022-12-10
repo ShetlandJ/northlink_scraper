@@ -6,9 +6,11 @@ use App\Models\JobRun;
 
 class JobRunService
 {
-    public function findByJobNameOrCreate($jobName): JobRun
+    public function findByJobNameOrCreate(string $jobName, string $routeCode): JobRun
     {
-        $jobRun = JobRun::where('job_name', $jobName)->first();
+        $jobRun = JobRun::where('job_name', $jobName)
+            ->where('route_code', $routeCode)
+            ->first();
 
         if ($jobRun) {
             return $jobRun;
@@ -16,14 +18,16 @@ class JobRunService
 
         return JobRun::create([
             'job_name' => $jobName,
+            'route_code' => $routeCode,
         ]);
     }
 
-    public function create(string $name): JobRun
+    public function create(string $name, string $routeCode): JobRun
     {
         return JobRun::create([
             'job_name' => $name,
             'started_at' => now(),
+            'route_code' => $routeCode,
         ]);
     }
 

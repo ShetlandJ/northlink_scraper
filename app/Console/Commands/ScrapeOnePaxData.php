@@ -71,7 +71,8 @@ class ScrapeOnePaxData extends Command
 
         $dates = $this->createDatesArray();
 
-        $jobRun = $this->jobRunService->findByJobNameOrCreate('ScrapeOnePaxData');
+        $jobRun = $this->jobRunService->findByJobNameOrCreate('ScrapeOnePaxData', $routeCodeArg);
+
         $this->jobRunService->startJob($jobRun);
 
         $routes = Trip::ALL_ROUTES;

@@ -67,7 +67,8 @@ class ScrapeCarDataOnePax extends Command
 
         $dates = $this->createDatesArray();
 
-        $jobRun = $this->jobRunService->findByJobNameOrCreate('ScrapeCarDataOnePax');
+        $jobRun = $this->jobRunService->findByJobNameOrCreate('ScrapeCarDataOnePax', $routeCodeArg);
+
         $this->jobRunService->startJob($jobRun);
 
             $bar = $this->output->createProgressBar(count($dates));
