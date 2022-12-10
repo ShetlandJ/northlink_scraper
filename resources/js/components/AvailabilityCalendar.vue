@@ -3,7 +3,7 @@ import "v-calendar/dist/style.css";
 import axios from "axios";
 import { ref, watch } from "@vue/runtime-core";
 import { usePage } from "@inertiajs/inertia-vue3";
-import Pulse from './Pulse.vue';
+import Pulse from "./Pulse.vue";
 
 const props = defineProps({
     title: {
@@ -123,8 +123,10 @@ const isToday = (day) => {
     );
 };
 
-watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYear.value));
-
+watch(
+    () => props.routePayload,
+    () => requestData(viewingMonth.value, viewingYear.value)
+);
 </script>
 
 <template>
@@ -136,7 +138,10 @@ watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYea
 
             <div v-if="jobStatus.lastFetched" class="text-sm dark:text-white">
                 <p>Last fetched: {{ jobStatus.lastFetched }}</p>
-                <div class="flex items-center mt-2" v-if="jobStatus.currentlyRunning">
+                <div
+                    class="flex items-center mt-2"
+                    v-if="jobStatus.currentlyRunning"
+                >
                     <span>currently syncing</span>
                     <Pulse class="ml-4" />
                 </div>
@@ -148,7 +153,9 @@ watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYea
         </p>
 
         <p class="mb-3 dark:text-white">
-            Please note: This data is for information and should not be fully relied upon for trip planning. We attempt to sync data every 15 minutes.
+            Please note: This data is for information and should not be fully
+            relied upon for trip planning. We attempt to sync data every 15
+            minutes.
         </p>
 
         <div class="mb-2 dark:text-white">
@@ -190,60 +197,37 @@ watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYea
             </option>
         </select>
 
-
-        <!-- <div v-for="(route, index) in ['LEAB', 'ABLE']" :key="route">
-            <div class="flex justify-center">
-                <p
-                    v-if="route === 'LEAB'"
-                    class="text-2xl text-gray-600 dark:text-white"
-                >
-                    Lerwick to Aberdeen
-                </p>
-                <p
-                    v-if="route === 'ABLE'"
-                    class="text-2xl text-gray-600 dark:text-gray-200"
-                >
-                    Aberdeen to Lerwick
-                </p>
-            </div> -->
-
-            <div>
-                <div class="calendar-spinner" v-if="loading">
-                    <easy-spinner
-                        type="spins"
-                        size="50"
-                        color="#22C55E"
-                    />
-                </div>
-
-                <Calendar
-                    :key="routeCode"
-                    class="mb-6"
-                    is-expanded
-                    :is-dark="isDarkMode"
-                    @update:from-page="(value) => updateFromPage(value, routeCode)"
-                >
-                    <template v-slot:day-content="{ day, dayEvents }">
-                        <div v-on="dayEvents">
-                            <div class="flex justify-center">
-                                <span v-if="!isToday(day)">{{ day.label }}</span>
-                                <div v-else class="today">{{ day.label }}</div>
-                            </div>
-                            <div class="flex justify-center mb-4">
-                                <div
-                                    class="availability-dot"
-                                    :class="
-                                        getAvailabilityClass(day.date, routeCode)
-                                    "
-                                />
-                            </div>
-                        </div>
-                    </template>
-                </Calendar>
+        <div>
+            <div class="calendar-spinner" v-if="loading">
+                <easy-spinner type="spins" size="50" color="#22C55E" />
             </div>
-        </div>
 
-    <!-- </div> -->
+            <Calendar
+                :key="routeCode"
+                class="mb-6"
+                is-expanded
+                :is-dark="isDarkMode"
+                @update:from-page="(value) => updateFromPage(value, routeCode)"
+            >
+                <template v-slot:day-content="{ day, dayEvents }">
+                    <div v-on="dayEvents">
+                        <div class="flex justify-center">
+                            <span v-if="!isToday(day)">{{ day.label }}</span>
+                            <div v-else class="today">{{ day.label }}</div>
+                        </div>
+                        <div class="flex justify-center mb-4">
+                            <div
+                                class="availability-dot"
+                                :class="
+                                    getAvailabilityClass(day.date, routeCode)
+                                "
+                            />
+                        </div>
+                    </div>
+                </template>
+            </Calendar>
+        </div>
+    </div>
 </template>
 
 <style scoped>
@@ -274,22 +258,22 @@ watch(() => props.routePayload, () => requestData(viewingMonth.value, viewingYea
 }
 
 .red {
-  background-color: #DB4325;
+    background-color: #db4325;
 }
 
 .orange {
-  background-color: #EDA247;
+    background-color: #eda247;
 }
 
 .yellow {
-  background-color: #FFC20A;
+    background-color: #ffc20a;
 }
 
 .green {
-  background-color: #57C4AD;
+    background-color: #57c4ad;
 }
 
 .blue {
-  background-color: #0571B0;
+    background-color: #0571b0;
 }
 </style>
