@@ -89,7 +89,8 @@ class ScrapeOnePaxData extends Command
                         'Authorization' => $token
                     ])->get(
                         $this->getUrl($routeCode, $date)
-                    )));
+                    )
+                    ));
 
             foreach ($responses as $index => $res) {
                 $json = $res->getBody();
