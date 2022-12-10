@@ -12,8 +12,25 @@ class Trip extends Model
 {
     protected $table = 'trips';
 
-    public const LERWICK_TO_ABERDEEN = 'LEAB';
+    public const ABERDEEN_TO_KIRKWALL = 'ABKI';
     public const ABERDEEN_TO_LERWICK = 'ABLE';
+    public const KIRKWALL_TO_ABERDEEN = 'KIAB';
+    public const KIRKWALL_TO_LERWICK = 'KILE';
+    public const LERWICK_TO_ABERDEEN = 'LEAB';
+    public const LERWICK_TO_KIRKWALL = 'LEKI';
+    public const SCRABSTER_TO_STROMNESS = 'SCST';
+    public const STROMNESS_TO_SCRABSTER = 'STSC';
+
+    public const ALL_ROUTES = [
+        self::ABERDEEN_TO_KIRKWALL,
+        self::ABERDEEN_TO_LERWICK,
+        self::KIRKWALL_TO_ABERDEEN,
+        self::KIRKWALL_TO_LERWICK,
+        self::LERWICK_TO_ABERDEEN,
+        self::LERWICK_TO_KIRKWALL,
+        // self::SCRABSTER_TO_STROMNESS,
+        // self::STROMNESS_TO_SCRABSTER,
+    ];
 
     protected $fillable = [
         'date',

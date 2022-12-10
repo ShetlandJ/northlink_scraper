@@ -7,6 +7,7 @@ use App\Http\Controllers\Home\PetCabinController;
 use App\Http\Controllers\Home\FindATripController;
 use App\Http\Controllers\Home\CarAvailabilityController;
 use App\Http\Controllers\Home\AccommodationAvailabilityController;
+use App\Http\Controllers\Home\TextDemoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,8 +24,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/pet-cabins/{month}/{year}', PetCabinController::class);
-Route::get('/cars/{month}/{year}', CarAvailabilityController::class);
+Route::get('/pet-cabins/{month}/{year}/{routeCode}', PetCabinController::class);
+Route::get('/cars/{month}/{year}/{routeCode}', CarAvailabilityController::class);
+Route::get('/text-demo/{month}/{year}/{routeCode}', TextDemoController::class);
 Route::get('/accommodation/{month}/{year}', AccommodationAvailabilityController::class);
 Route::get('/capacity/{month}/{year}/{routeCode}', CapacityController::class);
 Route::post('/find-a-trip', FindATripController::class);

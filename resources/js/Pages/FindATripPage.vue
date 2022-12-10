@@ -192,13 +192,13 @@ const search = () => {
                     <div>
                         <div>
                             <button
-                                class="text-blue-500 text-sm underline mr-4"
+                                class="text-blue-500 text-sm underline mr-4 pr-4"
                                 @click.prevent="setRangeToNextSevenDays"
                             >
                                 Next 7 days
                             </button>
                             <button
-                                class="text-blue-500 text-sm underline mr-4"
+                                class="text-blue-500 text-sm underline mr-4 pr-4"
                                 @click.prevent="setRangeToThisMonth"
                             >
                                 This month

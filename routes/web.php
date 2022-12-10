@@ -51,6 +51,32 @@ Route::get('/cars', function () {
     ]);
 })->name('cars');
 
+// Route::get('/text-demo', function () {
+//     $job = JobRun::where('job_name', 'ScrapeCarDataOnePax')->first();
+
+//     $payload = [
+//         'lastFetched' => $job->finished_at->diffForHumans(),
+//         'currentlyRunning' => $job->currentlyRunning,
+//     ];
+
+//     return Inertia::render('TextDemoPage', [
+//         'jobStatus' => $payload,
+//     ]);
+// })->name('text-demo');
+
+Route::get('/cars', function () {
+    $job = JobRun::where('job_name', 'ScrapeCarDataOnePax')->first();
+
+    $payload = [
+        'lastFetched' => $job->finished_at->diffForHumans(),
+        'currentlyRunning' => $job->currentlyRunning,
+    ];
+
+    return Inertia::render('CarAvailabilityPage', [
+        'jobStatus' => $payload,
+    ]);
+})->name('cars');
+
 Route::get('/rooms', function () {
     $job = JobRun::where('job_name', 'GetTripAccommodation')->first();
 

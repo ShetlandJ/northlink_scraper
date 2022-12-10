@@ -20,6 +20,10 @@ class NorthlinkService
 {
     private const LERWICK = 'LE';
     private const ABERDEEN = 'AB';
+    private const KIRKWALL = 'KI';
+    private const SCRABSTER = 'SC';
+    private const STROMNESS = 'ST';
+
     private const LERWICK_TO_ABERDEEN = 'LEAB';
     private const ABERDEEN_TO_LERWICK = 'ABLE';
     private const TOKEN_GENERATION_LINK = 'https://www.northlinkferries.co.uk/api/booking/create';
@@ -150,10 +154,6 @@ class NorthlinkService
     ): void {
         $trip = $this->getTripByRouteAndDate($routeCode, $date);
 
-        if ($trip && $trip->created_at->diffInMinutes(now()) < 15) {
-            return;
-        }
-
         if ($trip) {
             $trip->date = $date;
             $trip->routeCode = $routeCode;
@@ -185,7 +185,6 @@ class NorthlinkService
                 'startDate' => $data['startDate'],
             ]);
         }
-
 
         // create or update trip prices
         foreach ($data['prices'] as $price) {
@@ -307,12 +306,24 @@ class NorthlinkService
             $payload['departFrom'] = 'Lerwick';
         } elseif ($first === self::ABERDEEN) {
             $payload['departFrom'] = 'Aberdeen';
+        } else if ($first === self::KIRKWALL) {
+            $payload['departFrom'] = 'Kirkwall';
+        } else if ($first === self::SCRABSTER) {
+            $payload['departFrom'] = 'Scrabster';
+        } else if ($first === self::STROMNESS) {
+            $payload['departFrom'] = 'Stromness';
         }
 
         if ($last === self::ABERDEEN) {
             $payload['returnFrom'] = 'Aberdeen';
         } elseif ($last === self::LERWICK) {
             $payload['returnFrom'] = 'Lerwick';
+        } else if ($last === self::KIRKWALL) {
+            $payload['returnFrom'] = 'Kirkwall';
+        } else if ($last === self::SCRABSTER) {
+            $payload['returnFrom'] = 'Scrabster';
+        } else if ($last === self::STROMNESS) {
+            $payload['returnFrom'] = 'Stromness';
         }
 
         return (object) $payload;
