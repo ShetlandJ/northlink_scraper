@@ -166,8 +166,6 @@ onMounted(() => {
                     </div>
                 </div>
             </div>
-
-            <hr class="my-4" />
         </Container>
     </div>
 </template>
