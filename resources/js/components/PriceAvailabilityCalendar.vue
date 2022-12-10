@@ -35,9 +35,26 @@ const darkTheme = window.matchMedia("(prefers-color-scheme: dark)");
 isDarkMode.value = darkTheme.matches;
 
 const dates = ref({
-    LEAB: [],
+    ABKI: [],
     ABLE: [],
+    KIAB: [],
+    KILE: [],
+    LEAB: [],
+    LEKI: [],
+    SCST: [],
+    STSC: [],
 });
+
+const routesList = [
+    { code: "ABKI", name: "Aberdeen to Kirkwall" },
+    { code: "ABLE", name: "Aberdeen to Lerwick" },
+    { code: "KIAB", name: "Kirkwall to Aberdeen" },
+    { code: "KILE", name: "Kirkwall to Lerwick" },
+    { code: "LEAB", name: "Lerwick to Aberdeen" },
+    { code: "LEKI", name: "Lerwick to Kirkwall" },
+    { code: "SCST", name: "Scrabster to Stromness" },
+    { code: "STSC", name: "Stromness to Scrabster" },
+];
 
 const loading = ref(false);
 
@@ -47,24 +64,27 @@ const viewingYear = ref(null);
 const requestData = async (month, year, route = null) => {
     loading.value = true;
     let params = "";
+
     if (props.routePayload) {
-        params = new URLSearchParams(props.routePayload).toString();
+        params = `?${new URLSearchParams(props.routePayload).toString()}`;
     }
 
     viewingMonth.value = month;
     viewingYear.value = year;
 
     const { data } = await axios.get(
-        `/api/${props.apiRoute}/${month}/${year}?${params}`
+        `/api/${props.apiRoute}/${month}/${year}/${routeCode.value}${params}`
     );
 
-    if (!route) {
-        dates.value.LEAB = data.LEAB;
-        dates.value.ABLE = data.ABLE;
-    } else {
-        dates.value[route] = data[route];
-    }
+    dates.value[route] = data[routeCode.value];
+
     loading.value = false;
+};
+
+const routeCode = ref("ABLE");
+
+const setRouteCode = (code) => {
+    routeCode.value = code;
 };
 
 const today = new Date();
@@ -276,7 +296,27 @@ watch(
 
         <hr class="my-4" />
 
-        <div v-for="(route, index) in ['LEAB', 'ABLE']" :key="route">
+        <select
+            v-model="routeCode"
+            class="border border-gray-300 rounded-md px-3 py-2 mb-4"
+            style="width: 50%"
+            @change="
+                updateFromPage(
+                    { month: viewingMonth, year: viewingYear },
+                    routeCode
+                )
+            "
+        >
+            <option
+                v-for="route in routesList"
+                :key="route.code"
+                :value="route.code"
+            >
+                {{ route.name }}
+            </option>
+        </select>
+
+        <!-- <div v-for="(route, index) in ['LEAB', 'ABLE']" :key="route">
             <div class="flex justify-center">
                 <p
                     v-if="route === 'LEAB'"
@@ -290,7 +330,7 @@ watch(
                 >
                     Aberdeen to Lerwick
                 </p>
-            </div>
+            </div> -->
 
             <div>
                 <div class="calendar-spinner" v-if="loading">
@@ -360,7 +400,7 @@ watch(
 
             <hr v-if="index === 0" class="mb-4" />
         </div>
-    </div>
+    <!-- </div> -->
 </template>
 
 <style scoped>

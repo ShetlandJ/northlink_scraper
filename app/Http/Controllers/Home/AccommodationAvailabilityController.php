@@ -19,17 +19,16 @@ class AccommodationAvailabilityController extends NorthlinkController
         // get request content
         $request = request()->all();
         $roomType = $request['roomType'];
-        // dd($roomType);
 
         $year = (int) Route::input('year');
         $month = (int) Route::input('month');
+        $routeCode = Route::input('routeCode');
 
         $firstDayOfMonth = date('Y-m-d', strtotime($year . '-' . $month . '-01'));
 
-        return [
-            'LEAB' => $this->getAvailableTrips('LEAB', $firstDayOfMonth, $roomType),
-            'ABLE' => $this->getAvailableTrips('ABLE', $firstDayOfMonth, $roomType),
-        ];
+        $output[$routeCode] = $this->getAvailableTrips($routeCode, $firstDayOfMonth, $roomType);
+
+        return $output;
     }
 
     private function getAvailableTrips(

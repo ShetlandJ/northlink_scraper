@@ -27,6 +27,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/pet-cabins/{month}/{year}/{routeCode}', PetCabinController::class);
 Route::get('/cars/{month}/{year}/{routeCode}', CarAvailabilityController::class);
 Route::get('/text-demo/{month}/{year}/{routeCode}', TextDemoController::class);
-Route::get('/accommodation/{month}/{year}', AccommodationAvailabilityController::class);
+Route::get('/accommodation/{month}/{year}/{routeCode}', AccommodationAvailabilityController::class);
 Route::get('/capacity/{month}/{year}/{routeCode}', CapacityController::class);
 Route::post('/find-a-trip', FindATripController::class);
