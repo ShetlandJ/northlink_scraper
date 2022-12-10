@@ -43,6 +43,7 @@ const viewingMonth = ref(null);
 const viewingYear = ref(null);
 
 const requestData = async (month, year, route = null) => {
+    console.log(props.routePayload);
     loading.value = true;
     let params = "";
 
@@ -120,8 +121,8 @@ const isToday = (day) => {
 };
 
 watch(
-    () => props.routePayload,
-    () => requestData(viewingMonth.value, viewingYear.value)
+    () => props.routePayload.cancel,
+    () => requestData(viewingMonth.value, viewingYear.value, routeCode.value)
 );
 </script>
 
