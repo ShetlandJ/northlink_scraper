@@ -341,7 +341,7 @@ watch(
                     is-expanded
                     :is-dark="isDarkMode"
                     class="mb-6"
-                    @update:from-page="(value) => updateFromPage(value, route)"
+                    @update:from-page="(value) => updateFromPage(value, routeCode)"
                 >
                     <template v-slot:day-content="{ day, dayEvents }">
                         <div v-on="dayEvents">
@@ -350,10 +350,10 @@ watch(
                                 <div v-else class="today">{{ day.label }}</div>
                             </div>
                             <div class="flex justify-center mb-4">
-                                <div v-if="inPast(day.date, route)">-</div>
+                                <div v-if="inPast(day.date, routeCode)">-</div>
 
                                 <div
-                                    v-else-if="isAvailable(day.date, route)"
+                                    v-else-if="isAvailable(day.date, routeCode)"
                                     class="dark:text-white"
                                 >
                                     <div
@@ -364,10 +364,10 @@ watch(
                                             px-2
                                             text-sm
                                         "
-                                        :class="getPriceClass(day.date, route)"
+                                        :class="getPriceClass(day.date, routeCode)"
                                     >
                                         <div>
-                                            £{{ getPrice(day.date, route) }}
+                                            £{{ getPrice(day.date, routeCode) }}
                                         </div>
                                     </div>
                                     <div
@@ -380,11 +380,11 @@ watch(
                                             text-sm
                                         "
                                         :class="
-                                            getRemainingClass(day.date, route)
+                                            getRemainingClass(day.date, routeCode)
                                         "
                                     >
                                         <div>
-                                            {{ getRemaining(day.date, route) }}
+                                            {{ getRemaining(day.date, routeCode) }}
                                         </div>
                                     </div>
                                 </div>
