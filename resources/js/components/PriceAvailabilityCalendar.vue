@@ -3,7 +3,7 @@ import "v-calendar/dist/style.css";
 import axios from "axios";
 import { computed, ref, watch } from "@vue/runtime-core";
 import { usePage } from "@inertiajs/inertia-vue3";
-import Pulse from './Pulse.vue';
+import Pulse from "./Pulse.vue";
 
 const props = defineProps({
     title: {
@@ -122,9 +122,10 @@ const getPrice = (date, route) => {
         return "";
     }
 
-    const multiplier = props.paxNumber < 1 || props.paxNumber > 20 ? 1 : props.paxNumber
+    const multiplier =
+        props.paxNumber < 1 || props.paxNumber > 20 ? 1 : props.paxNumber;
 
-    return foundDate.price + (foundDate.trip_price * multiplier);
+    return foundDate.price + foundDate.trip_price * multiplier;
 };
 
 const isAvailable = (date, route) => {
@@ -251,7 +252,10 @@ watch(
 
             <div v-if="jobStatus.lastFetched" class="text-sm dark:text-white">
                 <p>Last fetched: {{ jobStatus.lastFetched }}</p>
-                <div class="flex items-center mt-2" v-if="jobStatus.currentlyRunning">
+                <div
+                    class="flex items-center mt-2"
+                    v-if="jobStatus.currentlyRunning"
+                >
                     <span>currently syncing</span>
                     <Pulse class="ml-4" />
                 </div>
@@ -263,7 +267,9 @@ watch(
         </p>
 
         <p class="mb-3 dark:text-white">
-            Please note: This data is for information and should not be fully relied upon for trip planning. We attempt to sync data every 15 minutes.
+            Please note: This data is for information and should not be fully
+            relied upon for trip planning. We attempt to sync data every 15
+            minutes.
         </p>
 
         <div class="flex items-center mb-2">
@@ -316,91 +322,72 @@ watch(
             </option>
         </select>
 
-        <!-- <div v-for="(route, index) in ['LEAB', 'ABLE']" :key="route">
-            <div class="flex justify-center">
-                <p
-                    v-if="route === 'LEAB'"
-                    class="text-2xl text-gray-600 dark:text-white"
-                >
-                    Lerwick to Aberdeen
-                </p>
-                <p
-                    v-if="route === 'ABLE'"
-                    class="text-2xl text-gray-600 dark:text-white"
-                >
-                    Aberdeen to Lerwick
-                </p>
-            </div> -->
+        <div>
+            <div class="calendar-spinner" v-if="loading">
+                <easy-spinner type="spins" size="50" color="#22C55E" />
+            </div>
 
-            <div>
-                <div class="calendar-spinner" v-if="loading">
-                    <easy-spinner type="spins" size="50" color="#22C55E" />
-                </div>
+            <Calendar
+                is-expanded
+                :is-dark="isDarkMode"
+                class="mb-6"
+                @update:from-page="(value) => updateFromPage(value, routeCode)"
+            >
+                <template v-slot:day-content="{ day, dayEvents }">
+                    <div v-on="dayEvents">
+                        <div class="flex justify-center">
+                            <span v-if="!isToday(day)">{{ day.label }}</span>
+                            <div v-else class="today">{{ day.label }}</div>
+                        </div>
+                        <div class="flex justify-center mb-4">
+                            <div v-if="inPast(day.date, routeCode)">-</div>
 
-                <Calendar
-                    is-expanded
-                    :is-dark="isDarkMode"
-                    class="mb-6"
-                    @update:from-page="(value) => updateFromPage(value, routeCode)"
-                >
-                    <template v-slot:day-content="{ day, dayEvents }">
-                        <div v-on="dayEvents">
-                            <div class="flex justify-center">
-                                <span v-if="!isToday(day)">{{ day.label }}</span>
-                                <div v-else class="today">{{ day.label }}</div>
-                            </div>
-                            <div class="flex justify-center mb-4">
-                                <div v-if="inPast(day.date, routeCode)">-</div>
-
+                            <div
+                                v-else-if="isAvailable(day.date, routeCode)"
+                                class="dark:text-white"
+                            >
                                 <div
-                                    v-else-if="isAvailable(day.date, routeCode)"
-                                    class="dark:text-white"
+                                    class="
+                                        w-auto
+                                        rounded-full
+                                        text-center
+                                        px-2
+                                        text-sm
+                                    "
+                                    :class="getPriceClass(day.date, routeCode)"
                                 >
-                                    <div
-                                        class="
-                                            w-auto
-                                            rounded-full
-                                            text-center
-                                            px-2
-                                            text-sm
-                                        "
-                                        :class="getPriceClass(day.date, routeCode)"
-                                    >
-                                        <div>
-                                            £{{ getPrice(day.date, routeCode) }}
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="
-                                            w-auto
-                                            rounded-full
-                                            text-center
-                                            px-2
-                                            mt-2
-                                            text-sm
-                                        "
-                                        :class="
-                                            getRemainingClass(day.date, routeCode)
-                                        "
-                                    >
-                                        <div>
-                                            {{ getRemaining(day.date, routeCode) }}
-                                        </div>
+                                    <div>
+                                        £{{ getPrice(day.date, routeCode) }}
                                     </div>
                                 </div>
                                 <div
-                                    v-else
-                                    class="availability-dot bg-gray-200 text-sm"
-                                ></div>
+                                    class="
+                                        w-auto
+                                        rounded-full
+                                        text-center
+                                        px-2
+                                        mt-2
+                                        text-sm
+                                    "
+                                    :class="
+                                        getRemainingClass(day.date, routeCode)
+                                    "
+                                >
+                                    <div>
+                                        {{ getRemaining(day.date, routeCode) }}
+                                    </div>
+                                </div>
                             </div>
+                            <div
+                                v-else
+                                class="availability-dot bg-gray-200 text-sm"
+                            ></div>
                         </div>
-                    </template>
-                </Calendar>
-            </div>
-
-            <hr v-if="index === 0" class="mb-4" />
+                    </div>
+                </template>
+            </Calendar>
         </div>
-    <!-- </div> -->
+    </div>
 </template>
 
 <style scoped>

@@ -215,9 +215,6 @@ watch(
             </div>
         </template>
     </Calendar>
-
-    <!-- <hr v-if="index === 0" class="mb-4" /> -->
-    <!-- </div> -->
 </template>
 
 <style scoped>
