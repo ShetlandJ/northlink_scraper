@@ -71,7 +71,7 @@ class ScrapeCarDataOnePax extends Command
 
         $this->jobRunService->startJob($jobRun);
 
-            $bar = $this->output->createProgressBar(count($dates));
+        $bar = $this->output->createProgressBar(count($dates));
 
         $continueCounter = 0;
         foreach ($dates as $dateString) {

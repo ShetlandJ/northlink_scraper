@@ -49,8 +49,9 @@ class GetTripAccommodation extends Command
     {
         $routeCodeArg = $this->argument('routeCode');
 
-        if ($routeCodeArg) {
+        if (!$routeCodeArg) {
             $this->error('Route code is required');
+            exit;
         }
 
         $returnRoute = $this->getReturnRoute($routeCodeArg);

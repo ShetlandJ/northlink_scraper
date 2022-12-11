@@ -80,33 +80,26 @@ class ScrapeOnePaxData extends Command
         if ($routeCodeArg) {
             $routes = [$routeCodeArg];
         }
+        $bar = $this->output->createProgressBar(count($dates));
+
 
         foreach ($routes as $routeCode) {
             $this->info('Scraping route ' . $routeCode);
-            $responses = Http::pool(fn (Pool $pool) =>
-                collect($dates)
-                    ->map(
-                        fn (string $date) => $pool->withHeaders([
-                        'Authorization' => $token
-                    ])->get(
-                        $this->getUrl($routeCode, $date)
-                    )
-                    ));
-
-            foreach ($responses as $index => $res) {
-                $json = $res->getBody();
-                $data = json_decode($json, true);
-                $results = isset($data["res"]['result'][0]) ? $data["res"]['result'][0] : null;
-
-                if (!$results) {
-                    $continueCounter++;
+            foreach ($dates as $dateString) {
+                $data = $this->northlinkService->fetchDataByDate($dateString, $routeCode);
+                if (!$data) {
                     continue;
                 }
-                $this->northlinkService->updateOrCreateTripRecords($results, $dates[$index], $routeCode);
+
+                $this->northlinkService->updateOrCreateTripRecords($data, $dateString, $routeCode);
+
+                $bar->advance();
             }
 
             $this->info($routeCode . ' scraping complete');
         }
+
+        $bar->finish();
 
         $end = microtime(true);
 

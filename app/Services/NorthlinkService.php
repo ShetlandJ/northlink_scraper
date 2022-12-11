@@ -371,10 +371,12 @@ class NorthlinkService
         $return = $this->getTripByRouteAndDate($returnRouteCode, $date->addDays(2));
 
         if (!$outbound || !$return) {
+            logger('No outbound or return trip found');
             return;
         }
 
         if (!isset($return->identifier)) {
+            logger('No return identifier');
             return;
         }
 
