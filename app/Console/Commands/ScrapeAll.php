@@ -42,6 +42,6 @@ class ScrapeAll extends Command
 
         // run GetTripAccommodation
         $this->info('Running GetTripAccommodation');
-        $this->call('scrape:accom %s', ["routeCode" => $routeCode]);
+        $this->call('scrape:accom', ["routeCode" => $routeCode]);
     }
 }
