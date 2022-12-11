@@ -78,10 +78,6 @@ class GetTripAccommodation extends Command
         $bar = $this->output->createProgressBar(count($dates));
 
         foreach ($dates as $dateString) {
-            if ($continueCounter > 5) {
-                $this->exit();
-            }
-
             try {
                 $this->northlinkService->fetchAccomodation(
                     $dateString,

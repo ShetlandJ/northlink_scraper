@@ -73,29 +73,25 @@ class ScrapeCarDataOnePax extends Command
 
             $bar = $this->output->createProgressBar(count($dates));
 
-            $continueCounter = 0;
-            foreach ($dates as $dateString) {
-                if ($continueCounter > 5) {
-                    $this->exit();
-                }
-
-                try {
-                    $data = $this->northlinkService->fetchDataByDate($dateString, $routeCodeArg);
-                    if (!$data) {
-                        $continueCounter++;
-                        continue;
-                    }
-                } catch (\Exception $e) {
+        $continueCounter = 0;
+        foreach ($dates as $dateString) {
+            try {
+                $data = $this->northlinkService->fetchDataByDate($dateString, $routeCodeArg);
+                if (!$data) {
                     $continueCounter++;
                     continue;
                 }
-
-                $continueCounter = 0;
-
-                $this->northlinkService->updateVehicleAvailabilityStatus($data, $dateString, $routeCodeArg);
-
-                $bar->advance();
+            } catch (\Exception $e) {
+                $continueCounter++;
+                continue;
             }
+
+            $continueCounter = 0;
+
+            $this->northlinkService->updateVehicleAvailabilityStatus($data, $dateString, $routeCodeArg);
+
+            $bar->advance();
+        }
 
         $this->jobRunService->endJob($jobRun);
 
