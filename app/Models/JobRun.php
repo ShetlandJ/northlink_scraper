@@ -13,7 +13,8 @@ class JobRun extends Model
         'job_name',
         'started_at',
         'finished_at',
-        'seconds_taken'
+        'seconds_taken',
+        'route_code'
     ];
 
     protected $dates = [
