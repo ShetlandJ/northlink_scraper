@@ -387,13 +387,18 @@ class NorthlinkService
         );
 
         if ( ! $success) {
+            logger('Failed to mock depart');
             return;
         }
+
+
 
         // reset all TripAccommodations
         TripAccommodation::where('trip_id', $outbound->id)->delete();
 
         try {
+            logger("1");
+            logger(sprintf('https://www.northlinkferries.co.uk/api/accommodations/%s', $outboundRouteCode));
             $res = $this->client->request(
                 'POST',
                 sprintf('https://www.northlinkferries.co.uk/api/accommodations/%s', $outboundRouteCode),
@@ -405,12 +410,18 @@ class NorthlinkService
                 ],
             );
 
+            logger("2");
+
+
             $json = $res->getBody();
             $data = json_decode($json, true);
             if (!isset($data['res']['result']['cabins'])) {
+                logger($data['res']);
                 logger("No cabins found");
                 return;
             }
+
+            logger("3");
 
             $cabins = $data['res']['result']['cabins'];
 
@@ -437,5 +448,23 @@ class NorthlinkService
                 'file' => $e->getFile(),
             ]);
         }
+    }
+
+    public function fetchAvailableDates(string $routeCode)
+    {
+        $token = $this->getToken();
+
+        $res = $this->client->request(
+            'GET',
+            sprintf(
+                'https://www.northlinkferries.co.uk/api/dates/%s',
+                $routeCode,
+            )
+        );
+
+        $json = $res->getBody();
+        $data = json_decode($json, true);
+        dd($data);
+        return $data;
     }
 }

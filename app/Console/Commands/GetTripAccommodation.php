@@ -78,6 +78,14 @@ class GetTripAccommodation extends Command
         $this->info("Fetching accommodation for $routeCodeArg");
         $bar = $this->output->createProgressBar(count($dates));
 
+        $availableOutboundDates = $this->northlinkService->fetchAvailableDates($routeCodeArg);
+        $availableReturnDates = $this->northlinkService->fetchAvailableDates($returnRoute);
+
+        dd(
+            $availableOutboundDates,
+            $availableReturnDates
+        );
+
         foreach ($dates as $dateString) {
             try {
                 $this->northlinkService->fetchAccomodation(
