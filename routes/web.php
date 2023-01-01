@@ -29,8 +29,8 @@ Route::get('/pets', function () {
     $job = JobRun::where('job_name', 'ScrapeOnePaxData')->first();
 
     $payload = [
-        'lastFetched' => $job->finished_at->diffForHumans(),
-        'currentlyRunning' => $job->currentlyRunning,
+        'lastFetched' => $job ? $job->finished_at->diffForHumans() : null,
+        'currentlyRunning' => $job ? $job->currentlyRunning : false,
     ];
 
     return Inertia::render('PetCabinAvailability', [
@@ -68,8 +68,8 @@ Route::get('/cars', function () {
     $job = JobRun::where('job_name', 'ScrapeCarDataOnePax')->first();
 
     $payload = [
-        'lastFetched' => $job->finished_at->diffForHumans(),
-        'currentlyRunning' => $job->currentlyRunning,
+        'lastFetched' => $job ? $job->finished_at->diffForHumans() : null,
+        'currentlyRunning' => $job ? $job->currentlyRunning : null,
     ];
 
     return Inertia::render('CarAvailabilityPage', [
@@ -81,8 +81,8 @@ Route::get('/rooms', function () {
     $job = JobRun::where('job_name', 'GetTripAccommodation')->first();
 
     $payload = [
-        'lastFetched' => $job->finished_at->diffForHumans(),
-        'currentlyRunning' => $job->currentlyRunning,
+        'lastFetched' => $job ? $job->finished_at->diffForHumans() : null,
+        'currentlyRunning' => $job ? $job->currentlyRunning : null,
     ];
 
     return Inertia::render('RoomsAvailabilityPage', [
