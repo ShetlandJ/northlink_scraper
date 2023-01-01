@@ -23,7 +23,7 @@ Route::get('/pets', function () {
     $job = JobRun::where('job_name', 'ScrapeOnePaxData')->first();
 
     $payload = [
-        'lastFetched' => $job ? $job->finished_at->diffForHumans() : null,
+        'lastFetched' => isset($job->finished_at->diffForHumans()) ? $job->finished_at->diffForHumans() : null,
         'currentlyRunning' => $job ? $job->currentlyRunning : false,
     ];
 
@@ -36,7 +36,7 @@ Route::get('/cars', function () {
     $job = JobRun::where('job_name', 'ScrapeCarDataOnePax')->first();
 
     $payload = [
-        'lastFetched' => $job ? $job->finished_at->diffForHumans() : null,
+        'lastFetched' => isset($job->finished_at->diffForHumans()) ? $job->finished_at->diffForHumans() : null,
         'currentlyRunning' => $job ? $job->currentlyRunning : false,
     ];
 
@@ -62,7 +62,7 @@ Route::get('/cars', function () {
     $job = JobRun::where('job_name', 'ScrapeCarDataOnePax')->first();
 
     $payload = [
-        'lastFetched' => $job ? $job->finished_at->diffForHumans() : null,
+        'lastFetched' => isset($job->finished_at->diffForHumans()) ? $job->finished_at->diffForHumans() : null,
         'currentlyRunning' => $job ? $job->currentlyRunning : null,
     ];
 
@@ -75,7 +75,7 @@ Route::get('/rooms', function () {
     $job = JobRun::where('job_name', 'GetTripAccommodation')->first();
 
     $payload = [
-        'lastFetched' => $job ? $job->finished_at->diffForHumans() : null,
+        'lastFetched' => isset($job->finished_at->diffForHumans()) ? $job->finished_at->diffForHumans() : null,
         'currentlyRunning' => $job ? $job->currentlyRunning : null,
     ];
 
