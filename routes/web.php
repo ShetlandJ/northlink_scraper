@@ -42,8 +42,8 @@ Route::get('/cars', function () {
     $job = JobRun::where('job_name', 'ScrapeCarDataOnePax')->first();
 
     $payload = [
-        'lastFetched' => $job->finished_at->diffForHumans(),
-        'currentlyRunning' => $job->currentlyRunning,
+        'lastFetched' => $job ? $job->finished_at->diffForHumans() : null,
+        'currentlyRunning' => $job ? $job->currentlyRunning : false,
     ];
 
     return Inertia::render('CarAvailabilityPage', [
