@@ -2,14 +2,8 @@
 
 use Inertia\Inertia;
 use App\Models\JobRun;
-use App\Models\Ingredient;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Home\HomeController;
-use App\Http\Controllers\Home\RecipeController;
-use App\Http\Controllers\Home\CategoryController;
-use App\Http\Controllers\Home\SupplierController;
-use App\Http\Controllers\Home\IngredientController;
-use App\Http\Controllers\Home\RecipeCreateController;
 
 /*
 |--------------------------------------------------------------------------
