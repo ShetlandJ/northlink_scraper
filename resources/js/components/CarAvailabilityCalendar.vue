@@ -73,14 +73,14 @@ const setRouteCode = (code) => {
 };
 
 const routesList = [
-    { code: "ABKI", name: "Aberdeen to Kirkwall" },
+    // { code: "ABKI", name: "Aberdeen to Kirkwall" },
     { code: "ABLE", name: "Aberdeen to Lerwick" },
-    { code: "KIAB", name: "Kirkwall to Aberdeen" },
-    { code: "KILE", name: "Kirkwall to Lerwick" },
+    // { code: "KIAB", name: "Kirkwall to Aberdeen" },
+    // { code: "KILE", name: "Kirkwall to Lerwick" },
     { code: "LEAB", name: "Lerwick to Aberdeen" },
-    { code: "LEKI", name: "Lerwick to Kirkwall" },
-    { code: "SCST", name: "Scrabster to Stromness" },
-    { code: "STSC", name: "Stromness to Scrabster" },
+    // { code: "LEKI", name: "Lerwick to Kirkwall" },
+    // { code: "SCST", name: "Scrabster to Stromness" },
+    // { code: "STSC", name: "Stromness to Scrabster" },
 ];
 
 requestData(month, year, routeCode.value);
