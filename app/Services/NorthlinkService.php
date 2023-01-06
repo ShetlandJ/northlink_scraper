@@ -193,7 +193,7 @@ class NorthlinkService
                 ->where('ticketType', $price['ticketType'])
                 ->first();
 
-            if ( ! $tripPrice) {
+            if (! $tripPrice) {
                 $tripPrice = new TripPrice();
             }
 
@@ -306,11 +306,11 @@ class NorthlinkService
             $payload['departFrom'] = 'Lerwick';
         } elseif ($first === self::ABERDEEN) {
             $payload['departFrom'] = 'Aberdeen';
-        } else if ($first === self::KIRKWALL) {
+        } elseif ($first === self::KIRKWALL) {
             $payload['departFrom'] = 'Kirkwall';
-        } else if ($first === self::SCRABSTER) {
+        } elseif ($first === self::SCRABSTER) {
             $payload['departFrom'] = 'Scrabster';
-        } else if ($first === self::STROMNESS) {
+        } elseif ($first === self::STROMNESS) {
             $payload['departFrom'] = 'Stromness';
         }
 
@@ -318,11 +318,11 @@ class NorthlinkService
             $payload['returnFrom'] = 'Aberdeen';
         } elseif ($last === self::LERWICK) {
             $payload['returnFrom'] = 'Lerwick';
-        } else if ($last === self::KIRKWALL) {
+        } elseif ($last === self::KIRKWALL) {
             $payload['returnFrom'] = 'Kirkwall';
-        } else if ($last === self::SCRABSTER) {
+        } elseif ($last === self::SCRABSTER) {
             $payload['returnFrom'] = 'Scrabster';
-        } else if ($last === self::STROMNESS) {
+        } elseif ($last === self::STROMNESS) {
             $payload['returnFrom'] = 'Stromness';
         }
 
@@ -359,16 +359,39 @@ class NorthlinkService
         }
     }
 
+    public function getNextAvailableDate(string $date, array $returnDates): string
+    {
+        // Find the position of the original date in the array
+        $pos = array_search($date, $returnDates);
+
+        // Check if the original date was found in the array
+        if ($pos) {
+            // If the original date was found, return the next date in the array
+            // (or the first date in the array if the original date is the last date)
+            return $returnDates[($pos + 1) % count($returnDates)];
+        }
+
+        // If the original date was not found, return the first date in the array
+        return $returnDates[0];
+    }
+
     public function fetchAccomodation(
         string $dateString,
         string $outboundRouteCode,
-        string $returnRouteCode
+        string $returnRouteCode,
+        array $returnDates
     ) {
         $token = $this->fetchTokenForSinglePerson();
         $date = Carbon::parse($dateString);
 
+        $returnDate = $this->getNextAvailableDate($dateString, $returnDates);
+
+        if (! $returnDate) {
+            $returnDate = $date->addDays(2);
+        }
+
         $outbound = $this->getTripByRouteAndDate($outboundRouteCode, $date);
-        $return = $this->getTripByRouteAndDate($returnRouteCode, $date->addDays(2));
+        $return = $this->getTripByRouteAndDate($returnRouteCode, $returnDate);
 
         if (!$outbound || !$return) {
             logger('No outbound or return trip found');
@@ -386,7 +409,7 @@ class NorthlinkService
             $return->identifier
         );
 
-        if ( ! $success) {
+        if (! $success) {
             return;
         }
 
@@ -437,5 +460,22 @@ class NorthlinkService
                 'file' => $e->getFile(),
             ]);
         }
+    }
+
+    public function getAvailableDates(string $routeCode): array
+    {
+        // make a request to https://www.northlinkferries.co.uk/api/dates/$routeCode
+        $res = $this->client->request(
+            'GET',
+            sprintf('https://www.northlinkferries.co.uk/api/dates/%s', $routeCode),
+            [
+                'http_errors' => false
+            ]
+        );
+
+        $json = $res->getBody();
+        $data = json_decode($json, true);
+
+        return $data['dates'];
     }
 }
