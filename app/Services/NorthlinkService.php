@@ -365,7 +365,7 @@ class NorthlinkService
         $pos = array_search($date, $returnDates);
 
         // Check if the original date was found in the array
-        if ($pos) {
+        if ($pos >= 0) {
             // If the original date was found, return the next date in the array
             // (or the first date in the array if the original date is the last date)
             return $returnDates[($pos + 1) % count($returnDates)];
@@ -393,7 +393,7 @@ class NorthlinkService
         $outbound = $this->getTripByRouteAndDate($outboundRouteCode, $date);
         $return = $this->getTripByRouteAndDate($returnRouteCode, $returnDate);
 
-        if (!$outbound || !$return) {
+        if (! $outbound || !$return) {
             logger('No outbound or return trip found');
             return;
         }
