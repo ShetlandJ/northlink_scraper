@@ -6,17 +6,25 @@ use DateTime;
 use App\Models\Trip;
 use App\Models\Token;
 use App\Models\JobRun;
+use App\Models\FlightPrice;
 use Nesk\Puphpeteer\Puppeteer;
 use App\Services\ConfigService;
 use App\Services\JobRunService;
 use Illuminate\Console\Command;
 use Illuminate\Http\Client\Pool;
+use Nesk\Rialto\Data\JsFunction;
+use App\Services\LoganairService;
 use App\Services\NorthlinkService;
 use Illuminate\Support\Facades\Http;
-use Nesk\Rialto\Data\JsFunction;
+use App\Jobs\GetFlightPriceJob;
+use Illuminate\Foundation\Bus\PendingDispatch;
 
 class ScrapeLoganair extends Command
 {
+    private const SUMBURGH = 'LSI';
+    private const ABERDEEN = 'ABZ';
+    private const KIRKWALL = 'KOI';
+
     // signature
     protected $signature = 'scrape:loganair';
 
@@ -24,7 +32,7 @@ class ScrapeLoganair extends Command
     protected $description = 'Scrape Loganair data';
 
     // northlink service
-    private NorthlinkService $northlinkService;
+    private LoganairService $loganairService;
 
     /**
      * Create a new command instance.
@@ -32,10 +40,10 @@ class ScrapeLoganair extends Command
      * @return void
      */
     public function __construct(
-        NorthlinkService $northlinkService,
+        LoganairService $loganairService,
     ) {
         parent::__construct();
-        $this->northlinkService = $northlinkService;
+        $this->loganairService = $loganairService;
     }
 
     /**
@@ -45,63 +53,31 @@ class ScrapeLoganair extends Command
      */
     public function handle()
     {
-        $puppeteer = new Puppeteer();
-        $browser = $puppeteer->launch([
-            'headless' => false,
-            'devtools' => true,
-        ]);
+        foreach ($this->getDates() as $dateString) {
+            try {
+                GetFlightPriceJob::dispatchNow($dateString, self::SUMBURGH, self::ABERDEEN);
+                    // ->onQueue('scrape');
+            } catch (\Exception $e) {
+                logger($e->getMessage());
+                $this->error($e->getMessage());
+            }
+        }
+    }
 
-        $page = $browser->newPage();
-        $page->goto('https://www.loganair.co.uk/');
+    public function getDates(): array
+    {
+        date_default_timezone_set('UTC');
+        $start = new DateTime('tomorrow');
+        $end = new DateTime('last day of this month');
+        $dates = array();
+        $dates[] = $start->format('Y-m-d');
 
-        $page->waitForSelector('#Origin');
-        $page->click('#Origin');
-        $page->select('#Origin', 'ABZ');
-        $page->select('#Destination', 'LSI');
+        while ($start < $end) {
+            $start->modify('+1 day');
 
-        $page->select('#JourneyType', "0");
+            $dates[] = $start->format('Y-m-d');
+        }
 
-        $page->click('#OutboundDate');
-
-        $tomorrow = new DateTime();
-        $tomorrow->add(new \DateInterval('P1D'));
-        $tomorrowDate = $tomorrow->format('d');
-        // dd("JAMES");
-        // dd($tomorrowDate);
-
-        // $page->evaluate(function ($tomorrowDate) {
-//     $elements = [];
-//     foreach (document.querySelectorAll('span.qs-num') as $element) {
-//         $elements[] = $element;
-//     }
-//     $el = null;
-//     foreach ($elements as $element) {
-//         if ($element->innerText == $tomorrowDate) {
-//             $el = $element;
-//             break;
-//         }
-//     }
-//     if ($el) {
-//         $el->parentElement->click();
-//     }
-        // }, $tomorrowDate);
-        $page->evaluate(JsFunction::createWithBody("
-            const elements = Array.from(document.querySelectorAll('span.qs-num'));
-            const el = elements.find((el) => el.innerText === String($tomorrowDate));
-            return el.parentElement.click();
-        "));
-
-        $page->click('.flight-search__cta > button');
-
-        $page->waitForNavigation();
-
-        $page->reload();
-        // $button = $page->$x("//button[contains(., 'Find flights')]");
-
-        // $button[0]->click();
-        sleep(15);
-        // $page->reload();
-
-        // $browser->close();
+        return $dates;
     }
 }
