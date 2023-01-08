@@ -398,7 +398,7 @@ class NorthlinkService
             return;
         }
 
-        if (!isset($return->identifier)) {
+        if (!isset($return->identifier) || !$return->identifier) {
             logger('No return identifier');
             return;
         }
