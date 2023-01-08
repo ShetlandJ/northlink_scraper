@@ -55,8 +55,6 @@ class ScrapeOnePaxData extends Command
         // start timer
         $start = microtime(true);
 
-        $continueCounter = 0;
-
         $returnRoute = $this->getReturnRoute($routeCodeArg);
 
         $payload = $this->configService->formatRequest(
@@ -67,9 +65,9 @@ class ScrapeOnePaxData extends Command
             $paxAmount = "1",
         );
 
-        $token = $this->northlinkService->fetchToken($payload);
+        $this->northlinkService->fetchToken($payload);
 
-        $dates = $this->createDatesArray();
+        $dates = $this->northlinkService->getAvailableDates($routeCodeArg);
 
         $jobRun = $this->jobRunService->findByJobNameOrCreate('ScrapeOnePaxData', $routeCodeArg);
 
@@ -109,28 +107,6 @@ class ScrapeOnePaxData extends Command
         $this->jobRunService->endJob($jobRun);
 
         return 0;
-    }
-
-    private function getUrl($routeCode, $date): string
-    {
-        return sprintf(
-            'https://www.northlinkferries.co.uk/api/departures/%s/prices/%s',
-            $routeCode,
-            $date,
-        );
-    }
-
-    private function createDatesArray(): array
-    {
-        $dates = [];
-        $startDate = date("Y-m-d", strtotime('tomorrow'));
-        $endDate = '2023-04-01';
-        $currentDate = $startDate;
-        while ($currentDate <= $endDate) {
-            $dates[] = $currentDate;
-            $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
-        }
-        return $dates;
     }
 
     private function getReturnRoute($routeCodeArg): string

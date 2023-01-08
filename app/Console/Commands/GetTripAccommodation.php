@@ -56,9 +56,6 @@ class GetTripAccommodation extends Command
 
         $returnRoute = $this->getReturnRoute($routeCodeArg);
 
-        // give users an option to choose between ABLE or LEAB
-        $continueCounter = 0;
-
         $payload = $this->configService->formatRequest(
             $routeCodeArg,
             $returnRoute,
@@ -70,7 +67,8 @@ class GetTripAccommodation extends Command
 
         $this->northlinkService->fetchToken($payload);
 
-        $dates = $this->createDatesArray();
+        $dates = $this->northlinkService->getAvailableDates($routeCodeArg);
+        $returnDates = $this->northlinkService->getAvailableDates($returnRoute);
 
         $jobRun = $this->jobRunService->findByJobNameOrCreate('GetTripAccommodation', $routeCodeArg);
         $this->jobRunService->startJob($jobRun);
@@ -83,14 +81,13 @@ class GetTripAccommodation extends Command
                 $this->northlinkService->fetchAccomodation(
                     $dateString,
                     $routeCodeArg,
-                    $returnRoute
+                    $returnRoute,
+                    $returnDates
                 );
             } catch (Exception $e) {
-                $continueCounter++;
+                $bar->advance();
                 continue;
             }
-
-            $continueCounter = 0;
 
             $bar->advance();
         }
@@ -100,19 +97,6 @@ class GetTripAccommodation extends Command
         $this->jobRunService->endJob($jobRun);
 
         return 0;
-    }
-
-    private function createDatesArray(): array
-    {
-        $dates = [];
-        $startDate = date("Y-m-d", strtotime('tomorrow'));
-        $endDate = '2023-04-01';
-        $currentDate = $startDate;
-        while ($currentDate <= $endDate) {
-            $dates[] = $currentDate;
-            $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
-        }
-        return $dates;
     }
 
     private function getReturnRoute($routeCodeArg): string
