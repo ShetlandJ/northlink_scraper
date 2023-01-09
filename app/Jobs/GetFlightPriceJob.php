@@ -34,7 +34,9 @@ class GetFlightPriceJob implements ShouldQueue
         $puppeteer = new Puppeteer();
         $browser = $puppeteer->launch([
             'headless' => true,
-            'user-agent' => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3312.0 Safari/537.36"
+            'args' => [
+                '--user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3312.0 Safari/537.36"'
+            ]
         ]);
 
         $page = $browser->newPage();
