@@ -29,17 +29,19 @@ class GetFlightPriceJob implements ShouldQueue
         $this->arrivalAirportCode = $arrivalAirportCode;
     }
 
-    public function handle(): void
+    public function handle(): array
     {
         $puppeteer = new Puppeteer();
         $browser = $puppeteer->launch([
-            'headless' => true,
-            'args' => [
-                '--user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3312.0 Safari/537.36"'
-            ]
+            'headless' => true
+            // 'args' => [
+            //     '--user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3312.0 Safari/537.36"'
+            // ]
         ]);
 
         $page = $browser->newPage();
+        $ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36";
+        $page->setUserAgent($ua);
         $page->goto('https://www.loganair.co.uk/');
 
         $page->waitForSelector('#Origin');
@@ -134,10 +136,8 @@ class GetFlightPriceJob implements ShouldQueue
 
         logger("6");
 
-        Log::info([
-            'flights' => $flights,
-        ]);
-
         $browser->close();
+
+        return $flights;
     }
 }
