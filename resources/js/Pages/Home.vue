@@ -65,6 +65,13 @@ import Tool from "../components/home/Tool.vue";
                     colour="blue"
                 />
 
+                <Tool
+                    emoji="🛩️"
+                    text="Loganair flight prices"
+                    route-name="flights"
+                    colour="indigo"
+                />
+
                 <!-- <Tool
                     emoji="📱"
                     text="Text cancellation demo"

@@ -84,6 +84,32 @@ Route::get('/rooms', function () {
     ]);
 })->name('accommodation');
 
+Route::get('/flights', function () {
+    // $job = JobRun::where('job_name', 'GetTripAccommodation')->first();
+
+    $payload = [
+        'lastFetched' => null,
+        'currentlyRunning' => null,
+    ];
+
+    return Inertia::render('FlightPricePage', [
+        'jobStatus' => $payload,
+    ]);
+})->name('flights');
+
+Route::get('/rooms', function () {
+    $job = JobRun::where('job_name', 'GetTripAccommodation')->first();
+
+    $payload = [
+        'lastFetched' => null,
+        'currentlyRunning' => $job ? $job->currentlyRunning : null,
+    ];
+
+    return Inertia::render('RoomsAvailabilityPage', [
+        'jobStatus' => $payload,
+    ]);
+})->name('accommodation');
+
 Route::get('/capacity', function () {
     return Inertia::render('CapacityPage');
 })->name('capacity');
