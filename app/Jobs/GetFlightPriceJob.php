@@ -32,7 +32,7 @@ class GetFlightPriceJob implements ShouldQueue
     {
         $puppeteer = new Puppeteer();
         $browser = $puppeteer->launch([
-            'headless' => false,
+            'headless' => true,
         ]);
 
         $page = $browser->newPage();
@@ -97,14 +97,14 @@ class GetFlightPriceJob implements ShouldQueue
                 return fltRows;
             "));
 
-                logger(["1", $flights]);
+        logger(["1", $flights]);
         foreach ($flights as $flight) {
             $foundFlight = FlightPrice::where('departure_airport', $this->departureAirportCode)
                 ->where('arrival_airport', $this->arrivalAirportCode)
                 ->where('departure_date', $this->date)
                 ->where('departure_time', $flight['times'][0])
                 ->first();
-                logger("2");
+            logger("2");
 
             if ($foundFlight) {
                 logger("3");
