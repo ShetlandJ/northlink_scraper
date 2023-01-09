@@ -26,7 +26,7 @@ class ScrapeLoganair extends Command
     private const KIRKWALL = 'KOI';
 
     // signature
-    protected $signature = 'scrape:loganair';
+    protected $signature = 'scrape:loganair {one}';
 
     // description
     protected $description = 'Scrape Loganair data';
@@ -53,7 +53,18 @@ class ScrapeLoganair extends Command
      */
     public function handle()
     {
-        foreach ($this->getDates() as $dateString) {
+        // get {one} argument
+        $one = $this->argument('one');
+
+        $dates = [];
+
+        if ($one) {
+            $dates[] = $this->getDates()[0];
+        } else {
+            $dates = $this->getDates();
+        }
+
+        foreach ($dates as $dateString) {
             try {
                 GetFlightPriceJob::dispatchNow($dateString, self::SUMBURGH, self::ABERDEEN);
                     // ->onQueue('scrape');
