@@ -44,16 +44,16 @@ class GetFlightPriceJob implements ShouldQueue
         $ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36";
 
         $device = [
-            //'name' => 'Nexus 6',
+            'name' => 'FF',
             'userAgent' => $ua,
-            // 'viewport' => [
-                // 'width' => 412,
-                // 'height' => 732,
-                // 'deviceScaleFactor' => 3.5,
-                // 'isMobile' => true,
-                // 'hasTouch' => true,
-                // 'isLandscape' => false
-            // ]
+            'viewport' => [
+                'width' => 1920,
+                'height' => 1080,
+                'deviceScaleFactor' => 1,
+                'isMobile' => false,
+                'hasTouch' => false,
+                'isLandscape' => false
+            ]
         ];
         $page->emulate($device);
         $page->setUserAgent($ua);
