@@ -40,6 +40,9 @@ class GetFlightPriceJob implements ShouldQueue
         ]);
 
         $page = $browser->newPage();
+        $page->setExtraHTTPHeaders([
+            'Accept-Language' => 'en-US,en;q=0.9'
+        ]);
         $ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36";
         $page->setUserAgent($ua);
         $page->goto('https://www.loganair.co.uk/');
