@@ -169,7 +169,10 @@ const pricesListConfig = computed(() => {
     return prices;
 });
 
+const selectedRouteCode = ref(null);
+
 const updateFromPage = ({ month, year }, route) => {
+    selectedRouteCode.value = route;
     requestData(month, year, route);
 };
 
@@ -239,7 +242,7 @@ const isToday = (day) => {
 
 watch(
     () => props.routePayload,
-    () => requestData(viewingMonth.value, viewingYear.value)
+    () => requestData(viewingMonth.value, viewingYear.value, selectedRouteCode.value)
 );
 </script>
 
