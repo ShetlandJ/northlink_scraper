@@ -62,7 +62,6 @@ class GetTripAccommodation extends Command
             date('Y-m-d', strtotime("+1 day")),
             date('Y-m-d', strtotime("+5 days")),
             $paxAmount = "1",
-            $vehicleCode = 'CAR'
         );
 
         $this->northlinkService->fetchToken($payload);
@@ -76,20 +75,27 @@ class GetTripAccommodation extends Command
         $this->info("Fetching accommodation for $routeCodeArg");
         $bar = $this->output->createProgressBar(count($dates));
 
-        foreach ($dates as $dateString) {
-            try {
-                $this->northlinkService->fetchAccomodation(
-                    $dateString,
-                    $routeCodeArg,
-                    $returnRoute,
-                    $returnDates
-                );
-            } catch (Exception $e) {
-                $bar->advance();
-                continue;
-            }
+        try {
+            foreach ($dates as $dateString) {
+                try {
+                    $this->northlinkService->fetchAccomodation(
+                        $dateString,
+                        $routeCodeArg,
+                        $returnRoute,
+                        $returnDates
+                    );
+                } catch (Exception $e) {
+                    $bar->advance();
+                    continue;
+                }
 
+                $bar->advance();
+            }
+        } catch (Exception $e) {
             $bar->advance();
+            logger([
+                'message' => $e->getMessage(),
+            ]);
         }
 
         $bar->finish();
