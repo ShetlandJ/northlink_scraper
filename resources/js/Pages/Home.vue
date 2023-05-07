@@ -65,12 +65,12 @@ import Tool from "../components/home/Tool.vue";
                     colour="blue"
                 />
 
-                <Tool
+                <!-- <Tool
                     emoji="🛩️"
                     text="Loganair flight prices"
                     route-name="flights"
                     colour="indigo"
-                />
+                /> -->
 
                 <!-- <Tool
                     emoji="📱"
