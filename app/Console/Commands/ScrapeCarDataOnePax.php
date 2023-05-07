@@ -65,7 +65,7 @@ class ScrapeCarDataOnePax extends Command
 
         $this->northlinkService->fetchToken($payload);
 
-        $dates = $this->createDatesArray();
+        $dates = $this->northlinkService->getAvailableDates($routeCodeArg);
 
         $jobRun = $this->jobRunService->findByJobNameOrCreate('ScrapeCarDataOnePax', $routeCodeArg);
 
@@ -73,20 +73,16 @@ class ScrapeCarDataOnePax extends Command
 
         $bar = $this->output->createProgressBar(count($dates));
 
-        $continueCounter = 0;
         foreach ($dates as $dateString) {
             try {
                 $data = $this->northlinkService->fetchDataByDate($dateString, $routeCodeArg);
                 if (!$data) {
-                    $continueCounter++;
                     continue;
                 }
             } catch (\Exception $e) {
-                $continueCounter++;
                 continue;
             }
 
-            $continueCounter = 0;
 
             $this->northlinkService->updateVehicleAvailabilityStatus($data, $dateString, $routeCodeArg);
 
