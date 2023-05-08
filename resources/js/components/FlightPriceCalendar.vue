@@ -249,7 +249,7 @@ watch(
 
         <p class="mb-3 dark:text-white">
             Please note: This data is for information and should not be fully
-            relied upon for trip planning. We attempt to sync data every hour.
+            relied upon for trip planning. We attempt to sync data few hours.
         </p>
 
         <div class="flex items-center mb-3 dark:text-white">
