@@ -55,7 +55,7 @@ onMounted(() => {
                         href="https://www.twitter.com/JAStewart"
                     >
                         James Stewart</a
-                    >, an ex-pat Shetlander living in Ayrshire working as a
+                    >, an ex-pat Shetlander living in Glasgow working as a
                     software engineer.
                 </p>
 
@@ -80,13 +80,9 @@ onMounted(() => {
                 </p>
 
                 <p class="mb-4">
-                    If you work for Northlink,
-                    <a id="contact" href="" class="underline"
-                        >please reach out to me</a
-                    >! The purpose of this project is not to replace the booking
+                    The purpose of this project is not to replace the booking
                     website, nor antagonise the company, but to make it easier
-                    for people to get information about the service. We could
-                    make it better if we work together.
+                    for people to get information about the service.
                 </p>
             </div>
 
