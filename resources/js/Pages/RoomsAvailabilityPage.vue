@@ -77,7 +77,7 @@ const routePayload = computed(() => ({
                                 ml-3
                             "
                         >
-                            Traveller{{paxNumber === 1 ? '' : 's'}} (change to see prices)
+                            Traveller{{paxNumber === 1 ? '' : 's'}} (change to see estimated/rough prices)
                         </label>
                     </div>
 
