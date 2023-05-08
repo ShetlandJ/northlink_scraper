@@ -131,7 +131,7 @@ onMounted(() => {
                     <p v-if="explain === 'simple'">
                         Northlink has publically accessible data which I have
                         grabbed and collated. No hacking or security breaches
-                        were involved! I sync my data every 15 minutes with the
+                        were involved! I sync my data every few hours with the
                         Northlink data.
                     </p>
                     <div v-else>
@@ -158,7 +158,7 @@ onMounted(() => {
                         <p class="mb-3">
                             The site is built in Laravel and Vue using Inertia.
                             The three jobs are combined into one single job
-                            which runs every 15 minutes via a CRON job through
+                            which runs every few hours via a CRON job through
                             Laravel Forge. I store the data in a MySQL database
                             (rather than pulling live data) for the sake of
                             latency.
