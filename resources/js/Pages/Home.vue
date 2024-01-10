@@ -1,6 +1,4 @@
 <script setup>
-import { ref, computed } from "vue";
-import { Head, useForm, Link } from "@inertiajs/inertia-vue3";
 import Container from "../components/Container.vue";
 import NavBar from "../components/NavBar.vue";
 import Tool from "../components/home/Tool.vue";

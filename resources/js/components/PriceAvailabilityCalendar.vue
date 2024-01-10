@@ -35,25 +35,13 @@ const darkTheme = window.matchMedia("(prefers-color-scheme: dark)");
 isDarkMode.value = darkTheme.matches;
 
 const dates = ref({
-    ABKI: [],
     ABLE: [],
-    KIAB: [],
-    KILE: [],
     LEAB: [],
-    LEKI: [],
-    SCST: [],
-    STSC: [],
 });
 
 const routesList = [
-    // { code: "ABKI", name: "Aberdeen to Kirkwall" },
     { code: "ABLE", name: "Aberdeen to Lerwick" },
-    // { code: "KIAB", name: "Kirkwall to Aberdeen" },
-    // { code: "KILE", name: "Kirkwall to Lerwick" },
     { code: "LEAB", name: "Lerwick to Aberdeen" },
-    // { code: "LEKI", name: "Lerwick to Kirkwall" },
-    // { code: "SCST", name: "Scrabster to Stromness" },
-    // { code: "STSC", name: "Stromness to Scrabster" },
 ];
 
 const loading = ref(false);
@@ -72,7 +60,7 @@ const requestData = async (month, year, route = null) => {
     viewingMonth.value = month;
     viewingYear.value = year;
 
-    const { data } = await axios.get(
+    const {data} = await axios.get(
         `/api/${props.apiRoute}/${month}/${year}/${routeCode.value}${params}`
     );
 
