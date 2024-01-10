@@ -31,19 +31,14 @@ class ScrapeLoganair extends Command
     // description
     protected $description = 'Scrape Loganair data';
 
-    // northlink service
-    private LoganairService $loganairService;
-
     /**
      * Create a new command instance.
      *
      * @return void
      */
     public function __construct(
-        LoganairService $loganairService,
     ) {
         parent::__construct();
-        $this->loganairService = $loganairService;
     }
 
     /**
@@ -67,7 +62,6 @@ class ScrapeLoganair extends Command
         foreach ($dates as $dateString) {
             try {
                 GetFlightPriceJob::dispatchNow($dateString, self::SUMBURGH, self::ABERDEEN);
-                    // ->onQueue('scrape');
             } catch (\Exception $e) {
                 logger($e->getMessage());
                 $this->error($e->getMessage());
